@@ -1,9 +1,3 @@
-```html
-<head>
-<title>Mathematical exposition</title>
-</head>
-```
-
 ## Youtube: 
 
 - [Webinar covida 20](https://www.youtube.com/channel/UCPGlAyWJqK37uXlRJ4nlP4g) 
