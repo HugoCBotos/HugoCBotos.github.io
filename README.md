@@ -9,4 +9,3 @@
 [**Geometria clássica (Curso de inverno -2020)**](classicalgeometry.md)
 
 [**O que é geometria? (Curso de verão -2021)**](oqehgeometria.md)
-
