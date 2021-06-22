@@ -1,5 +1,3 @@
-# Papers
-
 ## Arxiv
 
 -   [Orbifolds and orbibundles in complex hyperbolic geometry](https://arxiv.org/abs/2011.09372)
