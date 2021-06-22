@@ -1,6 +1,6 @@
 # Presentations and exposition articles
 
-# Youtube channel: [webinar covida 20](https://www.youtube.com/channel/UCPGlAyWJqK37uXlRJ4nlP4g) (I'm one of the organizers):
+# Youtube channel: [webinar covida 20](https://www.youtube.com/channel/UCPGlAyWJqK37uXlRJ4nlP4g) ( Iwas one of the organizers)
 
 # Presentations:
 
