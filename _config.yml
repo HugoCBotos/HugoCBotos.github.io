@@ -1,6 +1,9 @@
 author: Hugo Cattarucci Botós
 name: Poohnilista
 title: null
+plugins:
+  - jekyll-paginate
+  - jekyll-sitemap
 include:
   - README.md
   - articles.md
@@ -8,3 +11,5 @@ include:
   - exposition.md
   - oqehgeometria.md
   - pooh.jpg
+gems: 
+      - jekyll-sitemap
