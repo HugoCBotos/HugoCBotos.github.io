@@ -1,6 +1,5 @@
 author: Hugo Cattarucci Botós
-name: Poohnilista
-title: null
+title: Poohnilista
 plugins:
   - jekyll-relative-links
 relative_links:
