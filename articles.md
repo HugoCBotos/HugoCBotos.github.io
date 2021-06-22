@@ -1,3 +1,7 @@
+<head>
+   <title>Publications and preprints</title>
+ </head>
+
 ## Arxiv
 
 -   [Orbifolds and orbibundles in complex hyperbolic geometry](https://arxiv.org/abs/2011.09372)
