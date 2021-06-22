@@ -19,6 +19,6 @@
 
 ## Courses
 
-- [Geometria hiperbólica sem coordenadas](https://www.youtube.com/playlist?list=PLB2CI4e5fuMKAkyiH9xN9cci50G3BcJ-I) (Curso de inverno -2020)](classicalgeometry.md)
+- [Geometria hiperbólica sem coordenadas (Curso de inverno -2020)](classicalgeometry.md)
 - [O que é geometria? (Curso de verão -2021)](oqehgeometria.md)
 
