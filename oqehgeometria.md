@@ -1,8 +1,3 @@
----
-
-
----
-
 <h1 id="o-que-é-geometria">O que é Geometria?</h1>
 <p><strong>Resumo:</strong> Esse curso se propõe a apresentar de jeito elementar ideias de geometria moderna. Os tópicos centrais que estudaremos são: o terceiro problema de Hilbert, os problemas de bolhas de sabão, a visão de Klein da geometria e ladrilhamentos.</p>
 <p>Além disso, o objetivo do curso certamente não é fazer contas (até porque para isso que servem computadores), mas sim entender conceitualmente algumas ideias que permeiam a matemática atual. Em especial, a de simetria, que é fundamental para entender qualquer coisa em matemática e física: da teoria dos números mais refinada à física de partículas.</p>

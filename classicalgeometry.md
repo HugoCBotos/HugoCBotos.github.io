@@ -1,8 +1,3 @@
----
-
-
----
-
 <h1 id="geometria-clássica">Geometria clássica</h1>
 <p>Segue abaixo minhas anotações de geometrias clássicas:</p>
 <p><a href="https://drive.google.com/file/d/1k5miEuVn8IoY9MF6458VRpJKD8q3I6rG/view">Clique aqui para abrir pdf</a></p>

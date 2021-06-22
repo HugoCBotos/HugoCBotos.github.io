@@ -1,8 +1,3 @@
----
-
-
----
-
 <h1 id="papers">Papers</h1>
 <h2 id="arxiv">Arxiv</h2>
 <ul>
@@ -12,4 +7,3 @@
 <ul>
 <li><a href="https://teses.usp.br/teses/disponiveis/55/55135/tde-25102018-112308/pt-br.php">Propriedades globais de uma classe de complexos diferenciais</a></li>
 </ul>
-

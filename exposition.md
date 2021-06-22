@@ -1,8 +1,3 @@
----
-
-
----
-
 <h1 id="presentations-and-exposition-articles">Presentations and exposition articles</h1>
 <h1 id="youtube-channel-webinar-covida-20-im-one-of-the-organizers">Youtube channel: <a href="https://www.youtube.com/channel/UCPGlAyWJqK37uXlRJ4nlP4g">webinar covida 20</a> (I’m one of the organizers):</h1>
 <h1 id="presentations">Presentations:</h1>
@@ -17,4 +12,3 @@
 <li><a href="http://www.cemeai.icmc.usp.br/actalegalicus/uma-prova-celestial-do-teorema-fundamental-da-algebra/">Uma prova celestial do Teorema Fundamental da Álgebra - Acta Legalicus • Maio de 2020 • No. 28</a></li>
 <li><a href="http://www.cemeai.icmc.usp.br/actalegalicus/quaternions-animais-parecidos-com-os-numeros-complexos/">Quaternions: animais parecidos com os números complexos - Acta Legalicus • Abril 2018 • No. 10</a></li>
 </ul>
-
