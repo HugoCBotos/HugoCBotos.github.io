@@ -13,3 +13,5 @@ include:
   - pooh.jpg
 gems: 
       - jekyll-sitemap
+
+theme: jekyll-theme-minimal
