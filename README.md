@@ -5,14 +5,10 @@
 Find me at:
 
 - [**Github**](https://github.com/Poohnilista)
-
 - [**Twitter**](https://twitter.com/poohnilista)
-
 - [**Instagram**](https://www.instagram.com/poohnilista/)
 
-- **Email:<img src="https://raw.githubusercontent.com/Poohnilista/Poohnilista.github.io/master/Images/email.JPG" >**
-
-  
+My email is:![email](https://raw.githubusercontent.com/Poohnilista/Poohnilista.github.io/master/Images/email.JPG)
 
 
 
