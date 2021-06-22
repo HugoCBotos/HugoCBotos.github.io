@@ -1,7 +1,6 @@
 title: Poohnilista
 author: Hugo Cattarucci Botós
-github:
-  is_project_page: false
+name: teste
 plugins:
   - jekyll-relative-links
 relative_links:
