@@ -1,5 +1,5 @@
 title: Poohnilista
-
+layout: defaut
 plugins:
   - jekyll-default-layout
 
