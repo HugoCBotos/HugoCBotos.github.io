@@ -4,9 +4,10 @@
 
 Find me at:
 
-- [**Github**](https://github.com/Poohnilista)
+- [**Youtube**](https://www.youtube.com/channel/UCgYEmF0Qchq9iYZnJC_bIOA)
 - [**Twitter**](https://twitter.com/poohnilista)
 - [**Instagram**](https://www.instagram.com/poohnilista/)
+- [**Github**](https://github.com/Poohnilista)
 - **Email:** *hugocbotos at usp.br*
 
 
