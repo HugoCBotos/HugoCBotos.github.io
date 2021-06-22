@@ -55,6 +55,10 @@ body {
   background-color: #8972a3;
   color: white;
 }
+.topnav a.active2 {
+  background-color: #8972a3;
+  color: white;
+}
 
 .topnav .icon {
   display: none;
@@ -86,7 +90,7 @@ body {
 <body>
 
 <div class="topnav" id="myTopnav">
-   <a href="#home" class="active">Home</a>
+   <a href="#home" class="active2">Home</a>
      <a {% if page.url == "/" %}class="active"{% endif %} href="https://poohnilista.github.io">Me</a>
       <a {% if page.url == "/articles.html" %}class="active"{% endif %} href="https://poohnilista.github.io/articles.html">Publications and preprints</a>
       <a {% if page.url == "/exposition.html" %}class="active"{% endif %} href="https://poohnilista.github.io/exposition.html">Expositions, presentations and couses</a>
