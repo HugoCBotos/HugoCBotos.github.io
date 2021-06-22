@@ -1,8 +1,4 @@
-```html
-<header>
-teste
-</header>
-```
+ <title>Publications and preprints</title>
 
 ## Arxiv
 
