@@ -58,6 +58,10 @@ body {
       <a href="https://poohnilista.github.io/articles.html">Publications and preprints</a>
       <a href="https://poohnilista.github.io/exposition.html">Expositions, presentations and couses</a>
     </div>
+    $('topnav').click(function() {
+    $('topnav').removeClass('active');
+    $(this).addClass('active'); 
+}); 
     <main id="content" class="main-content" role="main">
       {{ content }}
     </main>
