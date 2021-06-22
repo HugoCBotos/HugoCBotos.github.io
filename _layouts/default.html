@@ -24,11 +24,11 @@
 body {
   margin: 0;
   font-family: Arial, Helvetica, sans-serif;
-}.topnav {
+}ul.topnav {
   overflow: hidden;
   background-color: #333;
 }
-.topnav a {
+ul.topnav a {
   float: left;
   color: #f2f2f2;
   text-align: center;
@@ -36,11 +36,11 @@ body {
   text-decoration: none;
   font-size: 17px;
 }
-.topnav a:hover {
+ul.topnav a:hover {
   background-color: #ddd;
   color: black;
 }
-.topnav a.active {
+ul.topnav a.active {
   background-color: #04AA6D;
   color: white;
 }
@@ -53,8 +53,8 @@ body {
 <script type="text/javascript">
     $(document).ready(function () {
         var url = window.location;
-        $('ul.nav a[href="'+ url +'"]').parent().addClass('active');
-        $('ul.nav a').filter(function() {
+        $('ul.topnav a[href="'+ url +'"]').parent().addClass('active');
+        $('ul.topnav a').filter(function() {
              return this.href == url;
         }).parent().addClass('active');
     });
