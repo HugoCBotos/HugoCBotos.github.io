@@ -2,7 +2,4 @@ title: Poohnilista
 layout: defaut
 plugins:
   - jekyll-default-layout
-
-gem: 
-  - 'jekyll-default-layout'
 theme: jekyll-theme-cayman
