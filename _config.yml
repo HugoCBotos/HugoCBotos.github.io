@@ -13,4 +13,4 @@ include:
   - oqehgeometria.md
   - pooh.jpg
 
-theme: jekyll-theme-slate
+theme: jekyll-theme-minimal
