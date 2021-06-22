@@ -20,14 +20,18 @@
     <meta name="theme-color" content="#157878">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <link rel="stylesheet" href="{{ '/assets/css/style.css?v=' | append: site.github.build_revision | relative_url }}">
-<style>
+
+    <style>
 body {
   margin: 0;
   font-family: Arial, Helvetica, sans-serif;
-}.topnav {
+}
+
+.topnav {
   overflow: hidden;
   background-color: #333;
 }
+
 .topnav a {
   float: left;
   color: #f2f2f2;
@@ -36,23 +40,26 @@ body {
   text-decoration: none;
   font-size: 17px;
 }
+
 .topnav a:hover {
   background-color: #ddd;
   color: black;
 }
+
 .topnav a.active {
   background-color: #04AA6D;
   color: white;
 }
 </style>
+  </head>
+  <body>
 <ul class="topnav">
-    <li><a data-target="#" data-toggle="pill" href="https://poohnilista.github.io">Me</a></li>
-    <li><a data-target="#" data-toggle="pill" href="https://poohnilista.github.io/articles.html">Publications and preprints</a></li>
-    <li><a data-target="#" data-toggle="pill" href="https://poohnilista.github.io/exposition.html">Expositions, presentations and couses</a></li>
+    <a data-target="#" data-toggle="pill" href="https://poohnilista.github.io">Me</a></li>
+    <a data-target="#" data-toggle="pill" href="https://poohnilista.github.io/articles.html">Publications and preprints</a>
+    <a data-target="#" data-toggle="pill" href="https://poohnilista.github.io/exposition.html">Expositions, presentations and couses</a>
 </ul>
 
-</head>
-  <body>
+
     </script>
     <main id="content" class="main-content" role="main">
       {{ content }}
