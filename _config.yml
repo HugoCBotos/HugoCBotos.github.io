@@ -1,6 +1,8 @@
 author: Hugo Cattarucci Botós
 title: Poohnilista
-site.name: Poohnilista
+plugins:
+  - jekyll-paginate
+  - jekyll-sitemap
 include:
   - README.md
   - articles.md
