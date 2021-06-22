@@ -5,3 +5,8 @@ plugins:
 theme: jekyll-theme-cayman
 gems: 
       - jekyll-sitemap
+include:
+      -README
+      -articles
+      -classicalgeometry
+      -exposition
