@@ -1,5 +1,6 @@
 title: Poohnilista
 layout: defaut
+site.title: Poohnilista
 plugins:
   - jekyll-default-layout
 theme: jekyll-theme-cayman
