@@ -7,7 +7,7 @@ Find me at:
 - [**Youtube**](https://www.youtube.com/channel/UCgYEmF0Qchq9iYZnJC_bIOA)
 - [**Twitter**](https://twitter.com/poohnilista)
 - [**Instagram**](https://www.instagram.com/poohnilista/)
-- [**Github**](https://github.com/Poohnilista)
+- [**Github**](https://github.com/HugoCBotos)
 - **Email:** *hugocbotos at usp.br*
 
 
