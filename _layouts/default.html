@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="{{ site.lang | default: "en-US" }}">
   <head>
-
+    <title>{{default: site.title}}</title>
     {% if site.google_analytics %}
       <script async src="https://www.googletagmanager.com/gtag/js?id={{ site.google_analytics }}"></script>
       <script>
@@ -84,9 +84,7 @@ body {
 </style>
 </head>
 <body>
-<header class="page-header" role="banner">
-      <h1 class="project-name">{{ page.title | default: site.title | default: site.github.repository_name }}</h1>
-</header>
+
 
 <div class="topnav" id="myTopnav">
       <a href="javascript:void(0);" class="icon" onclick="myFunction()">
