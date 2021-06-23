@@ -84,6 +84,9 @@ body {
 </style>
 </head>
 <body>
+<header class="page-header" role="banner">
+      <h1 class="project-name">{{ page.title | default: site.title | default: site.github.repository_name }}</h1>
+</header>
 
 <div class="topnav" id="myTopnav">
       <a href="javascript:void(0);" class="icon" onclick="myFunction()">
