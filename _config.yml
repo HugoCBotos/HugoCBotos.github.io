@@ -1,6 +1,6 @@
 title: Poohnilista
 layout: defaut
-
+url: https://hugocbotos.github.io/
 plugins:
   - jekyll-default-layout
 theme: jekyll-theme-cayman
@@ -12,3 +12,13 @@ include:
       -articles
       -classicalgeometry
       -exposition
+sitemap:
+    filename: "/sitemap.xml"
+    exclude:
+        - "/atom.xml"
+        - "/feed.xml"
+        - "/feed/index.xml"
+    include_posts:
+        - "/index.html"
+    change_frequency_name: "change_frequency"
+    priority_name: "priority"
