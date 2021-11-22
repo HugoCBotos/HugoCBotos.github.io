@@ -12,3 +12,8 @@
 
 * Geometry over algebras
 
+## Exposition articles
+
+-   [A celestial proof of the fundamental theorem of algebra (in Portuguese) - Acta Legalicus • Maio de 2020 • No. 28](http://www.cemeai.icmc.usp.br/actalegalicus/uma-prova-celestial-do-teorema-fundamental-da-algebra/)
+-   [Quaternions: Animals similar to complex numbers (in Portuguese) - Acta Legalicus • Abril 2018 • No. 10](http://www.cemeai.icmc.usp.br/actalegalicus/quaternions-animais-parecidos-com-os-numeros-complexos/)
+
