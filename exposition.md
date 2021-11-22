@@ -15,15 +15,15 @@
 
 ## Courses
 
-- [Estruturas lineares em geometria (Curso de inverno-2019)](classicalgeometry.md)
+- Estruturas lineares em geometria (Curso de inverno-2019)
 
-  **Url**: http://inverno.icmc.usp.br/doku.php?id=curso:estruturas
+  **Url**: [http://inverno.icmc.usp.br/doku.php?id=curso:estruturas](http://inverno.icmc.usp.br/doku.php?id=curso:estruturas)
 
 - [Geometria hiperbólica sem coordenadas (Curso de inverno-2020)](classicalgeometry.md)
 
-  **Url**: http://inverno.icmc.usp.br/doku.php?id=curso:geometriahiperbolica
+  **Url**: [http://inverno.icmc.usp.br/doku.php?id=curso:geometriahiperbolica](http://inverno.icmc.usp.br/doku.php?id=curso:geometriahiperbolica)
 
 - [O que é geometria? (Curso de verão-2021)](oqehgeometria.md)
 
-  **Url**: http://verao.icmc.usp.br/verao2021/MC8.pdf
+  **Url**: [http://verao.icmc.usp.br/verao2021/MC8.pdf](http://verao.icmc.usp.br/verao2021/MC8.pdf)
 
