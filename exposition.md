@@ -4,7 +4,7 @@
 - [Geometria hiperbólica sem coordenadas](https://www.youtube.com/playlist?list=PLB2CI4e5fuMKAkyiH9xN9cci50G3BcJ-I)
 - [O que é geometria?](https://www.youtube.com/playlist?list=PLB2CI4e5fuMKxJG2M2LvVp4bFhGC0bXxq)
 
-## Presentations:
+## Talks:
 
 -   [Introdução à difeologia parte 1](https://www.youtube.com/watch?v=ZgoPWoQaxm8)
 -   [Introdução à difeologia parte 2](https://www.youtube.com/watch?v=fvQ6Wm_cYug)
