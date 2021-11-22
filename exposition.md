@@ -10,7 +10,6 @@
 -   [Introdução à difeologia parte 2](https://www.youtube.com/watch?v=fvQ6Wm_cYug)
 -   [Introdução à difeologia parte 3](https://www.youtube.com/watch?v=MfzYQ_g5Gw8)
 -   [Poliedros de Platâo e Ladrilhamento](https://www.youtube.com/watch?v=PfBgpT3MzMM)
-
 -   [Quotients of the holomorphic 2-ball and the turnover](https://www.youtube.com/watch?v=t521WWqbu7I&t=21s)
 
 ## Courses
