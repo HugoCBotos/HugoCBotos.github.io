@@ -11,13 +11,19 @@
 -   [Introdução à difeologia parte 3](https://www.youtube.com/watch?v=MfzYQ_g5Gw8)
 -   [Poliedros de Platâo e Ladrilhamento](https://www.youtube.com/watch?v=PfBgpT3MzMM)
 
-## Exposition articles:
-
--   [Uma prova celestial do Teorema Fundamental da Álgebra - Acta Legalicus • Maio de 2020 • No. 28](http://www.cemeai.icmc.usp.br/actalegalicus/uma-prova-celestial-do-teorema-fundamental-da-algebra/)
--   [Quaternions: animais parecidos com os números complexos - Acta Legalicus • Abril 2018 • No. 10](http://www.cemeai.icmc.usp.br/actalegalicus/quaternions-animais-parecidos-com-os-numeros-complexos/)
+-   [Quotients of the holomorphic 2-ball and the turnover](https://www.youtube.com/watch?v=t521WWqbu7I&t=21s)
 
 ## Courses
 
-- [Geometria hiperbólica sem coordenadas (Curso de inverno -2020)](classicalgeometry.md)
-- [O que é geometria? (Curso de verão -2021)](oqehgeometria.md)
+- [Estruturas lineares em geometria (Curso de inverno-2019)](classicalgeometry.md)
+
+  **Url**: http://inverno.icmc.usp.br/doku.php?id=curso:estruturas
+
+- [Geometria hiperbólica sem coordenadas (Curso de inverno-2020)](classicalgeometry.md)
+
+  **Url**: http://inverno.icmc.usp.br/doku.php?id=curso:geometriahiperbolica
+
+- [O que é geometria? (Curso de verão-2021)](oqehgeometria.md)
+
+  **Url**: http://verao.icmc.usp.br/verao2021/MC8.pdf
 
