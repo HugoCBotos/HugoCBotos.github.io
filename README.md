@@ -8,7 +8,7 @@ Find me at:
 - [**Twitter**](https://twitter.com/poohnilista)
 - [**Instagram**](https://www.instagram.com/poohnilista/)
 - [**Github**](https://github.com/HugoCBotos)
-- **Email:** *hugocbotos at usp.br*
+- **Email:** *hugocbotos at gmail.com*
 
 
 
