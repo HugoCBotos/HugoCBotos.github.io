@@ -1,3 +1,6 @@
+## Publications
+-   [Orbifolds and orbibundles in complex hyperbolic geometry](https://www.sciencedirect.com/science/article/abs/pii/S0166864123002869?via%3Dihub) 
+
 ## Arxiv
 
 -   [Orbifolds and orbibundles in complex hyperbolic geometry](https://arxiv.org/abs/2011.09372) 
