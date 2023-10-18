@@ -6,6 +6,8 @@
 -   [Orbifolds and orbibundles in complex hyperbolic geometry](https://arxiv.org/abs/2011.09372) 
 -   [Quotients of the holomorphic 2-ball and the turnover](https://arxiv.org/abs/2109.08753)
 -   [Geometry over algebras](https://arxiv.org/abs/2203.05101)
+-   [On the interplay between discrete invariants of complex hyperbolic disc bundles over surfaces](https://arxiv.org/abs/2308.04204)
+
 
 ## PhD Thesis, Masters dissertation and Lecture notes
 -   [Orbibundles, complex hyperbolic manifolds and geometry over algebras. PhD thesis](https://www.teses.usp.br/teses/disponiveis/55/55135/tde-26072022-085204/pt-br.php)
