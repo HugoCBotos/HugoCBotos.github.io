@@ -15,7 +15,7 @@ Find me at:
 - [**Instagram**](https://www.instagram.com/poohnilista/)
 - [**Github**](https://github.com/HugoCBotos)
 - [**Lattes**](http://lattes.cnpq.br/3180578353518979)
-- [**Arxiv**](https://arxiv.org/search/math?searchtype=author&query=Bot%C3%B3s,+H+C)
+- [**arXiv**](https://arxiv.org/search/math?searchtype=author&query=Bot%C3%B3s,+H+C)
 - **Email:** *hugocbotos at gmail.com*
 
 
