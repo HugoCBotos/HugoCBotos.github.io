@@ -13,8 +13,8 @@
 ## PhD Thesis, Masters dissertation and Lecture notes
 -   [Orbibundles, complex hyperbolic manifolds and geometry over algebras. PhD thesis](https://www.teses.usp.br/teses/disponiveis/55/55135/tde-26072022-085204/pt-br.php)
 -   [Propriedades globais de uma classe de complexos diferenciais. Master dissertation](https://teses.usp.br/teses/disponiveis/55/55135/tde-25102018-112308/pt-br.php)
--   [Geometrias Clássicas. Lecture notes.](https://github.com/HugoCBotos/geometria-classica/blob/master/Geometrias%20Cl%C3%A1ssicas%20-%20Hugo%20C.%20Bot%C3%B3s.pdf)
--   [Calculus under construction (in Portuguese). Lecture notes.](https://github.com/HugoCBotos/calculo-em-construcao)
+-   [Geometrias Clássicas. Notas de aula.](https://github.com/HugoCBotos/geometrias-classicas/blob/main/Geometrias_cl%C3%A1ssicas.pdf)
+-   [Cálculo em construção. Notas de aula.](https://github.com/HugoCBotos/calculo-em-construcao)
 
 ## Exposition articles
 
