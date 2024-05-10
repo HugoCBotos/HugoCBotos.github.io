@@ -1,5 +1,6 @@
 ## Publications
 -   [Orbifolds and orbibundles in complex hyperbolic geometry](https://www.sciencedirect.com/science/article/abs/pii/S0166864123002869?via%3Dihub) 
+-   [Geometry over algebras](https://www.sciencedirect.com/science/article/abs/pii/S0926224524000275)
 
 
 ## Arxiv
@@ -8,6 +9,7 @@
 -   [Quotients of the holomorphic 2-ball and the turnover](https://arxiv.org/abs/2109.08753)
 -   [Geometry over algebras](https://arxiv.org/abs/2203.05101)
 -   [On the interplay between discrete invariants of complex hyperbolic disc bundles over surfaces](https://arxiv.org/abs/2308.04204)
+-   [Complete totally geodesic subsets of the complex hyperbolic plane: an elementary classification](https://arxiv.org/abs/2404.09859)
 
 
 ## PhD Thesis, Masters dissertation and Lecture notes
