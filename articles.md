@@ -1,9 +1,8 @@
 ## Publications
 -   [Orbifolds and orbibundles in complex hyperbolic geometry](https://www.sciencedirect.com/science/article/abs/pii/S0166864123002869?via%3Dihub) 
 -   [Geometry over algebras](https://www.sciencedirect.com/science/article/abs/pii/S0926224524000275)
--   [Geometry over algebras](https://www.sciencedirect.com/science/article/abs/pii/S0926224524000275)
 -   [Complete totally geodesic subsets of the complex hyperbolic plane: an elementary classification](https://link.springer.com/article/10.1007/s40863-024-00467-y)
--   
+
 ## Arxiv
 
 -   [Orbifolds and orbibundles in complex hyperbolic geometry (accepted for publication)](https://arxiv.org/abs/2011.09372) 
