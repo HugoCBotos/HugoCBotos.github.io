@@ -16,7 +16,6 @@
 <p>Find me at:</p>
 <ul>
   <li><a href="https://www.youtube.com/channel/UCgYEmF0Qchq9iYZnJC_bIOA"><strong>Youtube</strong></a></li>
-  <li><a href="https://www.instagram.com/poohnilista/"><strong>Instagram</strong></a></li>
   <li><a href="https://github.com/HugoCBotos"><strong>Github</strong></a></li>
   <li><a href="http://lattes.cnpq.br/3180578353518979"><strong>Lattes</strong></a></li>
   <li><a href="https://arxiv.org/search/math?searchtype=author&query=Bot%C3%B3s,+H+C"><strong>arXiv</strong></a></li>
