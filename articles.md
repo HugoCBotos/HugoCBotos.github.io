@@ -5,8 +5,7 @@
 
 ## Arxiv
 
--   [Orbifolds and orbibundles in complex hyperbolic geometry (accepted for publication)](https://arxiv.org/abs/2011.09372) 
--   [Quotients of the holomorphic 2-ball and the turnover](https://arxiv.org/abs/2109.08753)
+-   [Quotients of the holomorphic 2-ball and the turnover (accepted for publication)](https://arxiv.org/abs/2109.08753)
 -   [Geometry over algebras](https://arxiv.org/abs/2203.05101)
 -   [On the interplay between discrete invariants of complex hyperbolic disc bundles over surfaces](https://arxiv.org/abs/2308.04204)
 -  [ A non-trivial family of trivial bundles with complex hyperbolic structure ](https://arxiv.org/abs/2411.02213)
