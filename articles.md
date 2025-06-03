@@ -19,9 +19,9 @@
 
 ## Lecture notes
 
--   [Geometrias Clássicas. Notas de aula](https://github.com/HugoCBotos/geometrias-classicas)
--   [Cálculo em construção. Notas de aula](https://github.com/HugoCBotos/calculo-em-construcao)
--   [Análise em Rd. Notas de aula](https://github.com/HugoCBotos/Analise-em-Rd)
+-   [Geometrias Clássicas](https://github.com/HugoCBotos/geometrias-classicas)
+-   [Cálculo em construção](https://github.com/HugoCBotos/calculo-em-construcao)
+-   [Análise em Rd](https://github.com/HugoCBotos/Analise-em-Rd)
 
 ## Exposition articles
 
