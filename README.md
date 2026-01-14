@@ -10,7 +10,7 @@
   My research focuses mainly on hyperbolic geometry, differential topology, and geometric topology. Currently, I am interested in dynamical systems as well.
 </p>
 <p>
-  Previously, I was a postdoc at the Max-Planck-Institut für Mathematik (MPIM) in Germany, from March 2023 to August 2023, and a temporary professor at the University of São Paulo (Instituto de Ciências Matemáticas e de Computação - ICMC), from July 2022 to February 2023.
+  From July 2022 to February 2023, I was a temporary lecturer at the University of São Paulo (Instituto de Ciências Matemáticas e de Computação-ICMC). Then I held a postdoctoral position at the Max-Planck-Institut für Mathematik (MPIM) in Germany from March 2023 to August 2023. Later, I worked as a postdoc at the University of São Paulo for the following two years.
 </p>
 
 <p>Find me at:</p>
