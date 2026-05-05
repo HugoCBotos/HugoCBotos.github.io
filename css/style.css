@@ -227,6 +227,7 @@ em { font-style: italic; }
   background: linear-gradient(135deg, rgba(108,92,231,0.1), rgba(162,155,254,0.1));
   color: #6c5ce7;
   border: 1px solid rgba(108,92,231,0.2);
+  text-decoration: none;
   transition: all 0.2s ease;
 }
 
@@ -278,18 +279,22 @@ em { font-style: italic; }
 }
 
 .stat-item {
+  display: block;
   text-align: center;
   padding: 1.2rem 1.8rem;
   background: #fff;
   border-radius: 12px;
   box-shadow: 0 2px 8px rgba(0,0,0,0.06);
   min-width: 130px;
+  text-decoration: none;
+  color: inherit;
   transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
 .stat-item:hover {
   transform: translateY(-3px);
   box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+  text-decoration: none;
 }
 
 .stat-number {
