@@ -25,6 +25,19 @@ body {
   flex-direction: column;
 }
 
+/* --- Subtle Background Pattern --- */
+body::before {
+  content: "";
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background-image:
+    radial-gradient(circle at 25% 25%, rgba(108,92,231,0.03) 0%, transparent 50%),
+    radial-gradient(circle at 75% 75%, rgba(45,27,105,0.03) 0%, transparent 50%);
+  pointer-events: none;
+  z-index: -1;
+}
+
 /* --- Typography --- */
 h1, h2, h3 {
   font-weight: 600;
@@ -58,6 +71,29 @@ em { font-style: italic; }
   max-width: 900px;
   margin: 0 auto;
   padding: 0 1.5rem;
+}
+
+/* --- Animations --- */
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.fade-in {
+  animation: fadeInUp 0.6s ease forwards;
+}
+
+.fade-in-delay-1 { animation-delay: 0.1s; }
+.fade-in-delay-2 { animation-delay: 0.2s; }
+.fade-in-delay-3 { animation-delay: 0.3s; }
+
+/* --- Section Divider --- */
+.section-divider {
+  width: 60px;
+  height: 3px;
+  background: linear-gradient(90deg, #6c5ce7, #a29bfe);
+  border-radius: 2px;
+  margin: 2.5rem auto;
 }
 
 /* --- Header / Navigation --- */
@@ -142,11 +178,21 @@ em { font-style: italic; }
   border: 4px solid #fff;
   box-shadow: 0 4px 20px rgba(108,92,231,0.2);
   margin-bottom: 1.5rem;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.hero img:hover {
+  transform: scale(1.03);
+  box-shadow: 0 8px 30px rgba(108,92,231,0.3);
 }
 
 .hero h1 {
   font-size: 2.2rem;
   margin-bottom: 0.3rem;
+  background: linear-gradient(135deg, #2d1b69, #6c5ce7);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
 
 .hero .subtitle {
@@ -161,6 +207,34 @@ em { font-style: italic; }
   text-align: left;
   font-size: 0.98rem;
   color: #444;
+}
+
+/* --- Research Tags --- */
+.research-tags {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.5rem;
+  margin: 1.5rem 0;
+}
+
+.research-tag {
+  display: inline-block;
+  padding: 0.35rem 0.9rem;
+  font-size: 0.8rem;
+  font-weight: 500;
+  border-radius: 20px;
+  background: linear-gradient(135deg, rgba(108,92,231,0.1), rgba(162,155,254,0.1));
+  color: #6c5ce7;
+  border: 1px solid rgba(108,92,231,0.2);
+  transition: all 0.2s ease;
+}
+
+.research-tag:hover {
+  background: linear-gradient(135deg, #6c5ce7, #a29bfe);
+  color: #fff;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(108,92,231,0.3);
 }
 
 /* --- Links / Contact --- */
@@ -190,8 +264,107 @@ em { font-style: italic; }
   background: #6c5ce7;
   color: #fff;
   text-decoration: none;
-  transform: translateY(-1px);
+  transform: translateY(-2px);
   box-shadow: 0 4px 12px rgba(108,92,231,0.3);
+}
+
+/* --- Stats / Highlights --- */
+.stats-row {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1.5rem;
+  margin: 2rem 0;
+}
+
+.stat-item {
+  text-align: center;
+  padding: 1.2rem 1.8rem;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+  min-width: 130px;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.stat-item:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+}
+
+.stat-number {
+  font-size: 1.8rem;
+  font-weight: 700;
+  background: linear-gradient(135deg, #2d1b69, #6c5ce7);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  line-height: 1.2;
+}
+
+.stat-label {
+  font-size: 0.8rem;
+  color: #636e72;
+  margin-top: 0.2rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* --- Career Timeline --- */
+.timeline {
+  position: relative;
+  margin: 1.5rem 0 2rem;
+  padding-left: 2rem;
+}
+
+.timeline::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: linear-gradient(180deg, #6c5ce7, #a29bfe);
+  border-radius: 1px;
+}
+
+.timeline-item {
+  position: relative;
+  margin-bottom: 1.5rem;
+  padding-left: 1.5rem;
+}
+
+.timeline-item::before {
+  content: "";
+  position: absolute;
+  left: calc(-2rem - 5px);
+  top: 0.4rem;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: #fff;
+  border: 2px solid #6c5ce7;
+  box-shadow: 0 0 0 3px #f0edff;
+}
+
+.timeline-date {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #6c5ce7;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 0.2rem;
+}
+
+.timeline-title {
+  font-weight: 600;
+  font-size: 1rem;
+  margin-bottom: 0.15rem;
+}
+
+.timeline-desc {
+  font-size: 0.9rem;
+  color: #636e72;
 }
 
 
@@ -248,11 +421,17 @@ em { font-style: italic; }
 /* --- Course Cards --- */
 .course-card {
   background: #fff;
-  border-radius: 8px;
-  padding: 1.2rem 1.5rem;
+  border-radius: 10px;
+  padding: 1.3rem 1.5rem;
   margin-bottom: 1.2rem;
-  box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
   border-left: 4px solid #2d1b69;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.course-card:hover {
+  transform: translateX(3px);
+  box-shadow: 0 4px 16px rgba(0,0,0,0.1);
 }
 
 .course-card h3 {
@@ -303,6 +482,15 @@ em { font-style: italic; }
   border-left: 4px solid #a29bfe;
 }
 
+.expo-card {
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.expo-card:hover {
+  transform: translateX(3px);
+  box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+}
+
 .expo-card .expo-meta {
   font-size: 0.82rem;
   color: #636e72;
@@ -345,10 +533,10 @@ em { font-style: italic; }
 
 /* --- Footer --- */
 .site-footer {
-  background: #1a1a2e;
+  background: linear-gradient(135deg, #1a1a2e, #2d1b69);
   color: rgba(255,255,255,0.6);
   text-align: center;
-  padding: 1.5rem 0;
+  padding: 2rem 0;
   font-size: 0.85rem;
   margin-top: auto;
 }
@@ -359,6 +547,18 @@ em { font-style: italic; }
 
 .site-footer a:hover {
   color: #fff;
+}
+
+.site-footer .footer-divider {
+  width: 40px;
+  height: 2px;
+  background: rgba(255,255,255,0.15);
+  margin: 0.75rem auto;
+  border-radius: 1px;
+}
+
+.site-footer .footer-heart {
+  color: #e74c3c;
 }
 
 /* --- Responsive --- */
@@ -402,6 +602,14 @@ em { font-style: italic; }
   .contact-links a { font-size: 0.82rem; padding: 0.4rem 0.75rem; }
 
   .page-content { padding: 1.2rem; }
+
+  .stats-row { gap: 1rem; }
+  .stat-item { min-width: 100px; padding: 1rem 1.2rem; }
+  .stat-number { font-size: 1.4rem; }
+
+  .timeline { padding-left: 1.5rem; }
+  .timeline-item { padding-left: 1rem; }
+  .timeline-item::before { left: calc(-1.5rem - 5px); width: 10px; height: 10px; }
 }
 
 @media (max-width: 480px) {
