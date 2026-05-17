@@ -66,9 +66,9 @@
         </ul>
         <p><strong>Normalizing flows</strong> provide a way to learn a flexible posterior by composing invertible transformations:</p>
         <div class="equation-box">
-            <pre><code>z₀ ~ q₀(z₀)  (simple base, e.g., N(0, I))
-z_K = f_K ∘ ... ∘ f₁(z₀)  (compose K invertible transforms)
-q(z_K) = q₀(z₀) · ∏_{k=1}^K |det J_{f_k}^{-1}|</code></pre>
+            $$ z_0 \sim q_0(z_0) \quad\text{(simple base, e.g., }\mathcal{N}(0, I)\text{)} $$
+            $$ z_K = f_K \circ \cdots \circ f_1(z_0) \quad\text{(compose K invertible transforms)} $$
+            $$ q(z_K) = q_0(z_0) \cdot \prod_{k=1}^K \big|\det J_{f_k}^{-1}\big| $$
         </div>
 
         <h2>Louizos &amp; Welling's Approach</h2>
@@ -81,12 +81,12 @@ q(z_K) = q₀(z₀) · ∏_{k=1}^K |det J_{f_k}^{-1}|</code></pre>
 
         <h3>Formulation</h3>
         <div class="equation-box">
-            <pre><code>w = μ + σ ⊙ r(z),   where r(z) is a normalizing flow
-
-Key choices:
-- r(z) = z  →  standard Bayes by Backprop (Gaussian)
-- r(z) = inverse autoregressive flow (IAF)  →  richer posterior
-- r(z) = planar flow  →  simpler, cheaper flow</code></pre>
+            $$ w = \mu + \sigma \odot r(z), \quad\text{where } r(z) \text{ is a normalizing flow} $$
+            <ul>
+                <li>$r(z) = z$ — standard Bayes by Backprop (Gaussian posterior)</li>
+                <li>$r(z) = \text{IAF}$ — inverse autoregressive flow (richer posterior)</li>
+                <li>$r(z) = \text{planar flow}$ — simpler, cheaper flow</li>
+            </ul>
         </div>
 
         <h2>Results</h2>

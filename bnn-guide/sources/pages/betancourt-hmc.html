@@ -69,9 +69,9 @@
         <h2>Core Intuition: Analogy to Physics</h2>
         <p>Think of a frictionless puck sliding on a landscape:</p>
         <ul>
-            <li><strong>Potential energy:</strong> U(w) = -log p(w|D) (the negative log-posterior)</li>
-            <li><strong>Kinetic energy:</strong> K(p) = ½ p<sup>T</sup> M<sup>-1</sup> p (momentum p, mass matrix M)</li>
-            <li><strong>Hamiltonian:</strong> H(w, p) = U(w) + K(p) — total energy conserved</li>
+            <li><strong>Potential energy:</strong> $U(w) = -\log p(w \mid D)$ (the negative log-posterior)</li>
+            <li><strong>Kinetic energy:</strong> $K(p) = \frac{1}{2} p^T M^{-1} p$ (momentum $p$, mass matrix $M$)</li>
+            <li><strong>Hamiltonian:</strong> $H(w, p) = U(w) + K(p)$ — total energy conserved</li>
         </ul>
         <p>HMC simulates the Hamiltonian dynamics using leapfrog integration. After each trajectory, the momentum is randomly resampled, and the proposed (w, p) is accepted/rejected based on the energy difference (which is near-zero with accurate integration, giving high acceptance).</p>
 
@@ -79,7 +79,7 @@
         <table>
             <tr><th>Component</th><th>Role</th><th>Practical Choice</th></tr>
             <tr><td>Mass matrix M</td><td>Defines the metric (shapes the proposal)</td><td>Diagonal from empirical Fisher; adapt during warmup</td></tr>
-            <tr><td>Step size ε</td><td>Integration accuracy</td><td>Adapt to achieve ~0.65 acceptance rate (NUTS)</td></tr>
+            <tr><td>Step size $\varepsilon$</td><td>Integration accuracy</td><td>Adapt to achieve ~0.65 acceptance rate (NUTS)</td></tr>
             <tr><td>Number of steps L</td><td>Trajectory length</td><td>Automated via NUTS (No-U-Turn Sampler)</td></tr>
             <tr><td>Warmup iterations</td><td>Adapt parameters, burn-in</td><td>100-500 iterations (depends on complexity)</td></tr>
         </table>

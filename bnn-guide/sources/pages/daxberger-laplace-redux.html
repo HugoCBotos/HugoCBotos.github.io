@@ -61,7 +61,7 @@
         <h2>Mathematical Formulation</h2>
 
         <h3>The Laplace Approximation</h3>
-        <p>Given a MAP estimate <em>w<sub>MAP</sub></em>, the log-posterior is approximated by a second-order Taylor expansion:</p>
+        <p>Given a MAP estimate $w_{\text{MAP}}$, the log-posterior is approximated by a second-order Taylor expansion:</p>
         <div class="equation-box">
             $$\log p(w \mid D) \approx \log p(w_{\text{MAP}} \mid D) - \frac{1}{2}(w - w_{\text{MAP}})^T H\,(w - w_{\text{MAP}})$$
             <p>where $H = \nabla^2 \log p(w \mid D)$ is the Hessian of the negative log-joint at the MAP estimate. This implies a Gaussian posterior:</p>

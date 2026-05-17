@@ -62,15 +62,15 @@
         <h3>Assumed Density Filtering (ADF)</h3>
         <p>Assume each neuron's activation follows a Gaussian. For each layer, compute the mean and variance of the output <em>exactly</em> given Gaussian inputs and Gaussian weights:</p>
         <div class="equation-box">
-            <pre><code>h = f(Wx + b),  where W ~ N(μ_W, σ²_W), x ~ N(μ_x, σ²_x)
+            $$ h = f(Wx + b), \quad W \sim \mathcal{N}(\mu_W, \sigma_W^2),\; x \sim \mathcal{N}(\mu_x, \sigma_x^2) $$
 
-E[h] = E_W[ E_x[ f(Wx + b) | W ] ]
-Var[h] = Var_W[ E_x[ f(Wx + b) | W ] ] + E_W[ Var_x[ f(Wx + b) | W ] ]</code></pre>
+            $$ \mathbb{E}[h] = \mathbb{E}_W\!\big[\,\mathbb{E}_x[\,f(Wx + b) \mid W\,]\,\big] $$
+            $$ \mathrm{Var}[h] = \mathrm{Var}_W\!\big[\,\mathbb{E}_x[\,f(Wx + b) \mid W\,]\,\big] + \mathbb{E}_W\!\big[\,\mathrm{Var}_x[\,f(Wx + b) \mid W\,]\,\big] $$
         </div>
         <p>For the linear part (pre-activation), the propagation is exact:</p>
         <div class="equation-box">
-            <pre><code>E[a] = μ_W μ_x
-Var[a] = μ_W² σ²_x + σ²_W μ_x² + σ²_W σ²_x + σ²_b</code></pre>
+            $$ \mathbb{E}[a] = \mu_W \mu_x $$
+            $$ \mathrm{Var}[a] = \mu_W^2 \sigma_x^2 + \sigma_W^2 \mu_x^2 + \sigma_W^2 \sigma_x^2 + \sigma_b^2 $$
         </div>
 
         <h3>Handling Nonlinearities</h3>

@@ -60,27 +60,27 @@
         <h2>Mathematical Formulation</h2>
 
         <h3>Dropout as Variational Inference</h3>
-        <p>The key insight: dropout's stochastic binary mask can be interpreted as a variational distribution <em>q(w)</em> over the weights:</p>
+        <p>The key insight: dropout's stochastic binary mask can be interpreted as a variational distribution $q(w)$ over the weights:</p>
         <div class="equation-box">
-            <pre><code>q(w) = w ⊙ diag(z),   z_i ~ Bernoulli(p)</code></pre>
-            <p>where <em>p</em> is the keep probability. This is a mixture of a point mass at zero and the learned weight — a "multiplicative" Bernoulli noise on the weights.</p>
+            $$q(w) = w \odot \operatorname{diag}(z), \quad z_i \sim \operatorname{Bernoulli}(p)$$
+            <p>where $p$ is the keep probability. This is a mixture of a point mass at zero and the learned weight — a "multiplicative" Bernoulli noise on the weights.</p>
         </div>
 
         <p>Gal shows that optimizing the standard dropout objective (cross-entropy + L2 regularization) is equivalent to optimizing a valid ELBO, where:</p>
         <div class="equation-box">
-            <pre><code>L_dropout ≈ L_ELBO = E_{q(w)}[log p(D|w)] - KL[q(w) || p(w)]</code></pre>
-            <p>The L2 regularization term corresponds to a Gaussian prior <em>p(w)</em>. The dropout rate controls the KL divergence.</p>
+            $$\mathcal{L}_{\text{dropout}} \approx \mathcal{L}_{\text{ELBO}} = \mathbb{E}_{q(w)}[\log p(D \mid w)] - \operatorname{KL}[q(w) \parallel p(w)]$$
+            <p>The L2 regularization term corresponds to a Gaussian prior $p(w)$. The dropout rate controls the KL divergence.</p>
         </div>
 
         <h3>MC Dropout — Extracting Uncertainty</h3>
-        <p>At test time, instead of turning off dropout, <strong>keep it on</strong> and perform <em>T</em> stochastic forward passes:</p>
+        <p>At test time, instead of turning off dropout, <strong>keep it on</strong> and perform $T$ stochastic forward passes:</p>
         <div class="equation-box">
-            <pre><code>p(y*|x*, D) ≈ (1/T) Σ_{t=1}^T p(y*|x*, ŵ_t),   ŵ_t ~ q(w)</code></pre>
+            $$p(y^* \mid x^*, D) \approx \frac{1}{T} \sum_{t=1}^{T} p(y^* \mid x^*, \hat{w}_t), \quad \hat{w}_t \sim q(w)$$
         </div>
         <p>This gives you:</p>
         <ul>
-            <li><strong>Predictive mean:</strong> average of the <em>T</em> outputs</li>
-            <li><strong>Predictive uncertainty:</strong> variance of the <em>T</em> outputs</li>
+            <li><strong>Predictive mean:</strong> average of the $T$ outputs</li>
+            <li><strong>Predictive uncertainty:</strong> variance of the $T$ outputs</li>
         </ul>
 
         <h2>Practical Implementation</h2>
