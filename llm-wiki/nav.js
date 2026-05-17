@@ -18,25 +18,6 @@
         }
     }
 
-    function saveSidebarScroll() {
-        var sidebar = document.querySelector('.sidebar');
-        if (sidebar) {
-            try {
-                sessionStorage.setItem('wiki_sidebar_scroll', sidebar.scrollTop);
-            } catch(e) {}
-        }
-    }
-
-    // ─────────────────────────────────────────────────
-    // HELPERS
-    // ─────────────────────────────────────────────────
-
-    function resolveURL(url) {
-        var a = document.createElement('a');
-        a.href = url;
-        return a.href;
-    }
-
     // ─────────────────────────────────────────────────
     // HIGHLIGHT CURRENT PAGE IN SIDEBAR
     // ─────────────────────────────────────────────────
@@ -106,96 +87,20 @@
         });
     }
 
-    // ─────────────────────────────────────────────────
-    // TRY SPA NAVIGATION FIRST, FALL BACK TO FULL LOAD
-    // ─────────────────────────────────────────────────
-    function navigateTo(url) {
-        var absoluteUrl = resolveURL(url);
-        if (absoluteUrl === window.location.href) return;
-
-        saveSidebarScroll();
-
-        fetch(absoluteUrl)
-            .then(function(response) {
-                if (!response.ok) throw new Error('Fetch failed');
-                return response.text();
-            })
-            .then(function(html) {
-                var parser = new DOMParser();
-                var doc = parser.parseFromString(html, 'text/html');
-
-                var newContent = doc.querySelector('.main-content');
-                var newTitle = doc.querySelector('title');
-                if (!newContent) throw new Error('No content');
-
-                history.pushState({ path: absoluteUrl }, '', absoluteUrl);
-                currentPath = new URL(absoluteUrl).pathname;
-
-                var oldContent = document.querySelector('.main-content');
-                oldContent.innerHTML = newContent.innerHTML;
-
-                // Replace sidebar (keeps relative paths correct)
-                var newSidebar = doc.querySelector('.sidebar');
-                var oldSidebar = document.querySelector('.sidebar');
-                var savedScroll = oldSidebar ? oldSidebar.scrollTop : 0;
-
-                if (newSidebar && oldSidebar) {
-                    oldSidebar.innerHTML = newSidebar.innerHTML;
-                }
-
-                if (newTitle) document.title = newTitle.textContent;
-
-                highlightCurrentPage();
-                initCollapsibleSections();
-                initSidebarNavigation();
-
-                // Restore sidebar scroll AFTER collapsible sections are adjusted
-                // so the sidebar has its correct final height
-                if (oldSidebar) {
-                    requestAnimationFrame(function() {
-                        oldSidebar.scrollTop = savedScroll;
-                    });
-                }
-                initSmoothScroll();
-                if (window.renderTOC) window.renderTOC();
-                if (window.renderSearch) window.renderSearch();
-            })
-            .catch(function() {
-                // Full page load — scroll already saved to sessionStorage
-                window.location.href = absoluteUrl;
-            });
-    }
-
     function initSidebarNavigation() {
+        // Let the browser handle navigation natively.
+        // No need to intercept clicks — all pages are static HTML.
         var links = document.querySelectorAll('.sidebar-nav a');
         links.forEach(function(link) {
-            var newLink = link.cloneNode(true);
-            link.parentNode.replaceChild(newLink, link);
-
-            newLink.addEventListener('click', function(e) {
+            link.addEventListener('click', function(e) {
                 var href = this.getAttribute('href');
                 if (!href || href.startsWith('#') || href === '') return;
-
                 if (this.classList.contains('active')) {
                     e.preventDefault();
-                    return;
                 }
-
-                e.preventDefault();
-                navigateTo(href);
             });
         });
     }
-
-    // ─────────────────────────────────────────────────
-    // BACK/FORWARD — full page load with scroll preserved
-    // ─────────────────────────────────────────────────
-    window.addEventListener('popstate', function(e) {
-        if (e.state && e.state.path && e.state.path !== window.location.href) {
-            saveSidebarScroll();
-            window.location.href = e.state.path;
-        }
-    });
 
     // ─────────────────────────────────────────────────
     // INIT

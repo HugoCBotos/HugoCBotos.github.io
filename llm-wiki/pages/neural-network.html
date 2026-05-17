@@ -121,13 +121,13 @@
 
         <div class="equation-box">
             <div class="label">ReLU (Rectified Linear Unit)</div>
-            ReLU(<em>z</em>) = max(0, <em>z</em>)
+            $\operatorname{ReLU}(z) = \max(0, z)$
         </div>
 
         <p>Other common ones:</p>
         <ul>
-            <li><strong>Sigmoid:</strong> σ(<em>z</em>) = 1 / (1 + <em>e^{-z}</em>) — squashes to (0, 1)</li>
-            <li><strong>Tanh:</strong> tanh(<em>z</em>) = (<em>e^{z}</em> - <em>e^{-z}</em>) / (<em>e^{z}</em> + <em>e^{-z}</em>) — squashes to (-1, 1)</li>
+            <li><strong>Sigmoid:</strong> $\sigma(z) = \frac{1}{1 + e^{-z}}$ — squashes to $(0, 1)$</li>
+            <li><strong>Tanh:</strong> $\tanh(z) = \frac{e^{z} - e^{-z}}{e^{z} + e^{-z}}$ — squashes to $(-1, 1)$</li>
         </ul>
 
         <!-- ======== THE FULL NETWORK ======== -->
@@ -137,7 +137,7 @@
 
         <div class="equation-box">
             <div class="label">A 2-Layer Neural Network</div>
-            <em>f</em>(<em>x</em>) = ReLU(<em>W</em><sub>2</sub> · ReLU(<em>W</em><sub>1</sub> <em>x</em> + <em>b</em><sub>1</sub>) + <em>b</em><sub>2</sub>)
+            $f(x) = \operatorname{ReLU}(W_2 \cdot \operatorname{ReLU}(W_1 x + b_1) + b_2)$
         </div>
 
         <p>
