@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The ELBO — LLM Wiki</title>
+    <link rel="stylesheet" href="../style.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+        onload="renderMathInElement(document.body, {delimiters: [
+            {left: '$$', right: '$$', display: true},
+            {left: '$', right: '$', display: false}
+        ]});"></script>
+</head>
+<body>
+<div class="wrapper">
+                    <nav class="sidebar">
+        <h2>📚 Python &amp; DL Wiki</h2>
+        <div class="tagline">LLM-maintained knowledge base</div>
+        <ul class="sidebar-nav">
+            <li><a href="../index.html">🏠 Wiki Index</a></li>
+            <li><a href="../log.html">📋 Activity Log</a></li>
+            <li><a href="../../notes.html" style="color:#f39c12; font-weight:600;">⬅ Back to Notes</a></li>
+            <li class="sidebar-section">
+                <div class="section-header">
+                    <span class="section-toggle">▶</span>
+                    <span class="section-label">BNN</span>
+                </div>
+                <ul class="section-pages">
+                    <li><a href="bnn-for-beginners.html">📖 BNN Overview</a></li>
+                    <li><a href="neural-network.html">1. Neural Networks</a></li>
+                    <li><a href="bayesian-inference.html">2. Bayesian Inference</a></li>
+                    <li><a href="probability-distributions.html">3. Probability Distributions</a></li>
+                    <li><a href="uncertainty.html">4. Types of Uncertainty</a></li>
+                    <li><a href="kl-divergence.html">5. KL Divergence</a></li>
+                    <li><a href="evidence-lower-bound.html">6. The ELBO</a></li>
+                    <li><a href="variational-inference.html">7. Variational Inference</a></li>
+                    <li><a href="mc-dropout.html">8. MC Dropout</a></li>
+                    <li><a href="laplace-approximation.html">9. Laplace Approximation</a></li>
+                    <li><a href="mcmc-hmc.html">10. MCMC &amp; HMC</a></li>
+                    <li class="sidebar-subsection">
+                        <div class="subsection-header">
+                            <span class="subsection-toggle">▶</span>
+                            <span class="subsection-label">Papers</span>
+                        </div>
+                        <ul class="subsection-pages">
+                            <li><a href="bnn-sources.html">📖 Paper Index</a></li>
+                            <li><a href="blundell-bayes-by-backprop.html">Bayes by Backprop</a></li>
+                            <li><a href="hernandez-probabilistic-backprop.html">Probabilistic Backprop</a></li>
+                            <li><a href="louizos-normalizing-flows.html">Normalizing Flows</a></li>
+                            <li><a href="gal-dropout-bayesian.html">Dropout as Bayesian</a></li>
+                            <li><a href="daxberger-laplace-redux.html">Laplace Redux</a></li>
+                            <li><a href="izmailov-bnn-posteriors.html">BNN Posteriors</a></li>
+                            <li><a href="betancourt-hmc.html">HMC Intro</a></li>
+                            <li><a href="jospin-hands-on-bnn.html">Hands-on BNN</a></li>
+                            <li><a href="goan-fookes-survey.html">Survey (Goan &amp; Fookes)</a></li>
+                            <li><a href="wang-yeung-survey.html">Survey (Wang &amp; Yeung)</a></li>
+                            <li><a href="magris-bayesian-survey.html">Bayesian Survey (Magris)</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </li>
+        </ul>
+    </nav>
+
+    <main class="main-content">
+        <a href="../index.html" class="back-link">← Back to main page</a>
+        <div class="breadcrumb"><a href="../index.html">Home</a> / The ELBO</div>
+        <h1>6. The Evidence Lower Bound (ELBO)</h1>
+
+        <div class="key-insight">
+            <strong>🎯 In one sentence</strong>
+            <p>The ELBO is the objective function we optimize in variational inference. Instead of maximizing the intractable posterior, we maximize a lower bound on the log-evidence. It naturally decomposes into "fit the data" minus "stay close to the prior".</p>
+        </div>
+
+        <p>
+            This is the bridge between Bayesian inference (page 2) and practical optimization (page 7).
+            If you understand the ELBO, you understand what variational BNNs are actually doing.
+        </p>
+
+        <!-- ======== THE PROBLEM ======== -->
+        <h2>The Problem: We Can't Compute the Posterior</h2>
+
+        <p>
+            Recall Bayes' theorem:
+        </p>
+
+        <div class="equation-box">
+            $$p(w \mid D) = \frac{p(D \mid w) \, p(w)}{p(D)}$$
+        </div>
+
+        <p>
+            The denominator $p(D) = \int p(D \mid w) \, p(w) \, dw$ involves integrating over
+            all possible weights — impossible for a neural network with millions of parameters.
+        </p>
+
+        <p>
+            <strong>Idea:</strong> Instead of computing the posterior exactly, we choose a simple family of
+            distributions $Q$ (e.g., Gaussians) and find the $q \in Q$ that best
+            approximates the true posterior.
+        </p>
+
+        <!-- ======== DERIVATION ======== -->
+        <h2>Deriving the ELBO</h2>
+
+        <p>We want to minimize $\operatorname{KL}[q(w) \parallel p(w \mid D)]$. Let's expand it step by step:</p>
+
+        <div class="equation-box">
+            <div class="label">Step 1: Write the definition of KL</div>
+            $$\operatorname{KL}[q \parallel p(w \mid D)] = \int q(w) \log\frac{q(w)}{p(w \mid D)}\,dw$$
+            $$= \mathbb{E}_{q}[\log q(w)] - \mathbb{E}_{q}[\log p(w \mid D)]$$
+        </div>
+
+        <div class="equation-box">
+            <div class="label">Step 2: Replace $p(w \mid D)$ using Bayes' theorem</div>
+            $$\text{Recall: } p(w \mid D) = \frac{p(D \mid w)\,p(w)}{p(D)}$$
+            $$\text{Therefore: } \log p(w \mid D) = \log p(D \mid w) + \log p(w) - \log p(D)$$
+            $$\text{Substitute: } \operatorname{KL} = \mathbb{E}_{q}[\log q] - \mathbb{E}_{q}[\log p(D \mid w) + \log p(w) - \log p(D)]$$
+            $$= \mathbb{E}_{q}[\log q] - \mathbb{E}_{q}[\log p(D \mid w)] - \mathbb{E}_{q}[\log p(w)] + \log p(D)$$
+            $$= (\mathbb{E}_{q}[\log q] - \mathbb{E}_{q}[\log p(w)]) - \mathbb{E}_{q}[\log p(D \mid w)] + \log p(D)$$
+        </div>
+
+        <div class="equation-box">
+            <div class="label">Step 3: Recognize the KL between $q$ and the prior</div>
+            $$\mathbb{E}_{q}[\log q] - \mathbb{E}_{q}[\log p(w)] = \operatorname{KL}[q \parallel p(w)]$$
+            $$\operatorname{KL}[q \parallel p(w \mid D)] = \operatorname{KL}[q \parallel p(w)] - \mathbb{E}_{q}[\log p(D \mid w)] + \log p(D)$$
+        </div>
+
+        <div class="equation-box">
+            <div class="label">Step 4: Rearrange to isolate the ELBO</div>
+            $$\operatorname{KL}[q \parallel p(w \mid D)] = \mathbb{E}_{q}[\log q] - \mathbb{E}_{q}[\log p(D \mid w)] - \mathbb{E}_{q}[\log p(w)] + \log p(D)$$
+            $$= (\mathbb{E}_{q}[\log q] - \mathbb{E}_{q}[\log p(w)]) - \mathbb{E}_{q}[\log p(D \mid w)] + \log p(D)$$
+            $$= \operatorname{KL}[q \parallel p(w)] - \mathbb{E}_{q}[\log p(D \mid w)] + \log p(D)$$
+            $$\operatorname{KL}[q \parallel p(w \mid D)] = -\bigl( \color{#1565c0}{\mathbb{E}_{q}[\log p(D \mid w)]} - \color{#e65100}{\operatorname{KL}[q \parallel p(w)]} \bigr) + \log p(D)$$
+            $$\boxed{\operatorname{ELBO}[q] = \color{#1565c0}{\mathbb{E}_{q}[\log p(D \mid w)]} - \color{#e65100}{\operatorname{KL}[q \parallel p(w)]}}$$
+            $$\operatorname{KL}[q \parallel p(w \mid D)] = -\operatorname{ELBO}[q] + \log p(D)$$
+        </div>
+
+        <div class="equation-box">
+            <div class="label">Final result: the ELBO</div>
+            $$\boxed{\operatorname{ELBO}[q] = \underbrace{\color{#1565c0}{\mathbb{E}_{q}[\log p(D \mid w)]}}_{\text{data fit}} - \underbrace{\color{#e65100}{\operatorname{KL}[q \parallel p(w)]}}_{\text{regularization}}}$$
+        </div>
+
+        <p><em>Derivation summary:</em> Starting from $\operatorname{KL}[q \parallel p(w \mid D)]$, we expand the definition, apply Bayes' theorem, separate terms, and recognize that one group forms $\operatorname{KL}[q \parallel p(w)]$. Rearranging isolates the ELBO as the negative of the gap between $\operatorname{KL}[q \parallel p(w \mid D)]$ and $\log p(D)$.</p>
+
+        <p>Since $\operatorname{KL} \ge 0$, we have:</p>
+
+        <div class="equation-box">
+            $$\operatorname{KL}[q \parallel p(w \mid D)] = -\operatorname{ELBO}[q] + \log p(D) \ge 0$$
+            $$\boxed{\operatorname{ELBO}[q] \le \log p(D)}$$
+        </div>
+
+        <p>
+            This is why it's called a <strong>lower bound</strong>: the ELBO is always less than or equal to
+            the log-evidence log p(D). Maximizing the ELBO is equivalent to minimizing KL[q || p(w|D)].
+        </p>
+
+        <!-- ======== INTUITION ======== -->
+        <h2>Intuition: Two Competing Forces</h2>
+
+        <div class="concept-box">
+            <p><strong>$\operatorname{ELBO} = \text{Data Fit} - \operatorname{KL}[q \parallel \text{Prior}]$</strong></p>
+            <p>The ELBO has two terms that pull in opposite directions:</p>
+            <ul>
+                <li><strong>$\mathbb{E}_{q}[\log p(D \mid w)]$</strong> (data fit): push $q$ to put mass on weights that explain the data well. This is like the standard training loss.</li>
+                <li><strong>$-\operatorname{KL}[q \parallel p(w)]$</strong> (regularization): push $q$ to stay close to the prior. This prevents overfitting and keeps the weights from becoming too extreme.</li>
+            </ul>
+        </div>
+
+        <div class="story">
+            <p><strong>Analogy:</strong> You're trying to guess a number. The data fit says "the answer is probably around 7, based on the evidence". The prior says "most numbers in this problem are between -3 and 3". The posterior balances these: it will be somewhere between, weighted by how much data you have.</p>
+        </div>
+
+        <!-- ======== WHY "LOWER BOUND"? ======== -->
+        <h2>Why Is It Called a "Lower Bound"?</h2>
+
+        <p>
+            The ELBO is a lower bound on the log-evidence $\log p(D)$ (also called the "log marginal likelihood").
+            Since $\operatorname{KL} \ge 0$:
+        </p>
+
+        <div class="equation-box">
+            $$\log p(D) \ge \operatorname{ELBO}[q]$$
+        </div>
+
+        <p>
+            The gap between the ELBO and $\log p(D)$ is exactly $\operatorname{KL}[q \parallel p(w \mid D)]$ — the quality of our approximation.
+            If $q$ perfectly matches the posterior, the gap is zero.
+        </p>
+
+        <!-- ======== PRACTICAL COMPUTATION ======== -->
+        <h2>How We Actually Compute It</h2>
+
+        <p>In practice, we approximate the expectation using Monte Carlo sampling:</p>
+
+        <pre><code><span class="code-comment"># Pseudo-code for ELBO computation in a BNN</span>
+<span class="code-keyword">def</span> <span class="code-function">compute_elbo</span>(model, q_dist, prior, x_batch, y_batch):
+    <span class="code-comment"># 1. Sample weights from the variational posterior</span>
+    w_sample = q_dist.sample()
+    
+    <span class="code-comment"># 2. Forward pass with sampled weights</span>
+    predictions = model.forward(x_batch, w_sample)
+    
+    <span class="code-comment"># 3. Data fit term: log-likelihood</span>
+    data_fit = log_likelihood(predictions, y_batch)
+    
+    <span class="code-comment"># 4. KL term (closed-form for Gaussians)</span>
+    kl = kl_divergence(q_dist, prior)
+    
+    <span class="code-comment"># 5. ELBO = data_fit - kl</span>
+    elbo = data_fit - kl / N  <span class="code-comment"># N = number of mini-batches (unbiased estimate)</span>
+    <span class="code-keyword">return</span> -elbo  <span class="code-comment"># return negative for gradient descent</span></code></pre>
+
+        <div class="warning-box">
+            <strong>⚠️ Mini-batch scaling:</strong> In practice, we divide the KL by the number of mini-batches
+            so that the total ELBO over one epoch is unbiased. This is <em>not</em> the same as "KL annealing"
+            (which is a separate trick where you gradually increase the KL weight from 0 to 1 during training,
+            often helpful because the data fit term dominates early on).
+        </div>
+
+        <div class="success-box">
+            <strong>✅ You now understand the core of variational BNNs:</strong>
+            Everything in variational inference revolves around maximizing the ELBO.
+            The different methods (Bayes by Backprop, etc.) are different ways of
+            specifying <em>q</em>, computing the KL, and estimating the expectation
+            efficiently.
+        </div>
+
+        <div class="bottom-nav">
+            <a href="kl-divergence.html">← KL Divergence</a>
+            <a href="variational-inference.html">Next: Variational Inference →</a>
+        </div>
+    </main>
+</div>
+<script src="../nav.js"></script>
+<script src="../search.js"></script>
+<script src="../toc.js"></script>
+</body>
+</html>

@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Neural Networks — LLM Wiki</title>
+    <link rel="stylesheet" href="../style.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+        onload="renderMathInElement(document.body, {delimiters: [
+            {left: '$$', right: '$$', display: true},
+            {left: '$', right: '$', display: false}
+        ]});"></script>
+</head>
+<body>
+<div class="wrapper">
+                    <nav class="sidebar">
+        <h2>📚 Python &amp; DL Wiki</h2>
+        <div class="tagline">LLM-maintained knowledge base</div>
+        <ul class="sidebar-nav">
+            <li><a href="../index.html">🏠 Wiki Index</a></li>
+            <li><a href="../log.html">📋 Activity Log</a></li>
+            <li><a href="../../notes.html" style="color:#f39c12; font-weight:600;">⬅ Back to Notes</a></li>
+            <li class="sidebar-section">
+                <div class="section-header">
+                    <span class="section-toggle">▶</span>
+                    <span class="section-label">BNN</span>
+                </div>
+                <ul class="section-pages">
+                    <li><a href="bnn-for-beginners.html">📖 BNN Overview</a></li>
+                    <li><a href="neural-network.html">1. Neural Networks</a></li>
+                    <li><a href="bayesian-inference.html">2. Bayesian Inference</a></li>
+                    <li><a href="probability-distributions.html">3. Probability Distributions</a></li>
+                    <li><a href="uncertainty.html">4. Types of Uncertainty</a></li>
+                    <li><a href="kl-divergence.html">5. KL Divergence</a></li>
+                    <li><a href="evidence-lower-bound.html">6. The ELBO</a></li>
+                    <li><a href="variational-inference.html">7. Variational Inference</a></li>
+                    <li><a href="mc-dropout.html">8. MC Dropout</a></li>
+                    <li><a href="laplace-approximation.html">9. Laplace Approximation</a></li>
+                    <li><a href="mcmc-hmc.html">10. MCMC &amp; HMC</a></li>
+                    <li class="sidebar-subsection">
+                        <div class="subsection-header">
+                            <span class="subsection-toggle">▶</span>
+                            <span class="subsection-label">Papers</span>
+                        </div>
+                        <ul class="subsection-pages">
+                            <li><a href="bnn-sources.html">📖 Paper Index</a></li>
+                            <li><a href="blundell-bayes-by-backprop.html">Bayes by Backprop</a></li>
+                            <li><a href="hernandez-probabilistic-backprop.html">Probabilistic Backprop</a></li>
+                            <li><a href="louizos-normalizing-flows.html">Normalizing Flows</a></li>
+                            <li><a href="gal-dropout-bayesian.html">Dropout as Bayesian</a></li>
+                            <li><a href="daxberger-laplace-redux.html">Laplace Redux</a></li>
+                            <li><a href="izmailov-bnn-posteriors.html">BNN Posteriors</a></li>
+                            <li><a href="betancourt-hmc.html">HMC Intro</a></li>
+                            <li><a href="jospin-hands-on-bnn.html">Hands-on BNN</a></li>
+                            <li><a href="goan-fookes-survey.html">Survey (Goan &amp; Fookes)</a></li>
+                            <li><a href="wang-yeung-survey.html">Survey (Wang &amp; Yeung)</a></li>
+                            <li><a href="magris-bayesian-survey.html">Bayesian Survey (Magris)</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </li>
+        </ul>
+    </nav>
+
+    <main class="main-content">
+        <a href="../index.html" class="back-link">← Back to main page</a>
+        <div class="breadcrumb"><a href="../index.html">Home</a> / Neural Networks</div>
+        <h1>1. What is a Neural Network?</h1>
+
+        <div class="key-insight">
+            <strong>🎯 In one sentence</strong>
+            <p>A neural network is just a function — a composition of simple linear transformations and simple nonlinearities — that we tune to fit data.</p>
+        </div>
+
+        <p>
+            If you know linear algebra and calculus, you already know 90% of what a neural network is.
+            The rest is just vocabulary and engineering.
+        </p>
+
+        <!-- ======== THE BASIC BUILDING BLOCK ======== -->
+        <h2>The Basic Building Block: A Linear Layer</h2>
+
+        <p>
+            The simplest piece of a neural network is a <strong>linear layer</strong>.
+            It takes an input vector $x \in \mathbb{R}^{n}$ and produces an output vector $y \in \mathbb{R}^{m}$:
+        </p>
+
+        <div class="equation-box">
+            <div class="label">Linear Layer</div>
+            $$y = W x + b$$
+        </div>
+
+        <p>Where:</p>
+        <ul>
+            <li><strong>$W \in \mathbb{R}^{m \times n}$</strong> is the <strong>weight matrix</strong> (the "knobs" we tune)</li>
+            <li><strong>$b \in \mathbb{R}^{m}$</strong> is the <strong>bias vector</strong> (an offset)</li>
+        </ul>
+
+        <p>
+            That's it. It's just matrix multiplication plus a constant.
+            If <em>m</em> = 1 and <em>n</em> = 1, this is the familiar <em>y</em> = <em>wx</em> + <em>b</em> from high school.
+        </p>
+
+        <div class="info-box">
+            <strong>🔍 For the mathematician:</strong> A linear layer is an affine transformation from ℝ<sup>n</sup> to ℝ<sup>m</sup>.
+            The weights <em>W</em> define a linear map; the bias <em>b</em> translates it.
+        </div>
+
+        <!-- ======== ACTIVATION FUNCTIONS ======== -->
+        <h2>Activation Functions: Why We Need Nonlinearity</h2>
+
+        <p>
+            If we only stacked linear layers, the whole network would still be linear — 
+            a composition of affine maps is still affine. That's boring. 
+            To learn interesting patterns, we need <strong>nonlinearity</strong>.
+        </p>
+
+        <p>After each linear layer, we apply a simple nonlinear function. The most common is <strong>ReLU</strong>:</p>
+
+        <div class="equation-box">
+            <div class="label">ReLU (Rectified Linear Unit)</div>
+            ReLU(<em>z</em>) = max(0, <em>z</em>)
+        </div>
+
+        <p>Other common ones:</p>
+        <ul>
+            <li><strong>Sigmoid:</strong> σ(<em>z</em>) = 1 / (1 + <em>e^{-z}</em>) — squashes to (0, 1)</li>
+            <li><strong>Tanh:</strong> tanh(<em>z</em>) = (<em>e^{z}</em> - <em>e^{-z}</em>) / (<em>e^{z}</em> + <em>e^{-z}</em>) — squashes to (-1, 1)</li>
+        </ul>
+
+        <!-- ======== THE FULL NETWORK ======== -->
+        <h2>Putting It Together: A Neural Network</h2>
+
+        <p>A neural network is just a composition of alternating linear layers and nonlinearities:</p>
+
+        <div class="equation-box">
+            <div class="label">A 2-Layer Neural Network</div>
+            <em>f</em>(<em>x</em>) = ReLU(<em>W</em><sub>2</sub> · ReLU(<em>W</em><sub>1</sub> <em>x</em> + <em>b</em><sub>1</sub>) + <em>b</em><sub>2</sub>)
+        </div>
+
+        <p>
+            The "depth" is the number of layers. A "deep" network has many layers.
+            Each intermediate vector is called a <strong>hidden layer</strong>.
+            The numbers of neurons (dimensions) in each layer are <strong>hyperparameters</strong> we choose.
+        </p>
+
+        <div class="story">
+            <p><strong>Analogy:</strong> Think of a neural network as a very long sequence of small matrix operations,
+            each followed by a "gate" that clips negative values to zero (ReLU).
+            The weights are the dials — we turn them until the network produces the output we want.</p>
+        </div>
+
+        <!-- ======== CODE EXAMPLE ======== -->
+        <h2>Code: A Neural Network in PyTorch</h2>
+
+        <p>Here is a complete, minimal neural network for classifying the digits 0-9 from 28×28 images:</p>
+
+        <pre><code><span class="code-keyword">import</span> torch
+<span class="code-keyword">import</span> torch.nn <span class="code-keyword">as</span> nn
+
+<span class="code-comment"># Define the network architecture</span>
+<span class="code-keyword">class</span> <span class="code-class">MyNetwork</span>(nn.Module):
+    <span class="code-keyword">def</span> <span class="code-function">__init__</span>(self):
+        <span class="code-keyword">super</span>().<span class="code-function">__init__</span>()
+        self.layer1 = nn.Linear(28*28, 128)   <span class="code-comment"># W1: (128 × 784), b1: (128)</span>
+        self.layer2 = nn.Linear(128, 64)       <span class="code-comment"># W2: (64 × 128), b2: (64)</span>
+        self.layer3 = nn.Linear(64, 10)        <span class="code-comment"># W3: (10 × 64),  b3: (10)</span>
+        self.relu   = nn.ReLU()
+
+    <span class="code-keyword">def</span> <span class="code-function">forward</span>(self, x):
+        <span class="code-comment"># x shape: (batch_size, 784) — a batch of flattened images</span>
+        x = self.relu(self.layer1(x))   <span class="code-comment"># → (batch, 128)</span>
+        x = self.relu(self.layer2(x))   <span class="code-comment"># → (batch, 64)</span>
+        x = self.layer3(x)              <span class="code-comment"># → (batch, 10) — no ReLU on last layer</span>
+        <span class="code-keyword">return</span> x
+
+<span class="code-comment"># Create the network</span>
+model = MyNetwork()
+
+<span class="code-comment"># Test it with random data</span>
+fake_images = torch.randn(32, 784)   <span class="code-comment"># 32 random images</span>
+output = model(fake_images)           <span class="code-comment"># → 32 rows of 10 numbers (scores for each digit)</span>
+print(output.shape)                   <span class="code-comment"># → torch.Size([32, 10])</span></code></pre>
+
+        <div class="info-box">
+            <strong>🔍 What just happened?</strong> We defined 3 weight matrices. Each <code>nn.Linear</code> creates
+            a matrix <em>W</em> and a bias <em>b</em> internally. The <code>forward</code> method chains them together
+            with ReLU nonlinearities. The output is 10 numbers per image — scores for "is this a 0?", "is this a 1?", etc.
+        </div>
+
+        <!-- ======== TRAINING ======== -->
+        <h2>How Training Works (The Short Version)</h2>
+
+        <p>
+            We have a <strong>loss function</strong> that measures how wrong the network's outputs are.
+            The most common is <strong>cross-entropy loss</strong> for classification or
+            <strong>mean squared error</strong> for regression.
+        </p>
+
+        <p>
+            Training uses <strong>gradient descent</strong>: compute the gradient of the loss with respect to
+            every weight (this is called <strong>backpropagation</strong>), then nudge the weights slightly
+            in the direction that reduces the loss.
+        </p>
+
+        <pre><code><span class="code-comment"># Training loop (conceptual)</span>
+optimizer = torch.optim.Adam(model.parameters(), lr=0.001)
+loss_fn   = nn.CrossEntropyLoss()
+
+<span class="code-keyword">for</span> images, labels <span class="code-keyword">in</span> training_data:
+    predictions = model(images)          <span class="code-comment"># forward pass</span>
+    loss = loss_fn(predictions, labels)  <span class="code-comment"># how wrong are we?</span>
+    
+    optimizer.zero_grad()                <span class="code-comment"># clear old gradients</span>
+    loss.backward()                      <span class="code-comment"># compute gradients (backpropagation)</span>
+    optimizer.step()                     <span class="code-comment"># update weights slightly</span></code></pre>
+
+        <p>
+            After many iterations, the weights converge to values that make the network accurate.
+            This is the <strong>trained model</strong>.
+        </p>
+
+        <!-- ======== THE PROBLEM ======== -->
+        <h2>The Problem: Neural Networks Don't Know What They Don't Know</h2>
+
+        <div class="warning-box">
+            <strong>⚠️ Key issue:</strong> After training, the network gives you <em>one answer</em> per input.
+            It doesn't tell you "I'm very sure this is a 7" vs "I'm guessing this might be a 7".
+            For high-stakes decisions, that's a serious limitation.
+        </div>
+
+        <p>
+            A <strong>Bayesian neural network</strong> fixes this by replacing the fixed weights
+            with distributions. That's what the rest of this guide is about.
+        </p>
+
+        <div class="bottom-nav">
+            <a href="../index.html">← Main Page</a>
+            <a href="bayesian-inference.html">Next: Bayesian Inference →</a>
+        </div>
+    </main>
+</div>
+<script src="../nav.js"></script>
+<script src="../search.js"></script>
+<script src="../toc.js"></script>
+</body>
+</html>

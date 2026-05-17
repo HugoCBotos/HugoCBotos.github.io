@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bayes by Backprop — Blundell 2015</title>
+    <link rel="stylesheet" href="../../style.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+        onload="renderMathInElement(document.body, {delimiters: [
+            {left: '$$', right: '$$', display: true},
+            {left: '$', right: '$', display: false}
+        ]});"></script>
+</head>
+<body>
+<div class="wrapper">
+    <nav class="sidebar">
+        <h2>🧠 BNN References</h2>
+        <ul class="sidebar-nav">
+            <li><a href="../index.html">🏠 Back to References</a></li>
+            <li><a href="../../index.html">🧠 Main Tutorial</a></li>
+            <li class="section-label">Variational Inference</li>
+            <li><a href="blundell-bayes-by-backprop.html" class="active">Blundell — Bayes by Backprop</a></li>
+            <li><a href="hernandez-probabilistic-backprop.html">Hernández-Lobato — Prob. Backprop</a></li>
+            <li><a href="louizos-normalizing-flows.html">Louizos — Normalizing Flows</a></li>
+            <li class="section-label">Dropout &amp; Approximations</li>
+            <li><a href="gal-dropout-bayesian.html">Gal — Dropout as Bayesian</a></li>
+            <li class="section-label">Laplace Approximations</li>
+            <li><a href="daxberger-laplace-redux.html">Daxberger — Laplace Redux</a></li>
+            <li class="section-label">Empirical Studies</li>
+            <li><a href="izmailov-bnn-posteriors.html">Izmailov — BNN Posteriors</a></li>
+            <li class="section-label">Foundations &amp; MCMC</li>
+            <li><a href="betancourt-hmc.html">Betancourt — HMC Intro</a></li>
+            <li class="section-label">Tutorials &amp; Surveys</li>
+            <li><a href="jospin-hands-on-bnn.html">Jospin — Hands-on BNN</a></li>
+            <li><a href="goan-fookes-survey.html">Goan &amp; Fookes — Survey</a></li>
+            <li><a href="wang-yeung-survey.html">Wang &amp; Yeung — Survey</a></li>
+            <li><a href="magris-bayesian-survey.html">Magris — Bayesian Learning Survey</a></li>
+        </ul>
+    </nav>
+    <main class="main-content">
+        <a href="../index.html" class="back-link">← Back to main page</a>
+        <div class="concept-header">
+            <div class="breadcrumb"><a href="../index.html">Home</a> / Bayes by Backprop</div>
+            <h1>Bayes by Backprop</h1>
+            <p><em>Weight Uncertainty in Neural Networks</em> — Blundell, Cornebise, Kavukcuoglu, Wierstra (2015)</p>
+        </div>
+
+        <div class="citation">
+            <strong>📄 Paper:</strong> <a href="https://arxiv.org/abs/1505.05424">arXiv:1505.05424</a><br>
+            <strong>📁 Source:</strong> <code>2015_Blundell_Bayes_by_Backprop.pdf</code>
+        </div>
+
+        <div class="key-insight">
+            <strong>🎯 Core Idea</strong>
+            <p>Instead of learning one fixed number per weight (as in standard neural networks), learn <em>two</em> numbers per weight: a best guess (mean), and a range of uncertainty (spread). Then, when making predictions, randomly wiggle the weights according to their spreads and average the results — you get an answer plus a confidence interval.</p>
+        </div>
+
+        <h2>What Problem Does This Solve?</h2>
+        <p>In a standard neural network, each weight $w$ is a single number. Training finds the single best value for each weight. This gives good predictions on average, but the network has no way of telling you when it's uncertain — it always gives one answer, even when that answer is a wild guess.</p>
+        <p>Bayes by Backprop says: instead of learning one number per weight, learn a <strong>Gaussian distribution</strong> for each weight. A Gaussian is defined by two numbers: a mean $\mu$ (the best guess) and a standard deviation $\sigma$ (the spread). When we want to use the network, we:</p>
+        <ol>
+            <li><strong>Sample</strong> random weights from each Gaussian — this gives one "virtual network"</li>
+            <li>Run a forward pass through this virtual network</li>
+            <li>Repeat $T$ times with different random weight samples</li>
+            <li><strong>Average</strong> the $T$ outputs → this is your prediction</li>
+            <li><strong>Take the variance</strong> of the $T$ outputs → this is your uncertainty estimate</li>
+        </ol>
+        <p>If the $T$ outputs agree closely, the network is confident. If they disagree wildly, the network is saying "I have no idea."</p>
+
+        <h2>How to Train: The ELBO</h2>
+        <p>Training means finding the right $\mu$ and $\sigma$ for every weight. The objective function has two competing goals:</p>
+        <div class="equation-box">
+            $$\text{ELBO} = \underbrace{\mathbb{E}_{q}[\log p(D \mid w)]}_{\text{make good predictions}} - \underbrace{\text{KL}[q(w) \parallel p(w)]}_{\text{keep weights small}}$$
+        </div>
+        <ul>
+            <li><strong>Make good predictions (first term):</strong> The network's predictions should match the training data. This is the same goal as standard training.</li>
+            <li><strong>Keep weights small (second term):</strong> Regularization — a penalty term that discourages the weight distributions from becoming too spread out. This prevents overfitting and keeps the model simple unless the data strongly demands complexity.</li>
+        </ul>
+        <p>The name "ELBO" just means this is a lower bound on something we'd really like to compute (the evidence), but can't. Maximizing the ELBO is the best we can do.</p>
+
+        <h2>The Tricky Part: Making Randomness Differentiable</h2>
+        <p>Here's the technical difficulty: we need to compute gradients (derivatives) of the loss with respect to $\mu$ and $\sigma$. But the network's output depends on random samples from $\mathcal{N}(\mu, \sigma^2)$ — and you can't differentiate through a random number generator. If you try, the gradient is noise.</p>
+        <p>The <strong>reparameterization trick</strong> solves this with a simple math trick:</p>
+        <div class="equation-box">
+            $$w = \mu + \sigma \cdot \varepsilon, \quad \text{where } \varepsilon \sim \mathcal{N}(0, 1)$$
+        </div>
+        <p>Instead of sampling $w$ directly (which blocks gradients), sample a standard random number $\varepsilon$ from $\mathcal{N}(0, 1)$ (which doesn't depend on $\mu$ or $\sigma$), then <em>scale and shift</em> it. Now the gradient can flow through $\mu$ and $\sigma$ — they're just deterministic operations.</p>
+        <table>
+            <tr><th>Wrong way (no gradient)</th><th>Right way (reparameterization)</th></tr>
+            <tr>
+                <td>$w \sim \mathcal{N}(\mu, \sigma^2)$<br>$\frac{\partial \text{loss}}{\partial \mu} = ?$</td>
+                <td>$\varepsilon \sim \mathcal{N}(0, 1)$ (sampled once)<br>$w = \mu + \sigma \cdot \varepsilon$<br>$\frac{\partial \text{loss}}{\partial \mu} = \frac{\partial \text{loss}}{\partial w} \cdot 1$ ✓</td>
+            </tr>
+        </table>
+
+        <h2>Noise Reduction: Sampling Activations Instead of Weights</h2>
+        <p>The reparameterization trick lets gradients flow, but the estimates can be <strong>noisy</strong> — especially when you have millions of weights and each one gets its own random sample. The noise in the gradients makes training slow and unstable.</p>
+        <p>A follow-up paper (Kingma, Salimans &amp; Welling 2015) noticed something clever: instead of adding randomness to each <em>weight</em> individually, you can add randomness to the <em>pre-activation</em> (the weighted sum before the activation function). For a layer $b = w a$ (where $w$ is Gaussian-distributed and $a$ is the input):</p>
+        <div class="equation-box">
+            $$b \sim \mathcal{N}(\mu a,\; \sigma^2 a^2)$$
+        </div>
+        <p>This single random sample replaces millions of individual weight samples. Less randomness → less gradient noise → faster, more stable training. This is called the <strong>local reparameterization trick</strong>. It's not in Blundell's original paper, but it's commonly used together with Bayes by Backprop in practice.</p>
+
+        <h2>Algorithm Summary (Plain English)</h2>
+        <ol>
+            <li><strong>To make a prediction</strong> with current $\mu, \sigma$: sample random weights $w = \mu + \sigma \cdot \varepsilon$, run the network, record the output. Repeat $T$ times. Average = prediction, variance = uncertainty.</li>
+            <li><strong>To train</strong> (update $\mu, \sigma$):
+                <ol style="list-style-type: lower-alpha; margin-top: 0.3rem;">
+                    <li>Sample random weights using reparameterization (or the local version for efficiency).</li>
+                    <li>Compute the loss: prediction error + the KL penalty (which is just a formula involving $\mu$, $\sigma$, and the prior).</li>
+                    <li>Backpropagate gradients to $\mu$ and $\sigma$ — this works because of the reparameterization trick.</li>
+                    <li>Update $\mu$ and $\sigma$ with a standard optimizer (Adam, SGD).</li>
+                </ol>
+            </li>
+        </ol>
+
+        <h2>Practical Notes</h2>
+        <ul>
+            <li><strong>Ensuring $\sigma > 0$:</strong> Standard deviations must be positive numbers. Instead of learning $\sigma$ directly (which could go negative), learn $\rho$ (any real number) and compute $\sigma = \log(1 + e^\rho)$. This is called the "softplus" transformation and it's always positive.</li>
+            <li><strong>What prior to use?</strong> A single Gaussian prior tends to make all weights too similar. Blundell uses a <em>mixture of two Gaussians</em> — one with small spread (encourages tiny weights, useful for pruning) and one with large spread (allows important weights to grow).</li>
+            <li><strong>Cost:</strong> $2\times$ the parameters of a standard network (every weight has a $\mu$ and a $\sigma$), and about $2\times$ slower per forward pass (due to sampling).</li>
+            <li><strong>KL annealing:</strong> The KL penalty can overwhelm the prediction term early in training. Gradually increasing its weight (starting from 0) often helps.</li>
+        </ul>
+
+        <h2>Pros &amp; Cons for NN Practitioners</h2>
+        <table>
+            <tr><th>✅ Advantages</th><th>❌ Disadvantages</th></tr>
+            <tr>
+                <td>Principled Bayesian inference with uncertainty estimates</td>
+                <td>Gaussian posterior assumption is restrictive — real posteriors are often multi-modal and heavy-tailed</td>
+            </tr>
+            <tr>
+                <td>Works with any architecture (MLP, CNN, RNN)</td>
+                <td>2× parameter blowup can be significant for large models</td>
+            </tr>
+            <tr>
+                <td>Standard backpropagation — easy to implement in PyTorch/TF</td>
+                <td>Gradient estimates can still be high-variance for deep networks</td>
+            </tr>
+            <tr>
+                <td>Provides both epistemic and aleatoric uncertainty</td>
+                <td>Diagonal covariance posterior ignores weight correlations</td>
+            </tr>
+        </table>
+
+        <div class="info-box">
+            <strong>🔗 Connections:</strong> This paper is the foundation for most modern VI-based BNN work. Louizos &amp; Welling (2017) extended it with normalizing flows for richer posteriors. Izmailov et al. (2021) showed that the Gaussian posterior assumption is often severely misspecified — consider this when interpreting uncertainty.
+        </div>
+
+        <div class="bottom-nav">
+            <a href="../index.html">← Main Page</a>
+            <a href="hernandez-probabilistic-backprop.html">Next: Probabilistic Backpropagation →</a>
+        </div>
+    </main>
+</div>
+<script src="../nav.js"></script>
+</body>
+</html>

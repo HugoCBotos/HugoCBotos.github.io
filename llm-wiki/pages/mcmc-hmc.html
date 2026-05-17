@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MCMC & HMC — LLM Wiki</title>
+    <link rel="stylesheet" href="../style.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+        onload="renderMathInElement(document.body, {delimiters: [
+            {left: '$$', right: '$$', display: true},
+            {left: '$', right: '$', display: false}
+        ]});"></script>
+</head>
+<body>
+<div class="wrapper">
+                    <nav class="sidebar">
+        <h2>📚 Python &amp; DL Wiki</h2>
+        <div class="tagline">LLM-maintained knowledge base</div>
+        <ul class="sidebar-nav">
+            <li><a href="../index.html">🏠 Wiki Index</a></li>
+            <li><a href="../log.html">📋 Activity Log</a></li>
+            <li><a href="../../notes.html" style="color:#f39c12; font-weight:600;">⬅ Back to Notes</a></li>
+            <li class="sidebar-section">
+                <div class="section-header">
+                    <span class="section-toggle">▶</span>
+                    <span class="section-label">BNN</span>
+                </div>
+                <ul class="section-pages">
+                    <li><a href="bnn-for-beginners.html">📖 BNN Overview</a></li>
+                    <li><a href="neural-network.html">1. Neural Networks</a></li>
+                    <li><a href="bayesian-inference.html">2. Bayesian Inference</a></li>
+                    <li><a href="probability-distributions.html">3. Probability Distributions</a></li>
+                    <li><a href="uncertainty.html">4. Types of Uncertainty</a></li>
+                    <li><a href="kl-divergence.html">5. KL Divergence</a></li>
+                    <li><a href="evidence-lower-bound.html">6. The ELBO</a></li>
+                    <li><a href="variational-inference.html">7. Variational Inference</a></li>
+                    <li><a href="mc-dropout.html">8. MC Dropout</a></li>
+                    <li><a href="laplace-approximation.html">9. Laplace Approximation</a></li>
+                    <li><a href="mcmc-hmc.html">10. MCMC &amp; HMC</a></li>
+                    <li class="sidebar-subsection">
+                        <div class="subsection-header">
+                            <span class="subsection-toggle">▶</span>
+                            <span class="subsection-label">Papers</span>
+                        </div>
+                        <ul class="subsection-pages">
+                            <li><a href="bnn-sources.html">📖 Paper Index</a></li>
+                            <li><a href="blundell-bayes-by-backprop.html">Bayes by Backprop</a></li>
+                            <li><a href="hernandez-probabilistic-backprop.html">Probabilistic Backprop</a></li>
+                            <li><a href="louizos-normalizing-flows.html">Normalizing Flows</a></li>
+                            <li><a href="gal-dropout-bayesian.html">Dropout as Bayesian</a></li>
+                            <li><a href="daxberger-laplace-redux.html">Laplace Redux</a></li>
+                            <li><a href="izmailov-bnn-posteriors.html">BNN Posteriors</a></li>
+                            <li><a href="betancourt-hmc.html">HMC Intro</a></li>
+                            <li><a href="jospin-hands-on-bnn.html">Hands-on BNN</a></li>
+                            <li><a href="goan-fookes-survey.html">Survey (Goan &amp; Fookes)</a></li>
+                            <li><a href="wang-yeung-survey.html">Survey (Wang &amp; Yeung)</a></li>
+                            <li><a href="magris-bayesian-survey.html">Bayesian Survey (Magris)</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </li>
+        </ul>
+    </nav>
+
+    <main class="main-content">
+        <a href="../index.html" class="back-link">← Back to main page</a>
+        <div class="breadcrumb"><a href="../index.html">Home</a> / MCMC &amp; HMC</div>
+        <h1>10. MCMC and Hamiltonian Monte Carlo</h1>
+
+        <div class="key-insight">
+            <strong>🎯 In one sentence</strong>
+            <p>Instead of approximating the posterior with a simple distribution (like a Gaussian), MCMC methods generate samples directly from the true posterior by exploring the weight space using a guided random walk. They are the "gold standard" — but too expensive for modern neural networks.</p>
+        </div>
+
+        <p>
+            This page is conceptual. HMC is rarely used for full-size neural networks in practice.
+            But understanding it is essential because it's the reference point against which all other
+            methods are judged. If a cheaper method disagrees with HMC, the cheaper method is wrong.
+        </p>
+
+        <!-- ======== THE BIG IDEA ======== -->
+        <h2>The Big Idea of MCMC</h2>
+
+        <p>
+            <strong>Markov Chain Monte Carlo (MCMC)</strong> is a class of algorithms for sampling from
+            a probability distribution that we can't compute directly. The idea:
+        </p>
+
+        <ol>
+            <li>Start at some point in weight space.</li>
+            <li>Propose a new point (some random modification to the weights).</li>
+            <li>Accept or reject the proposal based on how much it improves the posterior probability.</li>
+            <li>Repeat. The sequence of accepted points forms a "Markov chain" whose distribution
+            converges to the true posterior.</li>
+        </ol>
+
+        <p>
+            After enough steps, the samples <em>w</em><sub>1</sub>, <em>w</em><sub>2</sub>, ..., <em>w</em><sub>T</sub>
+            are approximately drawn from <em>p(w|D)</em>. We can use them to approximate the predictive distribution:
+        </p>
+
+        <div class="equation-box">
+            <div class="label">Predictive distribution via MCMC</div>
+            $$p(y^* \mid x^*, D) \approx \frac{1}{T} \sum_{t=1}^{T} p(y^* \mid x^*, w_t)$$
+        </div>
+
+        <!-- ======== THE PROBLEM WITH NAIVE MCMC ======== -->
+        <h2>The Problem With Simple MCMC</h2>
+
+        <p>
+            The simplest MCMC method is <strong>random-walk Metropolis-Hastings</strong>.
+            It uses <strong>two different</strong> sources of randomness, and confusing them is common:
+        </p>
+
+        <div class="concept-box" style="border-left-color:#e74c3c;">
+            <p><strong>Algorithm (step by step):</strong></p>
+            <ol>
+                <li><strong>Start</strong> at some point <em>w</em> in weight space.</li>
+                <li><strong>Propose</strong> a new point: <em>w'</em> = <em>w</em> + noise.
+                    <br>↳ The <strong>noise</strong> is a random vector (e.g., Gaussian). This is <span style="color:#c0392b;"><strong>randomness source #1</strong></span>: <em>which direction to try.</em>
+                </li>
+                <li><strong>Compute ratio:</strong> <em>r</em> = <em>p(w'|D)</em> / <em>p(w|D)</em>.
+                    <br>↳ This tells us: is the new point more probable (r > 1) or less probable (r < 1) than the current one?</li>
+                <li><strong>Decide:</strong>
+                    <ul>
+                        <li>If <em>r</em> ≥ 1, <strong>always accept</strong>: move to <em>w'</em>.</li>
+                        <li>If <em>r</em> &lt; 1, <strong>accept with probability <em>r</em></strong>.
+                        <br>↳ To do this, draw a uniform random number <em>u</em> ∈ [0, 1]. Accept if <em>r</em> > <em>u</em>.
+                        <br>↳ This <em>u</em> is <span style="color:#2980b9;"><strong>randomness source #2</strong></span>: <em>whether to accept a bad proposal.</em></li>
+                    </ul>
+                </li>
+            </ol>
+        </div>
+
+        <p>Let's be very explicit about the two different "random"s:</p>
+
+        <table>
+            <tr><th></th><th><span style="color:#c0392b;">Randomness #1: Proposal noise</span></th><th><span style="color:#2980b9;">Randomness #2: Acceptance coin-flip</span></th></tr>
+            <tr><td><strong>What it is</strong></td><td>A random vector added to the current weights</td><td>A single random number between 0 and 1</td></tr>
+            <tr><td><strong>Purpose</strong></td><td>Decides <em>where</em> to try next</td><td>Decides <em>whether</em> to go to a worse point</td></tr>
+            <tr><td><strong>Why needed</strong></td><td>Otherwise you'd always stay where you are</td><td>Occasionally accepting worse points lets the chain explore the whole distribution</td></tr>
+            <tr><td><strong>Code</strong></td><td><code>noise = torch.randn(d) * step_size</code></td><td><code>u = torch.rand(1).item()</code></td></tr>
+        </table>
+
+        <h3>Why It Fails in High Dimensions</h3>
+
+        <p>
+            In 1 dimension, random-walk works fine: about half the proposals go uphill (higher probability) and half go downhill.
+            The chain explores the distribution.
+        </p>
+
+        <div class="story">
+            <p><strong>Think of this:</strong> You're standing in a dark room and want to find all the furniture.
+            You take a random step. In 1D (a hallway), a random step goes either left or right — a 50% chance of going the right way.
+            In 1 million dimensions (a hangar), a random step goes in 1 of 10<sup>6</sup> directions.
+            Almost every direction is wrong — you'll just stumble into a wall (low probability region) and get rejected.</p>
+        </div>
+
+        <p>Mathematically, the acceptance rate drops rapidly with dimension because:</p>
+        <ul>
+            <li>The probability of a random direction being "good" scales like <em>d</em><sup>−1/2</sup> (extremely small for large <em>d</em>).</li>
+            <li>To keep acceptance rate reasonable, the step size must shrink like <em>d</em><sup>−1/2</sup>, making exploration painfully slow.</li>
+            <li>The chain becomes "stuck" — consecutive samples are nearly identical (high autocorrelation).</li>
+        </ul>
+
+        <p>
+            This is why random-walk MCMC is useless for neural networks (millions of parameters).
+            HMC fixes this by replacing the <strong>random proposal</strong> with a <strong>gradient-guided proposal</strong> —
+            you use the slope of the posterior to decide which direction to go, rather than guessing randomly.
+        </p>
+
+        <!-- ======== HMC ======== -->
+        <h2>Hamiltonian Monte Carlo (HMC)</h2>
+
+        <p>
+            HMC solves this by using <strong>gradient information</strong> to propose intelligent moves.
+            It's inspired by Hamiltonian mechanics.
+        </p>
+
+        <div class="story">
+            <p><strong>Analogy:</strong> Imagine a frictionless puck sliding on a hilly landscape.
+            The landscape is the negative log-posterior (high hills = low probability).
+            Give the puck a random kick (momentum), let it roll according to physics, and record where it goes.
+            The puck explores the landscape efficiently because it follows the terrain — rolling downhill
+            (toward high probability) and coasting uphill (away from high probability) with momentum.</p>
+        </div>
+
+        <p>The mathematics:</p>
+        <div class="equation-box">
+            <div class="label">HMC Dynamics</div>
+            $$\text{Hamiltonian: } H(w, p) = -\log p(w \mid D) + \frac{1}{2} p^T M^{-1} p$$
+            $$\text{Potential energy: } U(w) = -\log p(w \mid D)$$
+            $$\text{Kinetic energy: } K(p) = \frac{1}{2} p^T M^{-1} p$$
+        </div>
+
+        <p>
+            The algorithm alternates between:
+        </p>
+        <ol>
+            <li><strong>Sample momentum</strong> <em>p</em> ~ N(0, M) (random kick).</li>
+            <li><strong>Simulate Hamiltonian dynamics</strong> for <em>L</em> steps using the leapfrog integrator
+            (follow the terrain using gradient information).</li>
+            <li><strong>Accept/reject</strong> the final (w, p) based on energy conservation (acceptance ≈ 1 with accurate integration).</li>
+        </ol>
+
+        <!-- ======== CODE EXAMPLE ======== -->
+        <h2>HMC in PyTorch (for a Small Model)</h2>
+
+        <p>Here's a minimal HMC implementation for a tiny neural network. This is <strong>not</strong> for production — use Pyro's NUTS instead — but it shows the core logic:</p>
+
+        <pre><code><span class="code-keyword">import</span> torch
+<span class="code-keyword">import</span> torch.nn <span class="code-keyword">as</span> nn
+<span class="code-keyword">import</span> torch.nn.functional <span class="code-keyword">as</span> F
+
+<span class="code-comment"># ---------- Step 1: Define the log-posterior ----------</span>
+<span class="code-keyword">def</span> <span class="code-function">log_posterior</span>(model, x, y, prior_std=1.0):
+    <span class="code-string">"""Compute log p(w|D) = log p(D|w) + log p(w) + constant"""</span>
+    pred = model(x)
+    log_lik = -F.cross_entropy(pred, y)
+    log_prior = 0.0
+    <span class="code-keyword">for</span> param <span class="code-keyword">in</span> model.parameters():
+        log_prior += -0.5 * (param**2 / prior_std**2).sum()
+    <span class="code-keyword">return</span> log_lik + log_prior
+
+<span class="code-comment"># ---------- Step 2: HMC sampler (with Metropolis acceptance) ----------</span>
+<span class="code-keyword">def</span> <span class="code-function">hmc_sample</span>(model, x, y, step_size=0.01, L=20, num_samples=100, prior_std=1.0):
+    <span class="code-string">"""
+    Hamiltonian Monte Carlo.
+    
+    The algorithm:
+    1. Start at current position w.
+    2. Sample random momentum p ~ N(0, I).
+    3. Simulate Hamiltonian dynamics for L leapfrog steps
+       (uses gradient of the posterior to guide the proposal).
+    4. Accept/reject based on energy conservation.
+    
+    In practice: use Pyro's NUTS sampler instead.
+    """</span>
+    samples = []
+    current_w = [p.data.clone() <span class="code-keyword">for</span> p <span class="code-keyword">in</span> model.parameters()]
+    
+    <span class="code-keyword">for</span> _ <span class="code-keyword">in</span> <span class="code-function">range</span>(num_samples * 2):  <span class="code-comment"># extra for burn-in</span>
+        <span class="code-comment"># --- Copy current weights ---</span>
+        w = [p.clone() <span class="code-keyword">for</span> p <span class="code-keyword">in</span> current_w]
+        
+        <span class="code-comment"># --- Sample momentum p ~ N(0, I) ---</span>
+        p = [torch.randn_like(w_i) <span class="code-keyword">for</span> w_i <span class="code-keyword">in</span> w]
+        
+        <span class="code-comment"># Compute current Hamiltonian: H(w, p) = U(w) + K(p)</span>
+        <span class="code-comment"># U(w) = -log p(w|D),  K(p) = ½ p·p</span>
+        <span class="code-keyword">for</span> i, param <span class="code-keyword">in</span> <span class="code-function">enumerate</span>(model.parameters()):
+            param.data = w[i]
+        U_current = -log_posterior(model, x, y, prior_std)
+        K_current = 0.5 * sum((p_i**2).sum() <span class="code-keyword">for</span> p_i <span class="code-keyword">in</span> p)
+        H_current = U_current + K_current
+        
+        <span class="code-comment"># --- Leapfrog integration (L steps) ---</span>
+        <span class="code-keyword">for</span> _ <span class="code-keyword">in</span> <span class="code-function">range</span>(L):
+            <span class="code-comment"># Half-step momentum: p -= ε/2 * ∇U(w)</span>
+            <span class="code-keyword">for</span> i, param <span class="code-keyword">in</span> <span class="code-function">enumerate</span>(model.parameters()):
+                param.data = w[i]
+            log_p = log_posterior(model, x, y, prior_std)
+            log_p.backward()
+            <span class="code-keyword">for</span> i, param <span class="code-keyword">in</span> <span class="code-function">enumerate</span>(model.parameters()):
+                p[i] -= 0.5 * step_size * (-param.grad)  <span class="code-comment"># ∇U = -∇log_p</span>
+            
+            <span class="code-comment"># Full-step position: w += ε * p</span>
+            <span class="code-keyword">for</span> i <span class="code-keyword">in</span> <span class="code-function">range</span>(len(w)):
+                w[i] = w[i] + step_size * p[i]
+                model.parameters()[i].data = w[i]
+                model.parameters()[i].grad = None  <span class="code-comment"># clear gradients</span>
+            
+            <span class="code-comment"># Another half-step momentum: p -= ε/2 * ∇U(w_new)</span>
+            log_p = log_posterior(model, x, y, prior_std)
+            log_p.backward()
+            <span class="code-keyword">for</span> i, param <span class="code-keyword">in</span> <span class="code-function">enumerate</span>(model.parameters()):
+                p[i] -= 0.5 * step_size * (-param.grad)
+                param.grad = None
+        
+        <span class="code-comment"># --- Compute Hamiltonian at proposal ---</span>
+        U_proposed = -log_posterior(model, x, y, prior_std)
+        K_proposed = 0.5 * sum((p_i**2).sum() <span class="code-keyword">for</span> p_i <span class="code-keyword">in</span> p)
+        H_proposed = U_proposed + K_proposed
+        
+        <span class="code-comment"># --- Metropolis accept/reject based on energy difference ---</span>
+        delta_H = H_proposed - H_current
+        <span class="code-keyword">if</span> delta_H &lt; 0 <span class="code-keyword">or</span> torch.rand(1).item() &lt; torch.exp(-delta_H):
+            current_w = [w_i.clone() <span class="code-keyword">for</span> w_i <span class="code-keyword">in</span> w]  <span class="code-comment"># accept</span>
+        
+        <span class="code-comment"># Store current sample (accepted or not)</span>
+        <span class="code-keyword">for</span> i, param <span class="code-keyword">in</span> <span class="code-function">enumerate</span>(model.parameters()):
+            param.data = current_w[i]
+        samples.append([w_i.clone() <span class="code-keyword">for</span> w_i <span class="code-keyword">in</span> current_w])
+    
+    <span class="code-keyword">return</span> samples[num_samples:]  <span class="code-comment"># discard burn-in</span></code></pre>
+
+        <div class="warning-box">
+            <strong>⚠️ This code is for illustration only!</strong> In practice, use
+            <a href="http://pyro.ai">Pyro's NUTS sampler</a> or
+            <a href="https://www.tensorflow.org/probability">TensorFlow Probability's HMC</a>.
+            They handle step size adaptation, mass matrix estimation, and convergence diagnostics
+            automatically. The code above uses a fixed step size and diagonal mass matrix (M = I),
+            which will perform poorly without careful tuning.
+        </div>
+
+        <div class="info-box">
+            <strong>✅ Note on the accept/reject step:</strong> The Metropolis-Hastings accept/reject
+            step (checking <code>exp(-ΔH)</code> against a random number) is <strong>essential</strong>
+            for valid posterior sampling. Without it, the trajectory is just gradient-guided optimization —
+            it would not produce samples from the true posterior. Even with an accurate leapfrog integrator,
+            numerical errors accumulate, making the correction necessary. The code above correctly implements this step.
+        </div>
+
+        <!-- ======== WHY HMC IS THE GOLD STANDARD ======== -->
+        <h2>Why HMC is the Gold Standard</h2>
+
+        <ul>
+            <li><strong>Asymptotically exact:</strong> As the number of samples → ∞, the distribution of samples converges to the true posterior. No approximation error (unlike VI or Laplace).</li>
+            <li><strong>Gradient-guided:</strong> Uses the geometry of the posterior to propose efficient moves, unlike random-walk Metropolis.</li>
+            <li><strong>Reference for evaluation:</strong> When Izmailov et al. (2021) wanted to know how bad VI and Laplace approximations are, they compared them to HMC.</li>
+        </ul>
+
+        <!-- ======== WHY IT'S IMPRACTICAL FOR LARGE NNS ======== -->
+        <h2>Why It's Rarely Used for Modern Networks</h2>
+
+        <table>
+            <tr><th>Requirement</th><th>HMC</th><th>Practical Implication</th></tr>
+            <tr>
+                <td>Gradients of full log-posterior</td>
+                <td>Needs gradient of <em>all</em> data per step</td>
+                <td>Can't use mini-batches (stochastic gradients break detailed balance)</td>
+            </tr>
+            <tr>
+                <td>Number of gradient evaluations</td>
+                <td>L × (N_data) per sample</td>
+                <td>100-1000× more computation than standard training</td>
+            </tr>
+            <tr>
+                <td>Autocorrelation</td>
+                <td>Needs many samples for accurate estimates</td>
+                <td>Need to run long chains (10K+ samples)</td>
+            </tr>
+            <tr>
+                <td>Tuning</td>
+                <td>Step size, trajectory length, mass matrix</td>
+                <td>Requires careful adaptation (NUTS automates this but is still expensive)</td>
+            </tr>
+        </table>
+
+        <p>
+            <strong>Practical verdict:</strong> HMC is feasible for models with up to ~10⁴ parameters.
+            Beyond that, use VI, MC Dropout, or Laplace. But <strong>always</strong> validate your
+            approximation against HMC on a smaller version of your problem if possible.
+        </p>
+
+        <!-- ======== COMPARISON TABLE ======== -->
+        <h2>Summary: Theoretical Guarantees &amp; When to Use</h2>
+
+        <p>
+            For a quick cost/quality comparison, see the table on the
+            <a href="../index.html#comparison">main page</a>. The table below focuses on
+            <strong>theoretical guarantees</strong> and practical considerations instead.
+        </p>
+
+        <table>
+            <tr><th>Method</th><th>Posterior type</th><th>Asymptotically exact?</th><th>Mini-batch friendly?</th><th>Best for</th></tr>
+            <tr>
+                <td><a href="variational-inference.html">Bayes by Backprop</a></td>
+                <td>Gaussian (parameterized)</td>
+                <td>No (fixed family)</td>
+                <td>✅ Yes</td>
+                <td>Small models, principled inference</td>
+            </tr>
+            <tr>
+                <td><a href="mc-dropout.html">MC Dropout</a></td>
+                <td>Bernoulli dropout mask</td>
+                <td>No (crude posterior)</td>
+                <td>✅ Yes</td>
+                <td>First thing to try</td>
+            </tr>
+            <tr>
+                <td><a href="laplace-approximation.html">Laplace</a></td>
+                <td>Gaussian (local curvature)</td>
+                <td>No (local only)</td>
+                <td>✅ Yes (post-hoc)</td>
+                <td>Pretrained models, post-hoc</td>
+            </tr>
+            <tr>
+                <td><strong>HMC</strong></td>
+                <td>No fixed form (samples)</td>
+                <td>✅ Yes (as T→∞)</td>
+                <td>❌ No</td>
+                <td>Small models, reference benchmark</td>
+            </tr>
+        </table>
+
+        <div class="success-box">
+            <strong>🏁 You've completed the guide!</strong> Go back to the
+            <a href="../index.html">main page</a> to review the big picture.
+            If you want the actual papers behind all this, check the
+            <a href="../sources/index.html">reference compendium</a> in the sources folder.
+        </div>
+
+        <div class="bottom-nav">
+            <a href="laplace-approximation.html">← Laplace Approximation</a>
+            <a href="../index.html">🏠 Back to Main →</a>
+        </div>
+    </main>
+</div>
+<script src="../nav.js"></script>
+<script src="../search.js"></script>
+<script src="../toc.js"></script>
+</body>
+</html>

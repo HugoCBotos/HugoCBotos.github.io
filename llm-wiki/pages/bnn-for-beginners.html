@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bayesian Neural Networks — For Beginners — LLM Wiki</title>
+    <link rel="stylesheet" href="../style.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+        onload="renderMathInElement(document.body, {delimiters: [
+            {left: '$$', right: '$$', display: true},
+            {left: '$', right: '$', display: false}
+        ]});"></script>
+</head>
+<body>
+<div class="wrapper">
+                <nav class="sidebar">
+        <h2>📚 Python &amp; DL Wiki</h2>
+        <div class="tagline">LLM-maintained knowledge base</div>
+        <ul class="sidebar-nav">
+            <li><a href="../../notes.html" style="color:#f39c12; font-weight:600;">⬅ Back to Notes</a></li>
+            <li><a href="../index.html">🏠 Wiki Index</a></li>
+            <li><a href="../log.html">📋 Activity Log</a></li>
+            <li class="sidebar-section">
+                <div class="section-header">
+                    <span class="section-toggle">▶</span>
+                    <span class="section-label">BNN</span>
+                </div>
+                <ul class="section-pages">
+                    <li><a href="bnn-for-beginners.html">📖 BNN Overview</a></li>
+                    <li><a href="neural-network.html">1. Neural Networks</a></li>
+                    <li><a href="bayesian-inference.html">2. Bayesian Inference</a></li>
+                    <li><a href="probability-distributions.html">3. Probability Distributions</a></li>
+                    <li><a href="uncertainty.html">4. Types of Uncertainty</a></li>
+                    <li><a href="kl-divergence.html">5. KL Divergence</a></li>
+                    <li><a href="evidence-lower-bound.html">6. The ELBO</a></li>
+                    <li><a href="variational-inference.html">7. Variational Inference</a></li>
+                    <li><a href="mc-dropout.html">8. MC Dropout</a></li>
+                    <li><a href="laplace-approximation.html">9. Laplace Approximation</a></li>
+                    <li><a href="mcmc-hmc.html">10. MCMC &amp; HMC</a></li>
+                    <li class="sidebar-subsection">
+                        <div class="subsection-header">
+                            <span class="subsection-toggle">▶</span>
+                            <span class="subsection-label">Papers</span>
+                        </div>
+                        <ul class="subsection-pages">
+                            <li><a href="bnn-sources.html">📖 Paper Index</a></li>
+                            <li><a href="blundell-bayes-by-backprop.html">Bayes by Backprop</a></li>
+                            <li><a href="hernandez-probabilistic-backprop.html">Probabilistic Backprop</a></li>
+                            <li><a href="louizos-normalizing-flows.html">Normalizing Flows</a></li>
+                            <li><a href="gal-dropout-bayesian.html">Dropout as Bayesian</a></li>
+                            <li><a href="daxberger-laplace-redux.html">Laplace Redux</a></li>
+                            <li><a href="izmailov-bnn-posteriors.html">BNN Posteriors</a></li>
+                            <li><a href="betancourt-hmc.html">HMC Intro</a></li>
+                            <li><a href="jospin-hands-on-bnn.html">Hands-on BNN</a></li>
+                            <li><a href="goan-fookes-survey.html">Survey (Goan &amp; Fookes)</a></li>
+                            <li><a href="wang-yeung-survey.html">Survey (Wang &amp; Yeung)</a></li>
+                            <li><a href="magris-bayesian-survey.html">Bayesian Survey (Magris)</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </li>
+        </ul>
+    </nav>
+
+    <main class="main-content">
+        <a href="../index.html" class="back-link">← Back to wiki index</a>
+        <div class="breadcrumb"><a href="../index.html">Home</a> / Bayesian Neural Networks</div>
+
+        <h1>Bayesian Neural Networks — For Beginners</h1>
+
+        <div class="key-insight">
+            <strong>🎯 In one sentence</strong>
+            <p>A Bayesian neural network replaces the fixed weights of a standard neural network with probability distributions — so instead of one guess, you get a guess <em>and</em> a measure of how uncertain you should be.</p>
+        </div>
+
+        <p>
+            You are a mathematician, so the good news is: you already understand 90% of what's needed.
+            The rest is learning a bit of Python vocabulary and the specific way that Bayesian ideas
+            get applied to neural networks. This page builds up from the absolute basics.
+        </p>
+
+        <!-- ======== Part 1: What is a Neural Network? ======== -->
+        <h2>1. What is a Neural Network?</h2>
+
+        <p>
+            A neural network is just a function — a composition of simple linear transformations
+            and simple nonlinearities — that we tune to fit data. That's it.
+        </p>
+
+        <h3>The Basic Building Block: A Linear Layer</h3>
+
+        <p>
+            The simplest piece is a <strong>linear layer</strong>, which is just an affine transformation:
+        </p>
+
+        <div class="equation-box">
+            <div class="label">Linear Layer</div>
+            <em>y</em> = <em>W</em> <em>x</em> + <em>b</em>
+        </div>
+
+        <p>Where:</p>
+        <ul>
+            <li><strong>W</strong> ∈ ℝ<sup>m × n</sup> is the <strong>weight matrix</strong> (the parameters we tune)</li>
+            <li><strong>b</strong> ∈ ℝ<sup>m</sup> is the <strong>bias vector</strong></li>
+            <li><strong>x</strong> ∈ ℝ<sup>n</sup> is the input</li>
+            <li><strong>y</strong> ∈ ℝ<sup>m</sup> is the output</li>
+        </ul>
+
+        <div class="info-box">
+            <strong>🔍 For the mathematician:</strong> This is exactly an affine map between finite-dimensional vector spaces. If <em>m</em> = <em>n</em> = 1, it's the line <em>y</em> = <em>wx</em> + <em>b</em> from high school.
+        </div>
+
+        <h3>Activation Functions: Why We Need Nonlinearity</h3>
+
+        <p>
+            If we only stacked linear layers, the composition would still be linear — an affine map of an affine map is still affine. To learn interesting patterns, we need <strong>nonlinearity</strong>.
+        </p>
+
+        <p>The most common nonlinearity is the <strong>ReLU</strong> (Rectified Linear Unit):</p>
+
+        <div class="equation-box">
+            <div class="label">ReLU</div>
+            ReLU(<em>z</em>) = max(0, <em>z</em>)
+        </div>
+
+        <p>Think of ReLU as a "gate" that passes positive values through and blocks negative ones. Other common activation functions:</p>
+        <ul>
+            <li><strong>Sigmoid:</strong> σ(<em>z</em>) = 1 / (1 + <em>e^{-z}</em>) — squashes to (0, 1)</li>
+            <li><strong>Tanh:</strong> tanh(<em>z</em>) — squashes to (-1, 1)</li>
+        </ul>
+
+        <h3>A Neural Network is a Composition</h3>
+
+        <div class="equation-box">
+            <div class="label">A 2-Layer Neural Network</div>
+            <em>f</em>(<em>x</em>) = ReLU(<em>W</em><sub>2</sub> · ReLU(<em>W</em><sub>1</sub> <em>x</em> + <em>b</em><sub>1</sub>) + <em>b</em><sub>2</sub>)
+        </div>
+
+        <p>
+            Each intermediate vector is called a <strong>hidden layer</strong>. The "depth" is the number of layers.
+            The dimensions of each layer are <strong>hyperparameters</strong> we choose.
+        </p>
+
+        <div class="story">
+            <p><strong>Analogy:</strong> A neural network is like a long sequence of small matrix multiplications, each followed by a "gate" that zeros out negative values. The weights are dials — we turn them until the network produces the output we want.</p>
+        </div>
+
+        <!-- ======== Part 2: Code ======== -->
+        <h2>2. A Neural Network in PyTorch (The Code)</h2>
+
+        <p>
+            Let's make this concrete. Here is a complete neural network in PyTorch for classifying
+            handwritten digits (0-9) from 28×28 pixel images:
+        </p>
+
+        <pre><code><span class="code-keyword">import</span> torch
+<span class="code-keyword">import</span> torch.nn <span class="code-keyword">as</span> nn
+
+<span class="code-comment"># Define the network architecture</span>
+<span class="code-keyword">class</span> <span class="code-class">MyNetwork</span>(nn.Module):
+    <span class="code-keyword">def</span> <span class="code-function">__init__</span>(self):
+        <span class="code-keyword">super</span>().<span class="code-function">__init__</span>()
+        self.layer1 = nn.Linear(28*28, 128)   <span class="code-comment"># W1: (128 × 784), b1: (128)</span>
+        self.layer2 = nn.Linear(128, 64)       <span class="code-comment"># W2: (64 × 128), b2: (64)</span>
+        self.layer3 = nn.Linear(64, 10)        <span class="code-comment"># W3: (10 × 64),  b3: (10)</span>
+        self.relu   = nn.ReLU()
+
+    <span class="code-keyword">def</span> <span class="code-function">forward</span>(self, x):
+        x = self.relu(self.layer1(x))   <span class="code-comment"># → (batch, 128)</span>
+        x = self.relu(self.layer2(x))   <span class="code-comment"># → (batch, 64)</span>
+        x = self.layer3(x)              <span class="code-comment"># → (batch, 10) — no ReLU on last layer</span>
+        <span class="code-keyword">return</span> x
+
+<span class="code-comment"># Create the network and test it</span>
+model = MyNetwork()
+fake_images = torch.randn(32, 784)   <span class="code-comment"># 32 random 28×28 images, flattened</span>
+output = model(fake_images)           <span class="code-comment"># → 32 rows of 10 scores</span>
+print(output.shape)                   <span class="code-comment"># → torch.Size([32, 10])</span></code></pre>
+
+        <div class="info-box">
+            <strong>🔍 What just happened?</strong> We defined 3 weight matrices. <code>nn.Linear</code> creates <em>W</em> and <em>b</em> internally. The <code>forward</code> method chains them with ReLU nonlinearities. The output is 10 numbers per image — scores for "is this a 0?", "is this a 1?", etc.
+        </div>
+
+        <h3>The Training Loop</h3>
+
+        <p>
+            We need a <strong>loss function</strong> to measure how wrong the network is, and an <strong>optimizer</strong>
+            to update the weights. The standard approach is gradient descent:
+        </p>
+
+        <pre><code>optimizer = torch.optim.Adam(model.parameters(), lr=0.001)
+loss_fn   = nn.CrossEntropyLoss()
+
+<span class="code-keyword">for</span> images, labels <span class="code-keyword">in</span> training_data:
+    predictions = model(images)          <span class="code-comment"># forward pass</span>
+    loss = loss_fn(predictions, labels)  <span class="code-comment"># how wrong are we?</span>
+    
+    optimizer.zero_grad()                <span class="code-comment"># clear old gradients</span>
+    loss.backward()                      <span class="code-comment"># compute gradients (backpropagation)</span>
+    optimizer.step()                     <span class="code-comment"># update weights slightly</span></code></pre>
+
+        <p>
+            After many iterations, the weights converge to values that make the network accurate.
+            This is a <strong>trained model</strong>.
+        </p>
+
+        <!-- ======== Part 3: The Problem ======== -->
+        <h2>3. The Problem: Standard NNs Don't Know What They Don't Know</h2>
+
+        <div class="warning-box">
+            <strong>⚠️ Key limitation:</strong> After training, the network gives you <em>one answer</em> per input. It doesn't distinguish between "I'm very sure this is a 7" and "I'm guessing this might be a 7". For high-stakes decisions, that's a serious issue.
+        </div>
+
+        <p>
+            Consider: you show the network a picture of a cat (something it was never trained on).
+            It will still output 10 numbers summing to 1 (because of the softmax), and one of them
+            will be the largest. It has to pick something. But it shouldn't be confident.
+        </p>
+
+        <p>
+            This is where <strong>Bayesian neural networks</strong> come in. Instead of learning a single
+            best weight vector <em>w</em>, they learn a <strong>distribution over weights</strong>.
+        </p>
+
+        <!-- ======== Part 4: Bayesian Inference ======== -->
+        <h2>4. Bayesian Inference in One Slide</h2>
+
+        <p>
+            You know Bayes' theorem:
+        </p>
+
+        <div class="equation-box">
+            <div class="label">Bayes' Theorem</div>
+            <em>p</em>(<em>w</em> | <em>D</em>) = <span class="math">p(D | w) p(w) / p(D)</span>
+        </div>
+
+        <p>In the context of neural networks:</p>
+        <ul>
+            <li><strong>Prior</strong> <em>p(w)</em> — what we believe about the weights before seeing data (e.g., "weights should be small")</li>
+            <li><strong>Likelihood</strong> <em>p(D | w)</em> — how probable is the training data given a specific set of weights</li>
+            <li><strong>Posterior</strong> <em>p(w | D)</em> — what we believe about the weights after seeing the data</li>
+            <li><strong>Evidence</strong> <em>p(D)</em> — the normalizing constant (usually intractable)</li>
+        </ul>
+
+        <div class="story">
+            <p><strong>Intuition:</strong> The posterior is a compromise between what we believed before (prior) and what the data tells us (likelihood). If the data is strong, the posterior is dominated by the likelihood. If the data is weak, the posterior stays close to the prior.</p>
+        </div>
+
+        <p>The key difficulty: <em>p(D)</em> involves an integral over all possible weights, which is exponentially large. So we never compute the exact posterior — we <strong>approximate</strong> it.</p>
+
+        <!-- ======== Part 5: BNNs ======== -->
+        <h2>5. What Makes a Neural Network "Bayesian"?</h2>
+
+        <p>
+            In a standard neural network, training finds a point estimate <em>w</em><sup>MAP</sup> (the
+            Maximum A Posteriori weights). In a Bayesian neural network, we maintain a distribution
+            <em>q(w)</em> over weights and use it to make predictions:
+        </p>
+
+        <div class="equation-box">
+            <div class="label">Predictive Distribution (BNN)</div>
+            <em>p</em>(<em>y</em> | <em>x</em>, <em>D</em>) = ∫ <em>p</em>(<em>y</em> | <em>x</em>, <em>w</em>) <em>q</em>(<em>w</em>) <em>dw</em>
+        </div>
+
+        <p>
+            Instead of one forward pass, we sample many weight configurations from <em>q(w)</em>
+            and average their predictions. The <strong>variance</strong> across these samples gives us
+            the uncertainty estimate.
+        </p>
+
+        <div class="info-box">
+            <strong>💡 Key insight:</strong> The predictive variance decomposes into <strong>aleatoric uncertainty</strong> (irreducible noise in the data) and <strong>epistemic uncertainty</strong> (reducible uncertainty from lack of knowledge). Epistemic uncertainty is high for inputs far from the training data — this is how the BNN says "I don't know."
+        </div>
+
+        <!-- ======== Part 6: Methods ======== -->
+        <h2>6. How to Approximate the Posterior</h2>
+
+        <p>
+            Since the exact posterior is intractable, we need approximation methods. Here are the four main approaches, ordered by conceptual complexity:
+        </p>
+
+        <h3>Method 1: Monte Carlo Dropout</h3>
+        <p>
+            The simplest trick: keep dropout turned on at test time, and run multiple forward passes.
+            Each pass uses a different random mask, giving a different prediction. The variance
+            across passes is the uncertainty estimate.
+        </p>
+        <div class="success-box">
+            <strong>✅ Why it works:</strong> Dropout during training can be interpreted as variational inference with a Bernoulli-distributed posterior. This was shown by <a href="bnn-sources.html">Gal &amp; Ghahramani (2016)</a>.
+        </div>
+
+        <h3>Method 2: Laplace Approximation</h3>
+        <p>
+            Train a standard network to find the MAP weights, then fit a Gaussian distribution
+            around that optimum using the Hessian (matrix of second derivatives) of the loss.
+        </p>
+        <div class="equation-box">
+            <div class="label">Laplace Approximation</div>
+            <em>q</em>(<em>w</em>) = 𝒩(<em>w</em> | <em>w</em><sub>MAP</sub>, <em>H</em><sup>−1</sup>)
+        </div>
+        <p>
+            Where <em>H</em> is the Hessian of the negative log-posterior at the MAP solution.
+            See <a href="bnn-sources.html">Daxberger et al. (2021)</a> for modern best practices.
+        </p>
+
+        <h3>Method 3: Variational Inference (Bayes by Backprop)</h3>
+        <p>
+            Directly learn a distribution <em>q<sub>θ</sub>(w)</em> (typically Gaussian with diagonal
+            covariance) by minimizing the KL divergence between <em>q</em> and the true posterior.
+            This is equivalent to maximizing the <strong>ELBO</strong> (Evidence Lower Bound):
+        </p>
+        <div class="equation-box">
+            <div class="label">ELBO Objective</div>
+            ℒ = 𝔼<sub><em>q</em></sub>[log <em>p</em>(<em>D</em> | <em>w</em>)] − KL[<em>q</em>(<em>w</em>) || <em>p</em>(<em>w</em>)]
+        </div>
+        <p>
+            The first term encourages fitting the data; the second term keeps the distribution close
+            to the prior (regularization). See <a href="bnn-sources.html">Blundell et al. (2015)</a>.
+        </p>
+
+        <h3>Method 4: Hamiltonian Monte Carlo (HMC)</h3>
+        <p>
+            The gold standard: directly sample from the exact posterior using gradient-guided MCMC.
+            This gives the most accurate uncertainty estimates but is too expensive for large models.
+            See <a href="bnn-sources.html">Betancourt (2017)</a> for an excellent introduction.
+        </p>
+
+        <!-- ======== Part 7: Comparison ======== -->
+        <h2>7. Quick Comparison</h2>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Method</th>
+                    <th>When does Bayes happen?</th>
+                    <th>Cost vs Standard NN</th>
+                    <th>Accuracy</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>MC Dropout</td>
+                    <td>Both (training + test)</td>
+                    <td>≈ 1× training, T× test</td>
+                    <td>Surprisingly good</td>
+                </tr>
+                <tr>
+                    <td>Laplace</td>
+                    <td>After training (post-hoc)</td>
+                    <td>≈ 1× training + Hessian</td>
+                    <td>Good for last layer</td>
+                </tr>
+                <tr>
+                    <td>Bayes by Backprop</td>
+                    <td>During training</td>
+                    <td>≈ 2× slower, 2× params</td>
+                    <td>Good (Gaussian assumption)</td>
+                </tr>
+                <tr>
+                    <td>HMC</td>
+                    <td>Special training procedure</td>
+                    <td>100-1000×</td>
+                    <td>Gold standard (exact)</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="info-box">
+            <strong>💡 Recommendation:</strong> Start with MC Dropout — it's the simplest thing that actually works. Move to Laplace if you need principled uncertainty with minimal code changes. Dive into VI (Bayes by Backprop) when you want learned uncertainty.
+        </div>
+
+        <!-- ======== References ======== -->
+        <h2>📚 Further Reading</h2>
+        <ul>
+            <li>See the <a href="bnn-sources.html">BNN Reference Compendium</a> for detailed paper summaries and links to the full technical pages.</li>
+            <li>The <a href="https://arxiv.org/abs/1505.05424">Blundell et al. (2015)</a> paper is the canonical introduction to Bayes by Backprop.</li>
+            <li>For a comprehensive modern survey, see <a href="bnn-sources.html">the BNN surveys listed here</a>.</li>
+        </ul>
+
+        <div class="bottom-nav">
+            <span class="nav-disabled">← Previous</span>
+            <a href="bnn-sources.html">Next: BNN Sources →</a>
+        </div>
+    </main>
+</div>
+<script src="../nav.js"></script>
+<script src="../toc.js"></script>
+</body>
+</html>

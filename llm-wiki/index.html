@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Python &amp; Deep Learning — LLM Wiki</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+        onload="renderMathInElement(document.body, {delimiters: [
+            {left: '$$', right: '$$', display: true},
+            {left: '$', right: '$', display: false}
+        ]});"></script>
+</head>
+<body>
+<div class="wrapper">
+                <nav class="sidebar">
+        <h2>📚 Python &amp; DL Wiki</h2>
+        <div class="tagline">LLM-maintained knowledge base</div>
+        <ul class="sidebar-nav">
+            <li><a href="../notes.html" style="color:#f39c12; font-weight:600;">⬅ Back to Notes</a></li>
+            <li><a href="index.html">🏠 Wiki Index</a></li>
+            <li><a href="log.html">📋 Activity Log</a></li>
+            <li class="sidebar-section">
+                <div class="section-header">
+                    <span class="section-toggle">▶</span>
+                    <span class="section-label">BNN</span>
+                </div>
+                <ul class="section-pages">
+                    <li><a href="pages/bnn-for-beginners.html">📖 BNN Overview</a></li>
+                    <li><a href="pages/neural-network.html">1. Neural Networks</a></li>
+                    <li><a href="pages/bayesian-inference.html">2. Bayesian Inference</a></li>
+                    <li><a href="pages/probability-distributions.html">3. Probability Distributions</a></li>
+                    <li><a href="pages/uncertainty.html">4. Types of Uncertainty</a></li>
+                    <li><a href="pages/kl-divergence.html">5. KL Divergence</a></li>
+                    <li><a href="pages/evidence-lower-bound.html">6. The ELBO</a></li>
+                    <li><a href="pages/variational-inference.html">7. Variational Inference</a></li>
+                    <li><a href="pages/mc-dropout.html">8. MC Dropout</a></li>
+                    <li><a href="pages/laplace-approximation.html">9. Laplace Approximation</a></li>
+                    <li><a href="pages/mcmc-hmc.html">10. MCMC &amp; HMC</a></li>
+                    <li class="sidebar-subsection">
+                        <div class="subsection-header">
+                            <span class="subsection-toggle">▶</span>
+                            <span class="subsection-label">Papers</span>
+                        </div>
+                        <ul class="subsection-pages">
+                            <li><a href="pages/bnn-sources.html">📖 Paper Index</a></li>
+                            <li><a href="pages/blundell-bayes-by-backprop.html">Bayes by Backprop</a></li>
+                            <li><a href="pages/hernandez-probabilistic-backprop.html">Probabilistic Backprop</a></li>
+                            <li><a href="pages/louizos-normalizing-flows.html">Normalizing Flows</a></li>
+                            <li><a href="pages/gal-dropout-bayesian.html">Dropout as Bayesian</a></li>
+                            <li><a href="pages/daxberger-laplace-redux.html">Laplace Redux</a></li>
+                            <li><a href="pages/izmailov-bnn-posteriors.html">BNN Posteriors</a></li>
+                            <li><a href="pages/betancourt-hmc.html">HMC Intro</a></li>
+                            <li><a href="pages/jospin-hands-on-bnn.html">Hands-on BNN</a></li>
+                            <li><a href="pages/goan-fookes-survey.html">Survey (Goan &amp; Fookes)</a></li>
+                            <li><a href="pages/wang-yeung-survey.html">Survey (Wang &amp; Yeung)</a></li>
+                            <li><a href="pages/magris-bayesian-survey.html">Bayesian Survey (Magris)</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </li>
+        </ul>
+    </nav>
+
+    <main class="main-content">
+        <div class="hero">
+            <h1>Python &amp; Deep Learning
+                <span class="subtitle">A mathematician's guide — built and maintained by LLM</span></h1>
+            <p>
+                This wiki is a <strong>persistent, compounding knowledge base</strong>.
+                Every new source gets read, summarized, cross-referenced, and integrated.
+                The LLM does the bookkeeping; you do the thinking.
+            </p>
+        </div>
+
+        <div class="story">
+            <p><strong>How this works:</strong> New sources go into <code>raw/</code>. I read them, we discuss, and I
+            update the wiki pages — summaries, cross-references, index, search, and log. The wiki <em>compounds</em>:
+            each source makes every page richer. Browse the cards below, use Ctrl+K to search, or check the
+            <a href="log.html">activity log</a> to see what's been added recently.</p>
+        </div>
+
+        <!-- ==================== WIKI PAGES ==================== -->
+        <h2>🗺️ Wiki Pages</h2>
+
+        <p>
+            Every page here is generated and maintained by an LLM. Pages are interlinked,
+            cross-referenced, and updated as new information arrives.
+        </p>
+
+        <div class="card-grid">
+            <!-- BNN Overview -->
+            <div class="card">
+                <h3><a href="pages/bnn-for-beginners.html">📖 BNN Overview</a></h3>
+                <p>The big picture: what BNNs are, why they matter, and how the different approximation methods compare. Start here.</p>
+                <span class="difficulty diff-beginner">overview</span>
+            </div>
+
+            <!-- Concept Pages -->
+            <div class="card">
+                <h3><a href="pages/neural-network.html">1. Neural Networks</a></h3>
+                <p>What is a neural network? Linear layers, activation functions, forward pass, backpropagation. The bare minimum.</p>
+                <span class="difficulty diff-beginner">beginner</span>
+            </div>
+            <div class="card">
+                <h3><a href="pages/bayesian-inference.html">2. Bayesian Inference</a></h3>
+                <p>Prior, likelihood, posterior, Bayes' theorem. The core philosophy of treating unknowns as distributions.</p>
+                <span class="difficulty diff-beginner">beginner</span>
+            </div>
+            <div class="card">
+                <h3><a href="pages/probability-distributions.html">3. Probability Distributions</a></h3>
+                <p>Random variables, PDFs, the Gaussian distribution, expectation, variance — the minimal probability toolkit.</p>
+                <span class="difficulty diff-beginner">beginner</span>
+            </div>
+            <div class="card">
+                <h3><a href="pages/uncertainty.html">4. Types of Uncertainty</a></h3>
+                <p>Aleatoric vs epistemic uncertainty. Why we care. What BNNs give you that normal NNs don't.</p>
+                <span class="difficulty diff-intermediate">intermediate</span>
+            </div>
+            <div class="card">
+                <h3><a href="pages/kl-divergence.html">5. KL Divergence</a></h3>
+                <p>A measure of "distance" between probability distributions. The workhorse of variational Bayesian methods.</p>
+                <span class="difficulty diff-intermediate">intermediate</span>
+            </div>
+            <div class="card">
+                <h3><a href="pages/evidence-lower-bound.html">6. The ELBO</a></h3>
+                <p>The Evidence Lower BOund — the objective function we actually optimize. Connects Bayesian inference to optimization.</p>
+                <span class="difficulty diff-intermediate">intermediate</span>
+            </div>
+            <div class="card">
+                <h3><a href="pages/variational-inference.html">7. Variational Inference</a></h3>
+                <p>The most popular approach: learn a distribution over weights by backpropagation. Full PyTorch code example.</p>
+                <span class="difficulty diff-advanced">advanced</span>
+            </div>
+            <div class="card">
+                <h3><a href="pages/mc-dropout.html">8. MC Dropout</a></h3>
+                <p>The simplest trick: use regular dropout at test time to get uncertainty. Near-zero extra cost.</p>
+                <span class="difficulty diff-intermediate">intermediate</span>
+            </div>
+            <div class="card">
+                <h3><a href="pages/laplace-approximation.html">9. Laplace Approximation</a></h3>
+                <p>Fit a Gaussian around the optimal weights after training. Elegant mathematics, simple implementation.</p>
+                <span class="difficulty diff-advanced">advanced</span>
+            </div>
+            <div class="card">
+                <h3><a href="pages/mcmc-hmc.html">10. MCMC &amp; HMC</a></h3>
+                <p>The gold standard — Hamiltonian Monte Carlo explained conceptually. Too expensive in practice but sets the benchmark.</p>
+                <span class="difficulty diff-advanced">advanced</span>
+            </div>
+        </div>
+
+        <h2>📚 Reference Papers</h2>
+        <div class="card-grid">
+            <div class="card">
+                <h3><a href="pages/bnn-sources.html">📖 Paper Index</a></h3>
+                <p>Organized catalog of all BNN reference papers. Use this to navigate the research literature.</p>
+                <span class="difficulty diff-advanced">reference</span>
+            </div>
+            <div class="card">
+                <h3><a href="pages/blundell-bayes-by-backprop.html">Bayes by Backprop</a></h3>
+                <p>Blundell et al., 2015 — Learn weight distributions via the reparameterization trick. The canonical VI method for BNNs.</p>
+                <span class="tag tag-variational">variational</span>
+            </div>
+            <div class="card">
+                <h3><a href="pages/hernandez-probabilistic-backprop.html">Probabilistic Backprop</a></h3>
+                <p>Hernández-Lobato &amp; Adams, 2015 — Moment-matching propagation for fast, deterministic Bayesian inference.</p>
+                <span class="tag tag-variational">variational</span>
+            </div>
+            <div class="card">
+                <h3><a href="pages/louizos-normalizing-flows.html">Normalizing Flows</a></h3>
+                <p>Louizos &amp; Welling, 2017 — Structured posteriors with normalizing flows for richer uncertainty.</p>
+                <span class="tag tag-flow">flows</span>
+            </div>
+            <div class="card">
+                <h3><a href="pages/gal-dropout-bayesian.html">Dropout as Bayesian</a></h3>
+                <p>Gal &amp; Ghahramani, 2016 — Dropout as approximate variational inference. The theoretical foundation for MC Dropout.</p>
+                <span class="tag tag-dropout">dropout</span>
+            </div>
+            <div class="card">
+                <h3><a href="pages/daxberger-laplace-redux.html">Laplace Redux</a></h3>
+                <p>Daxberger et al., 2021 — Modern Laplace approximation with Kronecker-factored Hessians. Scalable and competitive.</p>
+                <span class="tag tag-laplace">laplace</span>
+            </div>
+            <div class="card">
+                <h3><a href="pages/izmailov-bnn-posteriors.html">BNN Posteriors</a></h3>
+                <p>Izmailov et al., 2021 — What are BNN posteriors really like? An HMC-based empirical study revealing complex correlations.</p>
+                <span class="tag tag-hmc">hmc</span>
+            </div>
+            <div class="card">
+                <h3><a href="pages/betancourt-hmc.html">HMC Intro</a></h3>
+                <p>Betancourt, 2017 — A conceptual introduction to Hamiltonian Monte Carlo. Essential intuition-building.</p>
+                <span class="tag tag-tutorial">tutorial</span>
+            </div>
+            <div class="card">
+                <h3><a href="pages/jospin-hands-on-bnn.html">Hands-on BNN</a></h3>
+                <p>Jospin et al., 2022 — Tutorial-style review with practical PyTorch code examples for VI, MC Dropout, Laplace.</p>
+                <span class="tag tag-tutorial">tutorial</span>
+            </div>
+            <div class="card">
+                <h3><a href="pages/goan-fookes-survey.html">Survey (Goan &amp; Fookes)</a></h3>
+                <p>Bayesian deep learning for classification problems. Scaling challenges and practical solutions.</p>
+                <span class="tag tag-survey">survey</span>
+            </div>
+            <div class="card">
+                <h3><a href="pages/wang-yeung-survey.html">Survey (Wang &amp; Yeung)</a></h3>
+                <p>Comprehensive survey of Bayesian deep learning for regression and uncertainty quantification.</p>
+                <span class="tag tag-survey">survey</span>
+            </div>
+            <div class="card">
+                <h3><a href="pages/magris-bayesian-survey.html">Bayesian Survey (Magris)</a></h3>
+                <p>Up-to-date survey covering VI, MCMC, and hybrid methods for Bayesian deep learning with recommendations.</p>
+                <span class="tag tag-survey">survey</span>
+            </div>
+        </div>
+
+        <!-- ==================== HOW TO CONTRIBUTE ==================== -->
+        <h2>📥 Adding to the Wiki</h2>
+
+        <div class="concept-box">
+            <h3>For the Human (You)</h3>
+            <ol>
+                <li><strong>Find a source</strong> — an article, paper, notebook, or notes</li>
+                <li><strong>Save it to <code>raw/</code></strong> — drop the file into the <code>raw/</code> directory</li>
+                <li><strong>Tell the LLM</strong> — say "I added a new source to raw/, please ingest it"</li>
+                <li><strong>Discuss</strong> — review the summary, guide what to emphasize</li>
+                <li><strong>Explore</strong> — browse updated pages, follow new cross-references</li>
+            </ol>
+            <h3 style="margin-top:1rem;">For the LLM (Me)</h3>
+            <ol>
+                <li><strong>Read</strong> the source document</li>
+                <li><strong>Write</strong> a summary page in <code>pages/</code></li>
+                <li><strong>Update</strong> relevant existing pages with new cross-references</li>
+                <li><strong>Refresh</strong> <code>index.html</code> with the new card</li>
+                <li><strong>Update</strong> <code>search.js</code> index with new keywords</li>
+                <li><strong>Append</strong> an entry to <code>log.html</code></li>
+            </ol>
+        </div>
+
+        <!-- ==================== QUICK STATS ==================== -->
+        <h2>📊 Wiki Stats</h2>
+        <table>
+            <tr><th>Metric</th><th>Value</th></tr>
+            <tr><td>Wiki pages</td><td>25</td></tr>
+            <tr><td>Raw sources</td><td>0</td></tr>
+            <tr><td>Search index entries</td><td>35</td></tr>
+            <tr><td>Last updated</td><td>2026-05-17</td></tr>
+        </table>
+
+        <!-- ==================== RECENT ACTIVITY ==================== -->
+        <h2>📋 Recent Activity</h2>
+        <p>See the full <a href="log.html">activity log</a> for details.</p>
+        <ul>
+            <li><strong>2026-05-17</strong> — Restructured wiki: copied 10 BNN concept pages + 11 reference paper pages into wiki</li>
+            <li><strong>2026-05-17</strong> — Added collapsible sidebar with all pages listed, auto-TOC, section anchors</li>
+            <li><strong>2026-05-17</strong> — Infrastructure setup (nav.js, style.css, search.js, index.html)</li>
+            <li><strong>2026-05-17</strong> — Added MLE &amp; Conformal Prediction section to Uncertainty page; rewrote Bayesian inference example (coin → die); integrated KaTeX math rendering across all pages</li>
+        </ul>
+    </main>
+</div>
+<script src="nav.js"></script>
+<script src="search.js"></script>
+<script src="toc.js"></script>
+</body>
+</html>

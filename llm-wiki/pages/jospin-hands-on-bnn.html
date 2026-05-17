@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hands-on BNN Tutorial — Jospin 2022</title>
+    <link rel="stylesheet" href="../style.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+        onload="renderMathInElement(document.body, {delimiters: [
+            {left: '$$', right: '$$', display: true},
+            {left: '$', right: '$', display: false}
+        ]});"></script>
+</head>
+<body>
+<div class="wrapper">
+                    <nav class="sidebar">
+        <h2>📚 Python &amp; DL Wiki</h2>
+        <div class="tagline">LLM-maintained knowledge base</div>
+        <ul class="sidebar-nav">
+            <li><a href="../index.html">🏠 Wiki Index</a></li>
+            <li><a href="../log.html">📋 Activity Log</a></li>
+            <li><a href="../../notes.html" style="color:#f39c12; font-weight:600;">⬅ Back to Notes</a></li>
+            <li class="sidebar-section">
+                <div class="section-header">
+                    <span class="section-toggle">▶</span>
+                    <span class="section-label">BNN</span>
+                </div>
+                <ul class="section-pages">
+                    <li><a href="bnn-for-beginners.html">📖 BNN Overview</a></li>
+                    <li><a href="neural-network.html">1. Neural Networks</a></li>
+                    <li><a href="bayesian-inference.html">2. Bayesian Inference</a></li>
+                    <li><a href="probability-distributions.html">3. Probability Distributions</a></li>
+                    <li><a href="uncertainty.html">4. Types of Uncertainty</a></li>
+                    <li><a href="kl-divergence.html">5. KL Divergence</a></li>
+                    <li><a href="evidence-lower-bound.html">6. The ELBO</a></li>
+                    <li><a href="variational-inference.html">7. Variational Inference</a></li>
+                    <li><a href="mc-dropout.html">8. MC Dropout</a></li>
+                    <li><a href="laplace-approximation.html">9. Laplace Approximation</a></li>
+                    <li><a href="mcmc-hmc.html">10. MCMC &amp; HMC</a></li>
+                    <li class="sidebar-subsection">
+                        <div class="subsection-header">
+                            <span class="subsection-toggle">▶</span>
+                            <span class="subsection-label">Papers</span>
+                        </div>
+                        <ul class="subsection-pages">
+                            <li><a href="bnn-sources.html">📖 Paper Index</a></li>
+                            <li><a href="blundell-bayes-by-backprop.html">Bayes by Backprop</a></li>
+                            <li><a href="hernandez-probabilistic-backprop.html">Probabilistic Backprop</a></li>
+                            <li><a href="louizos-normalizing-flows.html">Normalizing Flows</a></li>
+                            <li><a href="gal-dropout-bayesian.html">Dropout as Bayesian</a></li>
+                            <li><a href="daxberger-laplace-redux.html">Laplace Redux</a></li>
+                            <li><a href="izmailov-bnn-posteriors.html">BNN Posteriors</a></li>
+                            <li><a href="betancourt-hmc.html">HMC Intro</a></li>
+                            <li><a href="jospin-hands-on-bnn.html">Hands-on BNN</a></li>
+                            <li><a href="goan-fookes-survey.html">Survey (Goan &amp; Fookes)</a></li>
+                            <li><a href="wang-yeung-survey.html">Survey (Wang &amp; Yeung)</a></li>
+                            <li><a href="magris-bayesian-survey.html">Bayesian Survey (Magris)</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </li>
+        </ul>
+    </nav>
+    <main class="main-content">
+        <a href="bnn-sources.html" class="back-link">← Back to paper index</a>
+        <div class="concept-header">
+            <div class="breadcrumb"><a href="bnn-sources.html">Paper Index</a> / Hands-on BNN Tutorial</div>
+            <h1>Hands-on Bayesian Neural Networks — A Tutorial</h1>
+            <p>Jospin, Buntine, Boussaid, Laga, Bennamoun — IEEE Computational Intelligence Magazine, 2022</p>
+        </div>
+
+        <div class="citation">
+            <strong>📄 Paper:</strong> <a href="https://arxiv.org/abs/2008.06351">arXiv:2008.06351</a><br>
+            <strong>📁 Source:</strong> <code>2022_Jospin_Hands-on_BNN_Tutorial.pdf</code>
+        </div>
+
+        <div class="key-insight">
+            <strong>🎯 Core Idea</strong>
+            <p>A practical, implementation-focused tutorial covering the three main approaches to BNNs: variational inference (Bayes by Backprop), MC Dropout, and deep ensembles. Includes Python code snippets for PyTorch, TensorFlow Probability, and Pyro.</p>
+        </div>
+
+        <h2>Structure of the Tutorial</h2>
+        <ol>
+            <li><strong>Introduction to Bayesian Deep Learning</strong> — why uncertainty matters, types of uncertainty (aleatoric vs. epistemic).</li>
+            <li><strong>Variational Inference</strong> — step-by-step implementation of Bayes by Backprop in PyTorch, with KL annealing, local reparameterization.</li>
+            <li><strong>Monte Carlo Dropout</strong> — practical guide with TensorFlow/Keras examples.</li>
+            <li><strong>Deep Ensembles</strong> — training multiple models, aggregating predictions.</li>
+            <li><strong>Case studies</strong> — regression, classification, out-of-distribution detection, active learning.</li>
+            <li><strong>Software</strong> — comparison of Pyro, TensorFlow Probability, GPyTorch, and Edward2.</li>
+        </ol>
+
+        <h2>Key Practical Takeaways</h2>
+        <table>
+            <tr><th>Method</th><th>Lines of Code</th><th>Training Overhead</th><th>Best For</th></tr>
+            <tr><td>MC Dropout</td><td>~5 (just keep dropout on)</td><td>None</td><td>Quick uncertainty estimates from existing models</td></tr>
+            <tr><td>Bayes by Backprop</td><td>~50 (custom layer)</td><td>2×</td><td>Small models where weight uncertainty matters</td></tr>
+            <tr><td>Deep Ensembles</td><td>~10 (training loop)</td><td>M× (M = ensemble size)</td><td>Best predictive performance, easy to implement</td></tr>
+            <tr><td>Laplace (via library)</td><td>~5 (post-hoc)</td><td>1× (post-training)</td><td>Adding uncertainty to pretrained models</td></tr>
+        </table>
+
+        <h2>Recommended Software</h2>
+        <ul>
+            <li><strong><a href="https://pyro.ai">Pyro</a> (Uber AI):</strong> Deep probabilistic programming built on PyTorch. Supports VI, HMC, and custom guides.</li>
+            <li><strong><a href="https://www.tensorflow.org/probability">TensorFlow Probability:</a></strong> BNN layers, VI, MCMC, and distributions for TensorFlow.</li>
+            <li><strong><a href="https://gpytorch.ai">GPyTorch:</a></strong> Gaussian processes and BNN approximations with GPU support.</li>
+            <li><strong><a href="https://aleximmer.github.io/Laplace/">Laplace library:</a></strong> Simple Laplace approximations for any PyTorch model.</li>
+        </ul>
+
+        <div class="info-box">
+            <strong>💡 Why this tutorial matters:</strong> It bridges the gap between theory and practice. If you want to actually <em>implement</em> a BNN today, start here. The code examples are directly reusable.
+        </div>
+
+        <div class="bottom-nav">
+            <a href="betancourt-hmc.html">← HMC Introduction</a>
+            <a href="goan-fookes-survey.html">Next: Goan &amp; Fookes Survey →</a>
+        </div>
+    </main>
+</div>
+<script src="../nav.js"></script>
+<script src="../toc.js"></script>
+</body>
+</html>

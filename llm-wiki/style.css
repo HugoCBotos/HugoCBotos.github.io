@@ -1,0 +1,858 @@
+/* === CSS Custom Properties (Theme) === */
+:root {
+    --accent: #f39c12;
+    --accent-hover: #e67e22;
+    --accent-bg: rgba(243, 156, 18, 0.2);
+    --sidebar-bg: #1a1a2e;
+    --sidebar-text: #a8a8b8;
+    --sidebar-text-active: #fff;
+    --body-bg: #f8f9fa;
+    --body-text: #1a1a2e;
+    --text-secondary: #6c757d;
+    --text-muted: #999;
+    --card-bg: #fff;
+    --card-border-top: #f39c12;
+    --border-color: #dee2e6;
+    --code-bg: #1a1a2e;
+    --code-text: #e0e0e0;
+    --font-sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+    --font-mono: 'JetBrains Mono', 'Fira Code', 'Consolas', monospace;
+    --line-height: 1.8;
+    --sidebar-width: 280px;
+    --content-max-width: 960px;
+    --border-radius: 8px;
+}
+
+/* === Reset & Base === */
+*, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: var(--font-sans);
+    line-height: var(--line-height);
+    color: var(--body-text);
+    background: var(--body-bg);
+    padding: 0;
+}
+
+/* === Layout === */
+.wrapper {
+    display: flex;
+    min-height: 100vh;
+}
+
+/* === Sidebar === */
+.sidebar {
+    width: var(--sidebar-width);
+    background: var(--sidebar-bg);
+    color: #e0e0e0;
+    padding: 2rem 1rem;
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    overflow-y: auto;
+    flex-shrink: 0;
+    z-index: 100;
+}
+
+.sidebar h2 {
+    font-size: 1.1rem;
+    color: #fff;
+    margin-bottom: 0.5rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 2px solid var(--accent);
+    letter-spacing: 0.5px;
+}
+
+.sidebar .tagline {
+    font-size: 0.75rem;
+    color: var(--accent);
+    margin-bottom: 1.5rem;
+    font-style: italic;
+}
+
+.sidebar-nav {
+    list-style: none;
+}
+
+.sidebar-nav li {
+    margin-bottom: 0.3rem;
+}
+
+.sidebar-nav a {
+    color: var(--sidebar-text);
+    text-decoration: none;
+    font-size: 0.85rem;
+    display: block;
+    padding: 0.3rem 0.5rem;
+    border-radius: 4px;
+    transition: all 0.2s;
+}
+
+.sidebar-nav a:hover,
+.sidebar-nav a.active {
+    color: var(--sidebar-text-active);
+    background: var(--accent-bg);
+}
+
+.sidebar-nav .section-label {
+    color: var(--accent);
+    font-size: 0.65rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    padding: 0.8rem 0.5rem 0.15rem;
+    font-weight: 600;
+}
+
+/* === Collapsible Sidebar Sections === */
+.sidebar-section {
+    margin-bottom: 0.2rem;
+}
+
+.section-header {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    padding: 0.4rem 0.5rem;
+    border-radius: 4px;
+    transition: background 0.2s;
+    user-select: none;
+}
+
+.section-header:hover {
+    background: rgba(255,255,255,0.05);
+}
+
+.section-toggle {
+    font-size: 0.6rem;
+    margin-right: 0.4rem;
+    color: var(--accent);
+    opacity: 0.7;
+    transition: transform 0.2s, opacity 0.2s;
+    display: inline-block;
+    width: 0.8rem;
+    text-align: center;
+}
+
+.section-toggle.expanded {
+    transform: rotate(90deg);
+    opacity: 1;
+}
+
+.section-header .section-label {
+    padding: 0;
+    font-size: 0.7rem;
+    letter-spacing: 1px;
+    color: var(--accent);
+    text-transform: uppercase;
+    font-weight: 600;
+    border: none;
+    margin: 0;
+}
+
+.section-pages {
+    list-style: none;
+    margin: 0 0 0 1.2rem;
+    padding: 0;
+    display: none;
+}
+
+.section-pages.open {
+    display: block;
+}
+
+.section-pages li {
+    margin-bottom: 0.2rem;
+}
+
+.section-pages a {
+    font-size: 0.8rem;
+    padding: 0.2rem 0.5rem;
+    color: var(--sidebar-text);
+    border-left: 2px solid transparent;
+    border-radius: 0;
+}
+
+.section-pages a:hover,
+.section-pages a.active {
+    color: var(--sidebar-text-active);
+    border-left-color: var(--accent);
+    background: transparent;
+}
+
+/* === Nested Subsections (e.g. References inside BNN) === */
+.sidebar-subsection {
+    margin-top: 0.4rem;
+    padding-top: 0.3rem;
+    border-top: 1px solid rgba(255,255,255,0.08);
+}
+
+.subsection-header {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    padding: 0.3rem 0.5rem;
+    border-radius: 4px;
+    transition: background 0.2s;
+    user-select: none;
+}
+
+.subsection-header:hover {
+    background: rgba(255,255,255,0.05);
+}
+
+.subsection-toggle {
+    font-size: 0.55rem;
+    margin-right: 0.4rem;
+    color: var(--accent);
+    opacity: 0.6;
+    transition: transform 0.2s, opacity 0.2s;
+    display: inline-block;
+    width: 0.7rem;
+    text-align: center;
+}
+
+.subsection-toggle.expanded {
+    transform: rotate(90deg);
+    opacity: 1;
+}
+
+.subsection-label {
+    font-size: 0.65rem;
+    letter-spacing: 1px;
+    color: var(--accent);
+    text-transform: uppercase;
+    font-weight: 600;
+    opacity: 0.8;
+}
+
+.subsection-pages {
+    list-style: none;
+    margin: 0 0 0 0.8rem;
+    padding: 0;
+    display: none;
+}
+
+.subsection-pages.open {
+    display: block;
+}
+
+.subsection-pages li {
+    margin-bottom: 0.2rem;
+}
+
+.subsection-pages a {
+    font-size: 0.78rem;
+    padding: 0.2rem 0.5rem;
+    color: var(--sidebar-text);
+    border-left: 2px solid transparent;
+    border-radius: 0;
+    display: block;
+}
+
+.subsection-pages a:hover,
+.subsection-pages a.active {
+    color: var(--sidebar-text-active);
+    border-left-color: var(--accent);
+    background: transparent;
+}
+
+/* === Main Content === */
+.main-content {
+    flex: 1;
+    margin-left: var(--sidebar-width);
+    padding: 2.5rem 3rem;
+    max-width: var(--content-max-width);
+}
+
+/* === Typography === */
+h1 {
+    font-size: 2rem;
+    color: var(--body-text);
+    margin-bottom: 0.5rem;
+    font-weight: 700;
+}
+
+h1 .subtitle {
+    font-size: 1rem;
+    font-weight: 400;
+    color: var(--text-secondary);
+    display: block;
+    margin-top: 0.25rem;
+}
+
+h2 {
+    font-size: 1.5rem;
+    color: var(--body-text);
+    margin: 2.5rem 0 1rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid var(--accent);
+}
+
+h3 {
+    font-size: 1.15rem;
+    color: #2d3436;
+    margin: 1.5rem 0 0.75rem;
+}
+
+h4 {
+    font-size: 1rem;
+    color: #2d3436;
+    margin: 1.2rem 0 0.5rem;
+}
+
+p {
+    margin-bottom: 1rem;
+    color: #444;
+}
+
+a {
+    color: var(--accent);
+    text-decoration: none;
+    transition: color 0.2s;
+}
+
+a:hover {
+    color: var(--accent-hover);
+    text-decoration: underline;
+}
+
+/* === Hero Section === */
+.hero {
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+    color: #fff;
+    padding: 2.5rem;
+    border-radius: 12px;
+    margin-bottom: 2rem;
+}
+
+.hero h1 {
+    color: #fff;
+    font-size: 2.2rem;
+    margin-bottom: 0.5rem;
+}
+
+.hero .subtitle {
+    color: var(--accent);
+    font-size: 1.1rem;
+    display: block;
+    margin-top: 0.25rem;
+}
+
+.hero p {
+    color: rgba(255,255,255,0.85);
+    margin-top: 1rem;
+    font-size: 1.05rem;
+}
+
+/* === Concept Box === */
+.concept-box {
+    background: var(--card-bg);
+    border: 1px solid #e0e0e0;
+    border-radius: 10px;
+    padding: 1.5rem;
+    margin: 1.5rem 0;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+    border-left: 4px solid var(--accent);
+}
+
+.concept-box h3 {
+    margin-top: 0;
+    color: var(--body-text);
+}
+
+.concept-box p {
+    margin-bottom: 0.5rem;
+}
+
+/* === Code Blocks === */
+pre {
+    background: var(--code-bg);
+    color: var(--code-text);
+    padding: 1.25rem;
+    border-radius: var(--border-radius);
+    overflow-x: auto;
+    font-size: 0.9rem;
+    line-height: 1.6;
+    margin: 1rem 0;
+    tab-size: 4;
+}
+
+code {
+    font-family: var(--font-mono);
+    font-size: 0.88em;
+}
+
+p code, li code {
+    background: #fff3e0;
+    padding: 0.15rem 0.4rem;
+    border-radius: 4px;
+    color: var(--accent-hover);
+}
+
+pre code {
+    background: none;
+    padding: 0;
+    color: inherit;
+}
+
+.code-comment { color: #6a9955; }
+.code-keyword { color: #569cd6; }
+.code-string { color: #ce9178; }
+.code-function { color: #dcdcaa; }
+.code-class { color: #4ec9b0; }
+.code-number { color: #b5cea8; }
+.code-operator { color: #d4d4d4; }
+
+/* === Math / Equation Box === */
+.equation-box {
+    background: #ffffff;
+    border: 1px solid #d0d0d0;
+    border-left: 4px solid var(--accent);
+    padding: 1rem 1.5rem;
+    border-radius: 0 var(--border-radius) var(--border-radius) 0;
+    margin: 1rem 0;
+    overflow-x: auto;
+    font-family: 'Consolas', 'Courier New', monospace;
+    font-size: 1.05rem;
+    color: var(--body-text);
+}
+
+.equation-box .label {
+    font-family: var(--font-sans);
+    font-size: 0.8rem;
+    color: #555;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 0.3rem;
+}
+
+.equation-box .math {
+    font-style: italic;
+}
+
+/* === Info Box === */
+.info-box {
+    background: #e3f2fd;
+    border-left: 4px solid #1565c0;
+    padding: 1rem 1.25rem;
+    border-radius: 0 var(--border-radius) var(--border-radius) 0;
+    margin: 1rem 0;
+}
+
+.info-box strong {
+    color: #1565c0;
+}
+
+.warning-box {
+    background: #fff3e0;
+    border-left: 4px solid #e65100;
+    padding: 1rem 1.25rem;
+    border-radius: 0 var(--border-radius) var(--border-radius) 0;
+    margin: 1rem 0;
+}
+
+.warning-box strong {
+    color: #e65100;
+}
+
+.success-box {
+    background: #e8f5e9;
+    border-left: 4px solid #2e7d32;
+    padding: 1rem 1.25rem;
+    border-radius: 0 var(--border-radius) var(--border-radius) 0;
+    margin: 1rem 0;
+}
+
+.success-box strong {
+    color: #2e7d32;
+}
+
+/* === Key Insight === */
+.key-insight {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: #fff;
+    padding: 1.25rem 1.5rem;
+    border-radius: 10px;
+    margin: 1.5rem 0;
+}
+
+.key-insight strong {
+    display: block;
+    font-size: 0.9rem;
+    margin-bottom: 0.5rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    opacity: 0.9;
+}
+
+.key-insight p {
+    color: rgba(255,255,255,0.95);
+    margin: 0;
+    font-size: 1.05rem;
+}
+
+/* === Cards (for index page) === */
+.card-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1rem;
+    margin: 1.5rem 0;
+}
+
+.card {
+    background: var(--card-bg);
+    border-radius: 10px;
+    padding: 1.5rem;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    transition: transform 0.2s, box-shadow 0.2s;
+    border-top: 4px solid var(--card-border-top);
+}
+
+.card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+}
+
+.card h3 {
+    margin: 0 0 0.5rem;
+    font-size: 1.05rem;
+    color: var(--body-text);
+}
+
+.card h3 a {
+    color: var(--body-text);
+}
+
+.card h3 a:hover {
+    color: var(--accent);
+}
+
+.card p {
+    font-size: 0.9rem;
+    color: #666;
+    margin: 0;
+}
+
+.card .difficulty {
+    display: inline-block;
+    font-size: 0.65rem;
+    padding: 0.15rem 0.5rem;
+    border-radius: 4px;
+    margin-top: 0.5rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.diff-beginner { background: #e8f5e9; color: #2e7d32; }
+.diff-intermediate { background: #fff3e0; color: #e65100; }
+.diff-advanced { background: #fce4ec; color: #c62828; }
+
+/* === Tags (for source pages) === */
+.tag {
+    display: inline-block;
+    font-size: 0.65rem;
+    padding: 0.15rem 0.5rem;
+    border-radius: 4px;
+    margin-top: 0.5rem;
+    margin-right: 0.3rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.tag-variational { background: #e8eaf6; color: #283593; }
+.tag-foundational { background: #fce4ec; color: #c62828; }
+.tag-flow { background: #e0f2f1; color: #00695c; }
+.tag-dropout { background: #fff3e0; color: #e65100; }
+.tag-laplace { background: #f3e5f5; color: #6a1b9a; }
+.tag-hmc { background: #e8f5e9; color: #2e7d32; }
+.tag-survey { background: #ede7f6; color: #4527a0; }
+.tag-tutorial { background: #e1f5fe; color: #01579b; }
+
+/* === Lists === */
+.main-content ul, .main-content ol {
+    margin: 0.5rem 0 1rem 1.8rem;
+}
+
+.main-content li {
+    margin-bottom: 0.4rem;
+    color: #444;
+    line-height: 1.7;
+}
+
+/* === Tables === */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1.5rem 0;
+    font-size: 0.95rem;
+}
+
+th, td {
+    padding: 0.75rem 1rem;
+    text-align: left;
+    border-bottom: 1px solid var(--border-color);
+}
+
+th {
+    background: var(--sidebar-bg);
+    color: #fff;
+    font-weight: 600;
+}
+
+tr:nth-child(even) {
+    background: #f8f9fa;
+}
+
+tr:hover {
+    background: #fef9e7;
+}
+
+/* === Navigation === */
+.bottom-nav {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 3rem;
+    padding-top: 1.5rem;
+    border-top: 2px solid var(--border-color);
+}
+
+.bottom-nav a {
+    font-weight: 600;
+    padding: 0.5rem 1rem;
+    background: var(--sidebar-bg);
+    color: #fff;
+    border-radius: 6px;
+    transition: all 0.2s;
+}
+
+.bottom-nav a:hover {
+    background: var(--accent);
+    text-decoration: none;
+    color: #fff;
+}
+
+.bottom-nav .nav-disabled {
+    color: #aaa;
+    cursor: default;
+    padding: 0.5rem 1rem;
+}
+
+/* === Back link === */
+.back-link {
+    display: inline-block;
+    margin-bottom: 1rem;
+    color: var(--accent);
+    font-weight: 500;
+}
+
+.back-link:hover {
+    color: var(--accent-hover);
+}
+
+/* === Breadcrumb === */
+.breadcrumb {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    margin-bottom: 0.5rem;
+}
+
+.breadcrumb a {
+    color: var(--accent);
+}
+
+/* === Story / Narrative === */
+.story {
+    background: #fffef5;
+    border: 1px solid #e8dcc8;
+    border-radius: 10px;
+    padding: 1.5rem 2rem;
+    margin: 1.5rem 0;
+    border-left: 4px solid var(--accent);
+}
+
+.story p {
+    color: var(--body-text);
+}
+
+.story strong {
+    color: var(--body-text);
+}
+
+/* === Figure placeholder === */
+.figure {
+    background: #e8e8ee;
+    border-radius: var(--border-radius);
+    padding: 2rem;
+    text-align: center;
+    margin: 1rem 0;
+    color: #666;
+    font-style: italic;
+}
+
+/* === Pipeline / Taxonomy (for sources page) === */
+.pipeline {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5rem;
+    margin: 1.5rem 0;
+    padding: 1rem;
+    background: #fff;
+    border-radius: 10px;
+    border: 1px solid #e0e0e0;
+}
+
+.pipeline-step {
+    background: var(--sidebar-bg);
+    color: #fff !important;
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+    font-size: 0.85rem;
+    font-weight: 500;
+    text-decoration: none !important;
+    transition: background 0.2s;
+}
+
+.pipeline-step:hover {
+    background: var(--accent) !important;
+}
+
+.pipeline-arrow {
+    color: var(--accent);
+    font-size: 1.2rem;
+    font-weight: bold;
+}
+
+/* === Log entries === */
+.log-entry {
+    padding: 1rem 0;
+    border-bottom: 1px solid #eee;
+}
+
+.log-entry:last-child {
+    border-bottom: none;
+}
+
+.log-entry .log-date {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    font-family: var(--font-mono);
+}
+
+.log-entry .log-title {
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin: 0.2rem 0;
+}
+
+.log-entry .log-description {
+    font-size: 0.9rem;
+    color: #666;
+}
+
+/* === Responsive === */
+@media (max-width: 768px) {
+    .sidebar {
+        width: 100%;
+        height: auto;
+        position: relative;
+        padding: 1rem;
+    }
+
+    .main-content {
+        margin-left: 0;
+        padding: 1.5rem;
+    }
+
+    .card-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .pipeline {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .pipeline-arrow {
+        transform: rotate(90deg);
+    }
+
+    .hero {
+        padding: 1.5rem;
+    }
+
+    .hero h1 {
+        font-size: 1.6rem;
+    }
+
+    .page-toc {
+        float: none;
+        width: 100%;
+        margin: 1rem 0;
+    }
+}
+
+/* === On This Page (Table of Contents) === */
+.page-toc {
+    background: #fff;
+    border: 1px solid #e0e0e0;
+    border-radius: 10px;
+    padding: 1.25rem 1.5rem;
+    margin: 1rem 0 2rem;
+    border-left: 4px solid var(--accent);
+    float: right;
+    width: 280px;
+    margin-left: 1.5rem;
+    margin-top: 0.5rem;
+}
+
+.page-toc-title {
+    font-size: 0.8rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--text-secondary);
+    margin-bottom: 0.5rem;
+}
+
+.page-toc-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.page-toc-list li {
+    margin-bottom: 0.3rem;
+    line-height: 1.4;
+}
+
+.page-toc-list a {
+    font-size: 0.82rem;
+    color: var(--body-text);
+    text-decoration: none;
+    display: block;
+    padding: 0.2rem 0.4rem;
+    border-radius: 4px;
+    transition: all 0.15s;
+}
+
+.page-toc-list a:hover {
+    background: var(--accent-bg);
+    color: var(--accent);
+    text-decoration: none;
+}
+
+.page-toc-list a.active {
+    color: var(--accent);
+    font-weight: 600;
+}
+
+
+}

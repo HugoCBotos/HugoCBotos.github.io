@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Activity Log — LLM Wiki</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+        onload="renderMathInElement(document.body, {delimiters: [
+            {left: '$$', right: '$$', display: true},
+            {left: '$', right: '$', display: false}
+        ]});"></script>
+</head>
+<body>
+<div class="wrapper">
+                <nav class="sidebar">
+        <h2>📚 Python &amp; DL Wiki</h2>
+        <div class="tagline">LLM-maintained knowledge base</div>
+        <ul class="sidebar-nav">
+            <li><a href="../notes.html" style="color:#f39c12; font-weight:600;">⬅ Back to Notes</a></li>
+            <li><a href="index.html">🏠 Wiki Index</a></li>
+            <li><a href="log.html">📋 Activity Log</a></li>
+            <li class="sidebar-section">
+                <div class="section-header">
+                    <span class="section-toggle">▶</span>
+                    <span class="section-label">BNN</span>
+                </div>
+                <ul class="section-pages">
+                    <li><a href="pages/bnn-for-beginners.html">📖 BNN Overview</a></li>
+                    <li><a href="pages/neural-network.html">1. Neural Networks</a></li>
+                    <li><a href="pages/bayesian-inference.html">2. Bayesian Inference</a></li>
+                    <li><a href="pages/probability-distributions.html">3. Probability Distributions</a></li>
+                    <li><a href="pages/uncertainty.html">4. Types of Uncertainty</a></li>
+                    <li><a href="pages/kl-divergence.html">5. KL Divergence</a></li>
+                    <li><a href="pages/evidence-lower-bound.html">6. The ELBO</a></li>
+                    <li><a href="pages/variational-inference.html">7. Variational Inference</a></li>
+                    <li><a href="pages/mc-dropout.html">8. MC Dropout</a></li>
+                    <li><a href="pages/laplace-approximation.html">9. Laplace Approximation</a></li>
+                    <li><a href="pages/mcmc-hmc.html">10. MCMC &amp; HMC</a></li>
+                    <li class="sidebar-subsection">
+                        <div class="subsection-header">
+                            <span class="subsection-toggle">▶</span>
+                            <span class="subsection-label">Papers</span>
+                        </div>
+                        <ul class="subsection-pages">
+                            <li><a href="pages/bnn-sources.html">📖 Paper Index</a></li>
+                            <li><a href="pages/blundell-bayes-by-backprop.html">Bayes by Backprop</a></li>
+                            <li><a href="pages/hernandez-probabilistic-backprop.html">Probabilistic Backprop</a></li>
+                            <li><a href="pages/louizos-normalizing-flows.html">Normalizing Flows</a></li>
+                            <li><a href="pages/gal-dropout-bayesian.html">Dropout as Bayesian</a></li>
+                            <li><a href="pages/daxberger-laplace-redux.html">Laplace Redux</a></li>
+                            <li><a href="pages/izmailov-bnn-posteriors.html">BNN Posteriors</a></li>
+                            <li><a href="pages/betancourt-hmc.html">HMC Intro</a></li>
+                            <li><a href="pages/jospin-hands-on-bnn.html">Hands-on BNN</a></li>
+                            <li><a href="pages/goan-fookes-survey.html">Survey (Goan &amp; Fookes)</a></li>
+                            <li><a href="pages/wang-yeung-survey.html">Survey (Wang &amp; Yeung)</a></li>
+                            <li><a href="pages/magris-bayesian-survey.html">Bayesian Survey (Magris)</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </li>
+        </ul>
+    </nav>
+
+    <main class="main-content">
+        <a href="index.html" class="back-link">← Back to wiki index</a>
+        <h1>📋 Activity Log</h1>
+        <p>
+            This is an <strong>append-only</strong> chronological record of everything that happens in this wiki.
+            Each entry starts with <code>## [YYYY-MM-DD] action | Title</code> so you can grep it from the terminal.
+        </p>
+
+        <hr>
+
+        <!--
+            LOG ENTRIES — appended by the LLM on every action.
+            Format: ## [YYYY-MM-DD] action | Title
+        -->
+
+        <!-- ===== 2026-05-17 ===== -->
+        <div class="log-entry">
+            <div class="log-date">## [2026-05-17] restructure | Full Wiki Populated</div>
+            <div class="log-title">Restructured wiki with all BNN concept and source pages</div>
+            <div class="log-description">
+                Copied all 10 BNN concept pages and 11 reference paper pages from ablation_bayes into the wiki.
+                Updated all sidebars to unified wiki navigation. Added collapsible sidebar subsections,
+                auto-generated "On This Page" TOC (toc.js), and section anchor support.
+                Sidebar now lists every individual page with cross-links.
+            </div>
+        </div>
+
+        <div class="log-entry">
+            <div class="log-date">## [2026-05-17] infra | Wiki Setup</div>
+            <div class="log-title">Infrastructure created</div>
+            <div class="log-description">
+                Created directory structure (pages/, raw/, assets/), nav.js, style.css (with CSS variables),
+                search.js (with 30 search index entries), index.html (catalog), log.html, AGENTS.md (schema),
+                README.md.
+            </div>
+        </div>
+
+        <!-- ===== 2026-05-17 (later) ===== -->
+        <div class="log-entry">
+            <div class="log-date">## [2026-05-17] content | MLE, Conformal, KaTeX, Coin→Die</div>
+            <div class="log-title">Pedagogical improvements and math rendering</div>
+            <div class="log-description">
+                <ul>
+                    <li><strong>New section</strong> on Uncertainty page: "MLE, Prediction Intervals, and When a BNN Is Overkill" — covers maximum likelihood estimation, prediction vs. parameter uncertainty, conformal prediction, and a decision table.</li>
+                    <li><strong>Rewrote</strong> the Bayesian inference example (coin → die) for a sharper Bayesian vs. frequentist contrast using the Dirichlet-Multinomial model.</li>
+                    <li><strong>KaTeX integrated</strong> across all 24 HTML pages — publication-quality math rendering for all equations (ELBO derivation, KL divergence, Gaussian PDF, variance decomposition, etc.).</li>
+                </ul>
+            </div>
+        </div>
+    </main>
+</div>
+<script src="nav.js"></script>
+<script src="search.js"></script>
+<script src="toc.js"></script>
+</body>
+</html>

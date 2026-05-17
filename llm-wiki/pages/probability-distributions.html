@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Probability Distributions — LLM Wiki</title>
+    <link rel="stylesheet" href="../style.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+        onload="renderMathInElement(document.body, {delimiters: [
+            {left: '$$', right: '$$', display: true},
+            {left: '$', right: '$', display: false}
+        ]});"></script>
+</head>
+<body>
+<div class="wrapper">
+                    <nav class="sidebar">
+        <h2>📚 Python &amp; DL Wiki</h2>
+        <div class="tagline">LLM-maintained knowledge base</div>
+        <ul class="sidebar-nav">
+            <li><a href="../index.html">🏠 Wiki Index</a></li>
+            <li><a href="../log.html">📋 Activity Log</a></li>
+            <li><a href="../../notes.html" style="color:#f39c12; font-weight:600;">⬅ Back to Notes</a></li>
+            <li class="sidebar-section">
+                <div class="section-header">
+                    <span class="section-toggle">▶</span>
+                    <span class="section-label">BNN</span>
+                </div>
+                <ul class="section-pages">
+                    <li><a href="bnn-for-beginners.html">📖 BNN Overview</a></li>
+                    <li><a href="neural-network.html">1. Neural Networks</a></li>
+                    <li><a href="bayesian-inference.html">2. Bayesian Inference</a></li>
+                    <li><a href="probability-distributions.html">3. Probability Distributions</a></li>
+                    <li><a href="uncertainty.html">4. Types of Uncertainty</a></li>
+                    <li><a href="kl-divergence.html">5. KL Divergence</a></li>
+                    <li><a href="evidence-lower-bound.html">6. The ELBO</a></li>
+                    <li><a href="variational-inference.html">7. Variational Inference</a></li>
+                    <li><a href="mc-dropout.html">8. MC Dropout</a></li>
+                    <li><a href="laplace-approximation.html">9. Laplace Approximation</a></li>
+                    <li><a href="mcmc-hmc.html">10. MCMC &amp; HMC</a></li>
+                    <li class="sidebar-subsection">
+                        <div class="subsection-header">
+                            <span class="subsection-toggle">▶</span>
+                            <span class="subsection-label">Papers</span>
+                        </div>
+                        <ul class="subsection-pages">
+                            <li><a href="bnn-sources.html">📖 Paper Index</a></li>
+                            <li><a href="blundell-bayes-by-backprop.html">Bayes by Backprop</a></li>
+                            <li><a href="hernandez-probabilistic-backprop.html">Probabilistic Backprop</a></li>
+                            <li><a href="louizos-normalizing-flows.html">Normalizing Flows</a></li>
+                            <li><a href="gal-dropout-bayesian.html">Dropout as Bayesian</a></li>
+                            <li><a href="daxberger-laplace-redux.html">Laplace Redux</a></li>
+                            <li><a href="izmailov-bnn-posteriors.html">BNN Posteriors</a></li>
+                            <li><a href="betancourt-hmc.html">HMC Intro</a></li>
+                            <li><a href="jospin-hands-on-bnn.html">Hands-on BNN</a></li>
+                            <li><a href="goan-fookes-survey.html">Survey (Goan &amp; Fookes)</a></li>
+                            <li><a href="wang-yeung-survey.html">Survey (Wang &amp; Yeung)</a></li>
+                            <li><a href="magris-bayesian-survey.html">Bayesian Survey (Magris)</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </li>
+        </ul>
+    </nav>
+
+    <main class="main-content">
+        <a href="../index.html" class="back-link">← Back to main page</a>
+        <div class="breadcrumb"><a href="../index.html">Home</a> / Probability Distributions</div>
+        <h1>3. Probability Distributions (The Minimal Toolkit)</h1>
+
+        <div class="key-insight">
+            <strong>🎯 In one sentence</strong>
+            <p>A probability distribution tells you how likely each possible value of a variable is. Instead of "the weight is 0.5", we say "the weight follows a Gaussian distribution centered at 0.5 with spread 0.1".</p>
+        </div>
+
+        <p>
+            This page covers the absolute minimum probability you need to understand BNNs.
+            If you already know what a Gaussian (normal) distribution is, you can skim this.
+        </p>
+
+        <!-- ======== RANDOM VARIABLES ======== -->
+        <h2>Random Variables</h2>
+
+        <p>
+            A <strong>random variable</strong> is a variable whose value is uncertain.
+            We denote it with a capital letter (<em>X</em>) and its possible values with lowercase (<em>x</em>).
+        </p>
+
+        <p>There are two kinds:</p>
+        <ul>
+            <li><strong>Discrete:</strong> takes values from a countable set (e.g., coin flip: heads or tails)</li>
+            <li><strong>Continuous:</strong> takes values from ℝ (e.g., the speed of a particle)</li>
+        </ul>
+
+        <p>In BNNs, weights are continuous random variables. They can be any real number.</p>
+
+        <!-- ======== PDF ======== -->
+        <h2>Probability Density Function (PDF)</h2>
+
+        <p>
+            For a continuous random variable, the <strong>PDF</strong> <em>p(x)</em> tells us the relative
+            likelihood of different values. The probability that <em>X</em> lies in an interval [a, b] is:
+        </p>
+
+        <div class="equation-box">
+            <div class="label">Probability from PDF</div>
+            $$P(a \le X \le b) = \int_a^b p(x)\,dx$$
+        </div>
+
+        <p>The PDF must satisfy:</p>
+        <ul>
+            <li>$p(x) \ge 0$ for all $x$ (probabilities can't be negative)</li>
+            <li>$\int_{-\infty}^{\infty} p(x)\,dx = 1$ (total probability = 1)</li>
+        </ul>
+
+        <!-- ======== EXPECTATION ======== -->
+        <h2>Expectation (Average)</h2>
+
+        <p>The <strong>expected value</strong> (mean, average) of a random variable is its "center of mass":</p>
+
+        <div class="equation-box">
+            <div class="label">Expectation (for continuous variables)</div>
+            $$\mathbb{E}[X] = \int x\,p(x)\,dx$$
+            <br><span style="font-size:0.85rem; color:#666;">
+            (For discrete variables, replace the integral with a sum: $\mathbb{E}[X] = \sum x\,p(x)$.)</span>
+        </div>
+
+        <p>
+            Think of this as: take each possible value <em>x</em>, weight it by how likely it is,
+            and sum them up. It's the average value you'd get if you sampled infinitely many times.
+        </p>
+
+        <p>Expectation is linear: $\mathbb{E}[aX + b] = a\,\mathbb{E}[X] + b$.</p>
+
+        <!-- ======== VARIANCE ======== -->
+        <h2>Variance (Spread)</h2>
+
+        <p>
+            The <strong>variance</strong> measures how spread out the distribution is — how much uncertainty there is:
+        </p>
+
+        <div class="equation-box">
+            <div class="label">Variance</div>
+            $$\operatorname{Var}[X] = \mathbb{E}[(X - \mathbb{E}[X])^2] = \mathbb{E}[X^2] - \mathbb{E}[X]^2$$
+        </div>
+
+        <p>
+            The <strong>standard deviation</strong> is σ = √Var[<em>X</em>], which has the same units as <em>X</em>
+            and is easier to interpret.
+        </p>
+
+        <!-- ======== THE GAUSSIAN ======== -->
+        <h2>The Gaussian (Normal) Distribution</h2>
+
+        <p>
+            This is the most important distribution for BNNs. Almost all methods assume (at least approximately)
+            that weights follow a Gaussian distribution.
+        </p>
+
+        <div class="equation-box">
+            <div class="label">Gaussian PDF</div>
+            $$p(x) = \frac{1}{\sigma\sqrt{2\pi}} \exp\left(-\frac{1}{2}\left(\frac{x-\mu}{\sigma}\right)^2\right)$$
+        </div>
+
+        <p>Where:</p>
+        <ul>
+            <li><strong>$\mu$</strong> (mean) controls where the bell is centered</li>
+            <li><strong>$\sigma$</strong> (standard deviation) controls how wide it is</li>
+        </ul>
+        <p>
+            The formula says: the probability density at <em>x</em> decays exponentially with the
+            <em>squared distance</em> from the mean, scaled by how wide the distribution is.
+            The 1/(σ√(2π)) is just a normalization constant to make the total area = 1.
+        </p>
+
+        <p>Parameters:</p>
+        <ul>
+            <li><strong>μ</strong> (mean): the center of the bell curve</li>
+            <li><strong>σ</strong> (standard deviation): the width of the bell curve</li>
+        </ul>
+
+        <p>We write <em>X</em> ~ N(μ, σ²) to say "X follows a Gaussian with mean μ and variance σ²".</p>
+
+        <div class="info-box">
+            <strong>📐 Key facts:</strong>
+            <ul>
+                <li>About 68% of the probability mass lies within μ ± σ</li>
+                <li>About 95% lies within μ ± 2σ</li>
+                <li>The Gaussian is the "maximum entropy" distribution for a given mean and variance — it's the most uninformative (safest) choice when we only know the first two moments.</li>
+            </ul>
+        </div>
+
+        <!-- ======== MULTIVARIATE GAUSSIAN ======== -->
+        <h2>Multivariate Gaussian</h2>
+
+        <p>
+            In BNNs, we often have many weights that are <strong>correlated</strong> — knowing one weight's
+            value tells us something about another. The multivariate Gaussian captures this:
+        </p>
+
+        <div class="equation-box">
+            <div class="label">Multivariate Gaussian</div>
+            p(<strong>x</strong>) = 1 / ( (2π)<sup>d/2</sup> |Σ|<sup>1/2</sup> ) · exp( −½ (<strong>x</strong> − <strong>μ</strong>)<sup>T</sup> Σ<sup>−1</sup> (<strong>x</strong> − <strong>μ</strong>) )
+        </div>
+
+        <p>Where:</p>
+        <ul>
+            <li><strong>μ</strong> ∈ ℝ<sup>d</sup> is the mean vector</li>
+            <li><strong>Σ</strong> ∈ ℝ<sup>d × d</sup> is the <strong>covariance matrix</strong></li>
+            <li>Σ<sub>ij</sub> = Cov[<em>X</em><sub>i</sub>, <em>X</em><sub>j</sub>] measures how <em>X</em><sub>i</sub> and <em>X</em><sub>j</sub> co-vary</li>
+        </ul>
+
+        <p>
+            The covariance matrix is huge (d × d for d weights, which could be millions).
+            Most BNN methods make simplifying assumptions about Σ to stay computationally feasible.
+        </p>
+
+        <!-- ======== SAMPLING ======== -->
+        <h2>Sampling</h2>
+
+        <p>
+            <strong>Sampling</strong> means generating random values from a distribution. 
+            In PyTorch, this is easy:
+        </p>
+
+        <pre><code><span class="code-keyword">import</span> torch
+
+<span class="code-comment"># Sample from a Gaussian: N(5, 3²)</span>
+samples = torch.normal(mean=5.0, std=3.0, size=(1000,))
+print(samples.mean())   <span class="code-comment"># ≈ 5.0</span>
+print(samples.std())    <span class="code-comment"># ≈ 3.0</span>
+
+<span class="code-comment"># Sample from a multivariate Gaussian</span>
+mean = torch.tensor([0.0, 1.0])
+cov  = torch.tensor([[1.0, 0.5], [0.5, 2.0]])  <span class="code-comment"># covariance matrix</span>
+samples = torch.distributions.MultivariateNormal(mean, cov).sample((500,))</code></pre>
+
+        <p>
+            This ability to sample is crucial for BNNs — we approximate the posterior by drawing
+            samples from it and averaging the predictions.
+        </p>
+
+        <div class="bottom-nav">
+            <a href="bayesian-inference.html">← Bayesian Inference</a>
+            <a href="uncertainty.html">Next: Types of Uncertainty →</a>
+        </div>
+    </main>
+</div>
+<script src="../nav.js"></script>
+<script src="../search.js"></script>
+<script src="../toc.js"></script>
+</body>
+</html>

@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Multiplicative Normalizing Flows — Louizos & Welling 2017</title>
+    <link rel="stylesheet" href="../style.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+        onload="renderMathInElement(document.body, {delimiters: [
+            {left: '$$', right: '$$', display: true},
+            {left: '$', right: '$', display: false}
+        ]});"></script>
+</head>
+<body>
+<div class="wrapper">
+                    <nav class="sidebar">
+        <h2>📚 Python &amp; DL Wiki</h2>
+        <div class="tagline">LLM-maintained knowledge base</div>
+        <ul class="sidebar-nav">
+            <li><a href="../index.html">🏠 Wiki Index</a></li>
+            <li><a href="../log.html">📋 Activity Log</a></li>
+            <li><a href="../../notes.html" style="color:#f39c12; font-weight:600;">⬅ Back to Notes</a></li>
+            <li class="sidebar-section">
+                <div class="section-header">
+                    <span class="section-toggle">▶</span>
+                    <span class="section-label">BNN</span>
+                </div>
+                <ul class="section-pages">
+                    <li><a href="bnn-for-beginners.html">📖 BNN Overview</a></li>
+                    <li><a href="neural-network.html">1. Neural Networks</a></li>
+                    <li><a href="bayesian-inference.html">2. Bayesian Inference</a></li>
+                    <li><a href="probability-distributions.html">3. Probability Distributions</a></li>
+                    <li><a href="uncertainty.html">4. Types of Uncertainty</a></li>
+                    <li><a href="kl-divergence.html">5. KL Divergence</a></li>
+                    <li><a href="evidence-lower-bound.html">6. The ELBO</a></li>
+                    <li><a href="variational-inference.html">7. Variational Inference</a></li>
+                    <li><a href="mc-dropout.html">8. MC Dropout</a></li>
+                    <li><a href="laplace-approximation.html">9. Laplace Approximation</a></li>
+                    <li><a href="mcmc-hmc.html">10. MCMC &amp; HMC</a></li>
+                    <li class="sidebar-subsection">
+                        <div class="subsection-header">
+                            <span class="subsection-toggle">▶</span>
+                            <span class="subsection-label">Papers</span>
+                        </div>
+                        <ul class="subsection-pages">
+                            <li><a href="bnn-sources.html">📖 Paper Index</a></li>
+                            <li><a href="blundell-bayes-by-backprop.html">Bayes by Backprop</a></li>
+                            <li><a href="hernandez-probabilistic-backprop.html">Probabilistic Backprop</a></li>
+                            <li><a href="louizos-normalizing-flows.html">Normalizing Flows</a></li>
+                            <li><a href="gal-dropout-bayesian.html">Dropout as Bayesian</a></li>
+                            <li><a href="daxberger-laplace-redux.html">Laplace Redux</a></li>
+                            <li><a href="izmailov-bnn-posteriors.html">BNN Posteriors</a></li>
+                            <li><a href="betancourt-hmc.html">HMC Intro</a></li>
+                            <li><a href="jospin-hands-on-bnn.html">Hands-on BNN</a></li>
+                            <li><a href="goan-fookes-survey.html">Survey (Goan &amp; Fookes)</a></li>
+                            <li><a href="wang-yeung-survey.html">Survey (Wang &amp; Yeung)</a></li>
+                            <li><a href="magris-bayesian-survey.html">Bayesian Survey (Magris)</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </li>
+        </ul>
+    </nav>
+    <main class="main-content">
+        <a href="bnn-sources.html" class="back-link">← Back to paper index</a>
+        <div class="concept-header">
+            <div class="breadcrumb"><a href="bnn-sources.html">Paper Index</a> / Multiplicative Normalizing Flows</div>
+            <h1>Multiplicative Normalizing Flows for BNNs</h1>
+            <p><em>Multiplicative Normalizing Flows for Variational Bayesian Neural Networks</em> — Louizos &amp; Welling (ICML 2017)</p>
+        </div>
+
+        <div class="citation">
+            <strong>📄 Paper:</strong> <a href="https://arxiv.org/abs/1603.04779">arXiv:1603.04779</a><br>
+            <strong>📁 Source:</strong> <code>2017_Louizos_Multiplicative_Normalizing_Flows.pdf</code>
+        </div>
+
+        <div class="key-insight">
+            <strong>🎯 Core Idea</strong>
+            <p>Extend mean-field VI by using normalizing flows to transform a simple base distribution (e.g., Gaussian) into a richer, more expressive posterior that captures correlations between weights and non-Gaussian structure.</p>
+        </div>
+
+        <h2>Why Normalizing Flows?</h2>
+        <p>Mean-field VI (Bayes by Backprop) assumes a fully factorized Gaussian posterior. This is known to be:</p>
+        <ul>
+            <li>Too narrow (overconfident) — the 'mode-seeking' behavior of KL[q||p].</li>
+            <li>Incapable of capturing weight correlations (off-diagonal structure).</li>
+            <li>Poor at representing heavy-tailed or multi-modal posteriors.</li>
+        </ul>
+        <p><strong>Normalizing flows</strong> provide a way to learn a flexible posterior by composing invertible transformations:</p>
+        <div class="equation-box">
+            $$ z_0 \sim q_0(z_0) \quad\text{(simple base, e.g., }\mathcal{N}(0, I)\text{)} $$
+            $$ z_K = f_K \circ \cdots \circ f_1(z_0) \quad\text{(compose K invertible transforms)} $$
+            $$ q(z_K) = q_0(z_0) \cdot \prod_{k=1}^K \big|\det J_{f_k}^{-1}\big| $$
+        </div>
+
+        <h2>Louizos &amp; Welling's Approach</h2>
+        <p>The key innovation is a <strong>multiplicative</strong> parameterization of the flow specifically designed for BNN weight posteriors:</p>
+        <ul>
+            <li><strong>Global auxiliary variables</strong> $z \sim q(z)$ that are shared across weights, reducing the effective dimensionality.</li>
+            <li><strong>Normalizing flow</strong> transforms these auxiliary variables into a rich, non-Gaussian distribution $q(z)$ (instead of a simple Gaussian).</li>
+            <li><strong>Multiplicative interaction:</strong> the flow output combines <em>multiplicatively</em> with the weight parameters, capturing correlations between weights that mean-field VI cannot.</li>
+        </ul>
+
+        <h3>Formulation</h3>
+        <div class="equation-box">
+            $$ W = r(z) \odot (\mu + \sigma \odot \varepsilon), \quad
+               \varepsilon \sim \mathcal{N}(0, I), \;
+               z \sim \text{flow base distribution} $$
+            <p>where $r(z)$ is the flow-transformed auxiliary variable, and $\odot$ denotes element-wise multiplication.</p>
+            <ul>
+                <li>$r(z) = 1$ — standard Bayes by Backprop (Gaussian posterior, no flow)</li>
+                <li>$r(z) = \text{IAF}(z)$ — inverse autoregressive flow (richer posterior)</li>
+                <li>$r(z) = \text{planar}(z)$ — simpler, cheaper flow</li>
+            </ul>
+            <p>The flow acts on <strong>auxiliary variables</strong>, not on pre-activations or weights directly. The multiplicative coupling $r(z) \odot (\mu + \sigma \odot \varepsilon)$ creates weight correlations and non-Gaussian structure.</p>
+        </div>
+
+        <h2>Results</h2>
+        <ul>
+            <li>Significantly better predictive log-likelihood than mean-field VI on UCI regression benchmarks.</li>
+            <li>Better-calibrated uncertainty — wider predictive intervals when data is scarce.</li>
+            <li>Captures weight correlations that are invisible to mean-field methods.</li>
+            <li>~2-5× more expensive than Bayes by Backprop (depends on flow complexity).</li>
+        </ul>
+
+        <h2>Pros &amp; Cons</h2>
+        <table>
+            <tr><th>✅ Advantages</th><th>❌ Disadvantages</th></tr>
+            <tr>
+                <td>Richer, more accurate posteriors than mean-field VI</td>
+                <td>Significant implementation complexity</td>
+            </tr>
+            <tr>
+                <td>Captures weight correlations and non-Gaussian structure</td>
+                <td>Computational cost grows with flow depth</td>
+            </tr>
+            <tr>
+                <td>Better uncertainty calibration</td>
+                <td>Flow design requires careful tuning (architecture choices)</td>
+            </tr>
+            <tr>
+                <td>Compatible with the reparameterization trick gradient estimator</td>
+                <td>Still a variational approximation — can miss true posterior modes</td>
+            </tr>
+        </table>
+
+        <div class="info-box">
+            <strong>🔗 Connections:</strong> This work bridges VI and normalizing flows. Modern extensions include neural spline flows, continuous flows (neural ODEs), and diffusion-based posteriors. Izmailov et al. (2021) showed that even flows may not fully capture the complexity of real BNN posteriors.
+        </div>
+
+        <div class="bottom-nav">
+            <a href="hernandez-probabilistic-backprop.html">← Probabilistic Backpropagation</a>
+            <a href="gal-dropout-bayesian.html">Next: Dropout as Bayesian Approximation →</a>
+        </div>
+    </main>
+</div>
+<script src="../nav.js"></script>
+<script src="../toc.js"></script>
+</body>
+</html>

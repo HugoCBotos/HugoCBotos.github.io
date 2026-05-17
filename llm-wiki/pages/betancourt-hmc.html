@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HMC Introduction — Betancourt 2017</title>
+    <link rel="stylesheet" href="../style.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+        onload="renderMathInElement(document.body, {delimiters: [
+            {left: '$$', right: '$$', display: true},
+            {left: '$', right: '$', display: false}
+        ]});"></script>
+</head>
+<body>
+<div class="wrapper">
+                    <nav class="sidebar">
+        <h2>📚 Python &amp; DL Wiki</h2>
+        <div class="tagline">LLM-maintained knowledge base</div>
+        <ul class="sidebar-nav">
+            <li><a href="../index.html">🏠 Wiki Index</a></li>
+            <li><a href="../log.html">📋 Activity Log</a></li>
+            <li><a href="../../notes.html" style="color:#f39c12; font-weight:600;">⬅ Back to Notes</a></li>
+            <li class="sidebar-section">
+                <div class="section-header">
+                    <span class="section-toggle">▶</span>
+                    <span class="section-label">BNN</span>
+                </div>
+                <ul class="section-pages">
+                    <li><a href="bnn-for-beginners.html">📖 BNN Overview</a></li>
+                    <li><a href="neural-network.html">1. Neural Networks</a></li>
+                    <li><a href="bayesian-inference.html">2. Bayesian Inference</a></li>
+                    <li><a href="probability-distributions.html">3. Probability Distributions</a></li>
+                    <li><a href="uncertainty.html">4. Types of Uncertainty</a></li>
+                    <li><a href="kl-divergence.html">5. KL Divergence</a></li>
+                    <li><a href="evidence-lower-bound.html">6. The ELBO</a></li>
+                    <li><a href="variational-inference.html">7. Variational Inference</a></li>
+                    <li><a href="mc-dropout.html">8. MC Dropout</a></li>
+                    <li><a href="laplace-approximation.html">9. Laplace Approximation</a></li>
+                    <li><a href="mcmc-hmc.html">10. MCMC &amp; HMC</a></li>
+                    <li class="sidebar-subsection">
+                        <div class="subsection-header">
+                            <span class="subsection-toggle">▶</span>
+                            <span class="subsection-label">Papers</span>
+                        </div>
+                        <ul class="subsection-pages">
+                            <li><a href="bnn-sources.html">📖 Paper Index</a></li>
+                            <li><a href="blundell-bayes-by-backprop.html">Bayes by Backprop</a></li>
+                            <li><a href="hernandez-probabilistic-backprop.html">Probabilistic Backprop</a></li>
+                            <li><a href="louizos-normalizing-flows.html">Normalizing Flows</a></li>
+                            <li><a href="gal-dropout-bayesian.html">Dropout as Bayesian</a></li>
+                            <li><a href="daxberger-laplace-redux.html">Laplace Redux</a></li>
+                            <li><a href="izmailov-bnn-posteriors.html">BNN Posteriors</a></li>
+                            <li><a href="betancourt-hmc.html">HMC Intro</a></li>
+                            <li><a href="jospin-hands-on-bnn.html">Hands-on BNN</a></li>
+                            <li><a href="goan-fookes-survey.html">Survey (Goan &amp; Fookes)</a></li>
+                            <li><a href="wang-yeung-survey.html">Survey (Wang &amp; Yeung)</a></li>
+                            <li><a href="magris-bayesian-survey.html">Bayesian Survey (Magris)</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </li>
+        </ul>
+    </nav>
+    <main class="main-content">
+        <a href="bnn-sources.html" class="back-link">← Back to paper index</a>
+        <div class="concept-header">
+            <div class="breadcrumb"><a href="bnn-sources.html">Paper Index</a> / HMC Introduction</div>
+            <h1>A Conceptual Introduction to Hamiltonian Monte Carlo</h1>
+            <p>Michael Betancourt (2017, arXiv)</p>
+        </div>
+
+        <div class="citation">
+            <strong>📄 Paper:</strong> <a href="https://arxiv.org/abs/1701.02434">arXiv:1701.02434</a><br>
+            <strong>📁 Source:</strong> <code>2017_Betancourt_HMC_Introduction.pdf</code>
+        </div>
+
+        <div class="key-insight">
+            <strong>🎯 Core Idea</strong>
+            <p>HMC is the gold-standard MCMC method for Bayesian neural networks. It uses Hamiltonian dynamics (from physics) to propose distant states with high acceptance probability, making it far more efficient than random-walk Metropolis-Hastings in high dimensions. This tutorial explains the geometry and practical diagnostics.</p>
+        </div>
+
+        <h2>Why HMC for BNNs?</h2>
+        <p>BNN posteriors are:</p>
+        <ul>
+            <li><strong>High-dimensional</strong> (thousands to millions of parameters)</li>
+            <li><strong>Strongly correlated</strong> (weights interact in complex ways)</li>
+            <li><strong>Multi-modal</strong> (many equivalent solutions due to symmetries)</li>
+        </ul>
+        <p>Random-walk Metropolis fails catastrophically in such spaces. HMC leverages gradient information to traverse the posterior efficiently.</p>
+
+        <h2>Core Intuition: Analogy to Physics</h2>
+        <p>Think of a frictionless puck sliding on a landscape:</p>
+        <ul>
+            <li><strong>Potential energy:</strong> U(w) = -log p(w|D) (the negative log-posterior)</li>
+            <li><strong>Kinetic energy:</strong> K(p) = ½ p<sup>T</sup> M<sup>-1</sup> p (momentum p, mass matrix M)</li>
+            <li><strong>Hamiltonian:</strong> H(w, p) = U(w) + K(p) — total energy conserved</li>
+        </ul>
+        <p>HMC simulates the Hamiltonian dynamics using leapfrog integration. After each trajectory, the momentum is randomly resampled, and the proposed (w, p) is accepted/rejected based on the energy difference (which is near-zero with accurate integration, giving high acceptance).</p>
+
+        <h2>Key Components in Practice</h2>
+        <table>
+            <tr><th>Component</th><th>Role</th><th>Practical Choice</th></tr>
+            <tr><td>Mass matrix M</td><td>Defines the metric (shapes the proposal)</td><td>Diagonal from empirical Fisher; adapt during warmup</td></tr>
+            <tr><td>Step size ε</td><td>Integration accuracy</td><td>Adapt to achieve ~0.65 acceptance rate (NUTS)</td></tr>
+            <tr><td>Number of steps L</td><td>Trajectory length</td><td>Automated via NUTS (No-U-Turn Sampler)</td></tr>
+            <tr><td>Warmup iterations</td><td>Adapt parameters, burn-in</td><td>100-500 iterations (depends on complexity)</td></tr>
+        </table>
+
+        <h2>Diagnostics (Essential!)</h2>
+        <ul>
+            <li><strong>R-hat (Ř) &lt; 1.01:</strong> Chain convergence diagnostic. Multiple chains must agree.</li>
+            <li><strong>ESS (Effective Sample Size):</strong> Number of independent samples equivalent to your correlated chain. Higher is better.</li>
+            <li><strong>Divergent transitions:</strong> If present, the posterior geometry is problematic — may need reparameterization or stronger mass matrix.</li>
+        </ul>
+
+        <h2>Practical Use in BNN Research</h2>
+        <pre><code><span class="code-keyword">import</span> pyro
+<span class="code-keyword">import</span> pyro.distributions <span class="code-keyword">as</span> dist
+
+<span class="code-comment"># Define model: logistic regression with HMC</span>
+<span class="code-keyword">def</span> <span class="code-function">model</span>(x, y=None):
+    <span class="code-comment"># Weight vector (10 features → 1 output) with IID Normal prior</span>
+    w = pyro.sample(<span class="code-string">'w'</span>, dist.Normal(torch.zeros(10),
+                                         torch.ones(10)).to_event(1))
+    <span class="code-comment"># Bias with standard Normal prior</span>
+    b = pyro.sample(<span class="code-string">'b'</span>, dist.Normal(0, 1))
+    mu = x @ w + b
+    <span class="code-keyword">with</span> pyro.plate(<span class="code-string">'data'</span>, len(x)):
+        pyro.sample(<span class="code-string">'obs'</span>, dist.Bernoulli(logits=mu), obs=y)
+
+<span class="code-comment"># Run HMC (NUTS)</span>
+nuts_kernel = pyro.infer.NUTS(model)
+mcmc = pyro.infer.MCMC(nuts_kernel, num_samples=500, warmup_steps=200)
+mcmc.run(x_train, y_train)
+
+<span class="code-comment"># Extract posterior samples</span>
+samples = mcmc.get_samples()</code></pre>
+
+        <h2>Limitations for Large NNs</h2>
+        <ul>
+            <li>HMC requires computing the gradient of the <em>entire</em> log-posterior per leapfrog step — O(N) cost per step, with N steps per sample.</li>
+            <li>For modern deep networks (millions of parameters), HMC is <strong>prohibitively expensive</strong>.</li>
+            <li>Stochastic gradient HMC (SGHMC) variants exist but lose the guarantees.</li>
+            <li><strong>Practical recommendation:</strong> Use HMC only on small models or last layers. For full networks, use it only as a benchmark to evaluate cheaper approximations.</li>
+        </ul>
+
+        <div class="info-box">
+            <strong>🔗 Connections:</strong> This tutorial is the pre-requisite for understanding why BNN inference is hard. It directly connects to Izmailov et al. (2021) which uses HMC as the gold standard to evaluate all other approximations. For practical implementation, check Pyro's NUTS or TensorFlow Probability's HMC.
+        </div>
+
+        <div class="bottom-nav">
+            <a href="izmailov-bnn-posteriors.html">← BNN Posteriors</a>
+            <a href="jospin-hands-on-bnn.html">Next: Hands-on BNN Tutorial →</a>
+        </div>
+    </main>
+</div>
+<script src="../nav.js"></script>
+<script src="../toc.js"></script>
+</body>
+</html>
