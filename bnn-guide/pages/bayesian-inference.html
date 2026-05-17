@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bayesian Inference — BNN for Beginners</title>
+    <link rel="stylesheet" href="../style.css">
+</head>
+<body>
+<div class="wrapper">
+    <nav class="sidebar">
+        <h2>🧠 BNN for Beginners</h2>
+        <div class="tagline">from a mathematician's perspective</div>
+        <ul class="sidebar-nav">
+            <li><a href="../../notes.html" style="color:#f39c12; font-weight:600;">⬅ Back to Notes</a></li>
+            <li><a href="../index.html">🏠 Main Page</a></li>
+            <li class="section-label">Concepts</li>
+            <li><a href="neural-network.html">1. Neural Networks</a></li>
+            <li><a href="bayesian-inference.html" class="active">2. Bayesian Inference</a></li>
+            <li><a href="probability-distributions.html">3. Probability Distributions</a></li>
+            <li><a href="uncertainty.html">4. Types of Uncertainty</a></li>
+            <li><a href="kl-divergence.html">5. KL Divergence</a></li>
+            <li><a href="evidence-lower-bound.html">6. The ELBO</a></li>
+            <li class="section-label">Methods</li>
+            <li><a href="variational-inference.html">7. Variational Inference</a></li>
+            <li><a href="mc-dropout.html">8. MC Dropout</a></li>
+            <li><a href="laplace-approximation.html">9. Laplace Approximation</a></li>
+            <li><a href="mcmc-hmc.html">10. MCMC &amp; HMC</a></li>
+        </ul>
+    </nav>
+
+    <main class="main-content">
+        <a href="../index.html" class="back-link">← Back to main page</a>
+        <div class="breadcrumb"><a href="../index.html">Home</a> / Bayesian Inference</div>
+        <h1>2. What is Bayesian Inference?</h1>
+
+        <div class="key-insight">
+            <strong>🎯 In one sentence</strong>
+            <p>Bayesian inference is a framework for updating your beliefs about something (a weight, a parameter) when you see new data. You start with a <strong>prior</strong> belief, see data, and end with a <strong>posterior</strong> belief.</p>
+        </div>
+
+        <!-- ======== THE THREE INGREDIENTS ======== -->
+        <h2>The Three Ingredients</h2>
+
+        <div class="info-box">
+            <strong>📝 Notation: the vertical bar "|" means "given"</strong>
+            <p>
+                In probability, <strong>p(D | w)</strong> reads as <strong>"probability of D <em>given</em> w"</strong>.
+                The pipe <strong>|</strong> separates what we're computing (left) from what we assume known (right).
+                So <em>p(D | w)</em> = "how likely is the data D, assuming the weights are w".
+            </p>
+        </div>
+
+        <p>Every Bayesian problem has three components:</p>
+
+        <table>
+            <tr><th>Name</th><th>Symbol</th><th>Meaning</th><th>Analogy</th></tr>
+            <tr>
+                <td><strong>Prior</strong></td>
+                <td><em>p(w)</em></td>
+                <td>What we believe about <em>w</em> before seeing data</td>
+                <td>"Before the experiment, I think the coin is probably fair"</td>
+            </tr>
+            <tr>
+                <td><strong>Likelihood</strong></td>
+                <td><em>p(D|w)</em></td>
+                <td>How probable is the data <em>D</em> if <em>w</em> were the true value</td>
+                <td>"If the coin had bias 0.7, what's the chance of 8 heads in 10 tosses?"</td>
+            </tr>
+            <tr>
+                <td><strong>Posterior</strong></td>
+                <td><em>p(w|D)</em></td>
+                <td>What we believe after seeing the data</td>
+                <td>"After seeing 8 heads in 10 tosses, now I think the bias is around 0.8"</td>
+            </tr>
+        </table>
+
+        <!-- ======== BAYES THEOREM ======== -->
+        <h2>Bayes' Theorem</h2>
+
+        <p>The three ingredients are connected by <strong>Bayes' theorem</strong>:</p>
+
+        <div class="equation-box">
+            <div class="label">Bayes' Theorem</div>
+            p(w | D) = p(D | w) &middot; p(w) / p(D)
+        </div>
+
+        <p>In words:</p>
+        <div class="equation-box">
+            <div class="label">Posterior = (Likelihood &times; Prior) / Evidence</div>
+        </div>
+
+        <ul>
+            <li><strong>Posterior</strong> <em>p(w|D)</em>: our updated belief after seeing data</li>
+            <li><strong>Likelihood</strong> <em>p(D|w)</em>: how well the data fits a particular <em>w</em></li>
+            <li><strong>Prior</strong> <em>p(w)</em>: our belief before data</li>
+            <li><strong>Evidence</strong> <em>p(D)</em>: a normalizing constant (total probability of the data)</li>
+        </ul>
+
+        <div class="info-box">
+            <strong>🔍 For the mathematician:</strong> The evidence <em>p(D)</em> = ∫ <em>p(D|w)</em> <em>p(w)</em> <em>dw</em> is just the constant that makes the posterior integrate to 1. It's often impossible to compute analytically — that's the central difficulty of Bayesian inference.
+        </div>
+
+        <!-- ======== A CONCRETE EXAMPLE ======== -->
+        <h2>A Concrete Example: Coin Tossing</h2>
+
+        <div class="story">
+            <p><strong>Scenario:</strong> You have a coin. You want to know its probability of landing heads (call it <em>w</em>).
+            You toss it 10 times and get 8 heads. What is <em>w</em>?</p>
+        </div>
+
+        <p><strong>Frequentist answer:</strong> <em>w</em> = 8/10 = 0.8. A single number.</p>
+
+        <p><strong>Bayesian answer:</strong> We keep a whole distribution.</p>
+
+        <ol>
+            <li><strong>Prior:</strong> Before tossing, we think any <em>w</em> ∈ [0, 1] is equally likely.
+            So <em>p(w)</em> = 1 (uniform distribution).</li>
+            <li><strong>Likelihood:</strong> The probability of exactly 8 heads in 10 tosses, given bias <em>w</em>,
+            is <em>p(D|w)</em> = C(10,8) <em>w</em><sup>8</sup> (1-<em>w</em>)<sup>2</sup>.</li>
+            <li><strong>Posterior:</strong> Multiply and normalize. The result is a <strong>Beta distribution</strong>
+            concentrated near 0.8, but with a spread that reflects our remaining uncertainty.</li>
+        </ol>
+
+        <p>Notice: the Bayesian answer is a <em>distribution</em>, not a point. That distribution tells us not just
+        "the most likely value is 0.8" but also "we're about 95% sure the true bias is between 0.55 and 0.95".
+        This uncertainty information is what BNNs bring to neural networks.</p>
+
+        <!-- ======== CONNECTION TO NEURAL NETS ======== -->
+        <h2>Connection to Neural Networks</h2>
+
+        <p>In a neural network, <em>w</em> is the set of all weights (millions of numbers).
+        The data <em>D</em> is the training dataset.</p>
+
+        <ul>
+            <li><strong>Prior</strong> <em>p(w)</em>: our initial belief about the weights (usually "they should be small", i.e., a Gaussian centered at 0)</li>
+            <li><strong>Likelihood</strong> <em>p(D|w)</em>: how well the network predicts the training data given those weights</li>
+            <li><strong>Posterior</strong> <em>p(w|D)</em>: the distribution of weights that explain the data</li>
+        </ul>
+
+        <p>
+            A <strong>Bayesian neural network</strong> doesn't just find the single best <em>w</em>.
+            It approximates the whole posterior <em>p(w|D)</em>. When making a prediction, we average over all plausible weights:
+        </p>
+
+        <div class="equation-box">
+            <div class="label">Predictive Distribution</div>
+            <em>p(y*|x*, D)</em> = ∫ <em>p(y*|x*, w)</em> <em>p(w|D)</em> <em>dw</em>
+        </div>
+
+        <p>
+            This integral is why we need approximation methods (VI, Dropout, Laplace, HMC).
+            Each method is a different way of approximating this impossible integral.
+        </p>
+
+        <div class="warning-box">
+            <strong>⚠️ The central challenge:</strong> The posterior <em>p(w|D)</em> for a neural network
+            is a distribution over millions of parameters, with complex correlations and multiple modes.
+            It is <strong>intractable</strong> — we can't compute it exactly. All BNN methods are approximations.
+        </div>
+
+        <div class="bottom-nav">
+            <a href="neural-network.html">← Neural Networks</a>
+            <a href="probability-distributions.html">Next: Probability Distributions →</a>
+        </div>
+    </main>
+</div>
+<script src="../nav.js"></script>
+<script src="../search.js"></script>
+</body>
+</html>

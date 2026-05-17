@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Laplace Redux — Daxberger 2021</title>
+    <link rel="stylesheet" href="../style.css">
+</head>
+<body>
+<div class="wrapper">
+    <nav class="sidebar">
+        <h2>🧠 BNN References</h2>
+        <ul class="sidebar-nav">
+            <li><a href="../index.html">🏠 Back to References</a></li>
+            <li><a href="../../index.html">🧠 Main Tutorial</a></li>
+            <li class="section-label">Variational Inference</li>
+            <li><a href="blundell-bayes-by-backprop.html">Blundell — Bayes by Backprop</a></li>
+            <li><a href="hernandez-probabilistic-backprop.html">Hernández-Lobato — Prob. Backprop</a></li>
+            <li><a href="louizos-normalizing-flows.html">Louizos — Normalizing Flows</a></li>
+            <li class="section-label">Dropout &amp; Approximations</li>
+            <li><a href="gal-dropout-bayesian.html">Gal — Dropout as Bayesian</a></li>
+            <li class="section-label">Laplace Approximations</li>
+            <li><a href="daxberger-laplace-redux.html" class="active">Daxberger — Laplace Redux</a></li>
+            <li class="section-label">Empirical Studies</li>
+            <li><a href="izmailov-bnn-posteriors.html">Izmailov — BNN Posteriors</a></li>
+            <li class="section-label">Foundations &amp; MCMC</li>
+            <li><a href="betancourt-hmc.html">Betancourt — HMC Intro</a></li>
+            <li class="section-label">Tutorials &amp; Surveys</li>
+            <li><a href="jospin-hands-on-bnn.html">Jospin — Hands-on BNN</a></li>
+            <li><a href="goan-fookes-survey.html">Goan &amp; Fookes — Survey</a></li>
+            <li><a href="wang-yeung-survey.html">Wang &amp; Yeung — Survey</a></li>
+            <li><a href="magris-bayesian-survey.html">Magris — Bayesian Learning Survey</a></li>
+        </ul>
+    </nav>
+    <main class="main-content">
+        <a href="../index.html" class="back-link">← Back to main page</a>
+        <div class="concept-header">
+            <div class="breadcrumb"><a href="../index.html">Home</a> / Laplace Redux</div>
+            <h1>Laplace Redux</h1>
+            <p><em>Laplace Redux — Effortless Bayesian Deep Learning</em> — Daxberger, Kristiadi, Immer, Eschenhagen, Bauer, Hennig (NeurIPS 2021)</p>
+        </div>
+
+        <div class="citation">
+            <strong>📄 Paper:</strong> <a href="https://arxiv.org/abs/2106.14806">arXiv:2106.14806</a><br>
+            <strong>📁 Source:</strong> <code>2021_Daxberger_Laplace_Redux.pdf</code><br>
+            <strong>🛠️ Code:</strong> <a href="https://github.com/aleximmer/Laplace">github.com/aleximmer/Laplace</a>
+        </div>
+
+        <div class="key-insight">
+            <strong>🎯 Core Idea</strong>
+            <p>After standard MAP training, approximate the posterior as a Gaussian centered at the MAP estimate using a second-order Taylor expansion of the log-joint. Modern Hessian approximations (Kronecker-factored, diagonal) make this scalable to modern architectures.</p>
+        </div>
+
+        <h2>Mathematical Formulation</h2>
+
+        <h3>The Laplace Approximation</h3>
+        <p>Given a MAP estimate <em>w<sub>MAP</sub></em>, the log-posterior is approximated by a second-order Taylor expansion:</p>
+        <div class="equation-box">
+            <pre><code>log p(w|D) ≈ log p(w_MAP|D) - ½(w - w_MAP)^T H (w - w_MAP)</code></pre>
+            <p>where <em>H = ∇² log p(w|D)</em> is the Hessian of the negative log-joint at the MAP estimate. This implies a Gaussian posterior:</p>
+        </div>
+        <div class="equation-box">
+            <pre><code>p(w|D) ≈ N(w; w_MAP, H^{-1})</code></pre>
+        </div>
+
+        <h3>Hessian Approximations for Scalability</h3>
+        <p>Full Hessian is O(D²) where D is the number of parameters — infeasible for modern nets. Daxberger et al. systematically compare approximations:</p>
+        <table>
+            <tr><th>Approximation</th><th>Memory</th><th>Quality</th><th>Notes</th></tr>
+            <tr><td>Full (via GGMC)</td><td>O(D²)</td><td>Best</td><td>Only for small models</td></tr>
+            <tr><td>Kronecker-Factored (K-FAC)</td><td>O(L·(d_in² + d_out²))</td><td>Very Good</td><td>Best practical choice for moderate nets</td></tr>
+            <tr><td>Diagonal</td><td>O(D)</td><td>Moderate</td><td>Ignores off-diagonal correlations</td></tr>
+            <tr><td>Last-Layer</td><td>O(L_out²)</td><td>Good</td><td>Only last layer — surprisingly effective</td></tr>
+        </table>
+
+        <h2>Why It Matters for Practitioners</h2>
+        <ul>
+            <li><strong>Post-hoc:</strong> Applied after standard training — no need to modify training.</li>
+            <li><strong>Last-layer Laplace</strong> is especially compelling: treat the network as a feature extractor, then apply Laplace only to the final linear layer. This is cheap and often gives excellent uncertainty estimates.</li>
+            <li>Compatible with any pretrained model — just add Laplace on top.</li>
+        </ul>
+
+        <h2>Using the Library</h2>
+        <pre><code><span class="code-keyword">from</span> laplace <span class="code-keyword">import</span> Laplace
+
+model = trained_model  <span class="code-comment"># any PyTorch model</span>
+
+<span class="code-comment"># Fit Laplace approximation</span>
+la = Laplace(model, <span class="code-string">'classification'</span>,
+             subset_of_weights=<span class="code-string">'last_layer'</span>,
+             hessian_structure=<span class="code-string">'kron'</span>)
+la.fit(train_loader)
+
+<span class="code-comment"># Predict with uncertainty</span>
+pred = la(x)
+uncertainty = la.predictive_samples(x).var(dim=0)</code></pre>
+
+        <h2>Pros &amp; Cons</h2>
+        <table>
+            <tr><th>✅ Advantages</th><th>❌ Disadvantages</th></tr>
+            <tr>
+                <td>Post-hoc — no training changes needed</td>
+                <td>Local approximation (Gaussian around mode) — may miss multi-modality</td>
+            </tr>
+            <tr>
+                <td>Works with any pretrained model</td>
+                <td>Full Hessian is impractical at scale</td>
+            </tr>
+            <tr>
+                <td>Last-layer version is extremely efficient</td>
+                <td>Posterior quality depends on the quality of the MAP estimate</td>
+            </tr>
+            <tr>
+                <td>Mature, well-documented Python library available</td>
+                <td>Not suitable for very deep weight-space posteriors (last-layer recommended)</td>
+            </tr>
+        </table>
+
+        <div class="bottom-nav">
+            <a href="gal-dropout-bayesian.html">← Dropout as Bayesian Approximation</a>
+            <a href="izmailov-bnn-posteriors.html">Next: BNN Posteriors Empirical Study →</a>
+        </div>
+    </main>
+</div>
+<script src="../nav.js"></script>
+</body>
+</html>

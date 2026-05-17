@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Notes — Hugo Cattarucci Botós</title>
+  <meta name="description" content="Study notes, tutorials, and reference material by Hugo Cattarucci Botós.">
+  <link rel="stylesheet" href="css/style.css?v=2">
+</head>
+<body>
+
+  <!-- Navigation -->
+  <header class="site-header">
+    <nav class="navbar">
+      <a href="index.html" class="site-title">Hugo C. Botós</a>
+      <button class="nav-toggle" id="navToggle" aria-label="Toggle menu">&#9776;</button>
+      <ul class="nav-links" id="navLinks">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="articles.html">Publications</a></li>
+        <li><a href="exposition.html">Expositions</a></li>
+        <li><a href="notes.html" class="active">Notes</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <!-- Main Content -->
+  <main class="content">
+    <div class="container">
+
+      <div class="page-header">
+        <h1>Notes &amp; Tutorials</h1>
+      </div>
+
+      <!-- BNN Tutorial Card -->
+      <div class="course-card" style="border-left-color: #e67e22;">
+        <h3>
+          <a href="bnn-guide/index.html">Bayesian Neural Networks — A Beginner's Guide</a>
+        </h3>
+        <div class="course-meta">From a mathematician's perspective &bull; May 2026</div>
+        <div class="course-desc">
+          <p>
+            A step-by-step tutorial covering the foundations of Bayesian neural networks.
+            Starts from linear algebra and probability, builds up to variational inference,
+            MC Dropout, Laplace approximation, and HMC. Includes PyTorch code examples.
+            Designed for mathematicians who are new to deep learning and Bayesian methods.
+          </p>
+        </div>
+      </div>
+
+      <!-- More notes can be added here later -->
+
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="container">
+      <p>&copy; 2026 Hugo Cattarucci Botós</p>
+      <div class="footer-divider"></div>
+      <p>Built with <span class="footer-heart">&#9829;</span></p>
+    </div>
+  </footer>
+
+  <!-- Mobile Nav Toggle -->
+  <script>
+    document.getElementById('navToggle').addEventListener('click', function() {
+      document.getElementById('navLinks').classList.toggle('open');
+    });
+  </script>
+</body>
+</html>

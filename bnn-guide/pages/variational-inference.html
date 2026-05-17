@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Variational Inference — BNN for Beginners</title>
+    <link rel="stylesheet" href="../style.css">
+</head>
+<body>
+<div class="wrapper">
+    <nav class="sidebar">
+        <h2>🧠 BNN for Beginners</h2>
+        <div class="tagline">from a mathematician's perspective</div>
+        <ul class="sidebar-nav">
+            <li><a href="../../notes.html" style="color:#f39c12; font-weight:600;">⬅ Back to Notes</a></li>
+            <li><a href="../index.html">🏠 Main Page</a></li>
+            <li class="section-label">Concepts</li>
+            <li><a href="neural-network.html">1. Neural Networks</a></li>
+            <li><a href="bayesian-inference.html">2. Bayesian Inference</a></li>
+            <li><a href="probability-distributions.html">3. Probability Distributions</a></li>
+            <li><a href="uncertainty.html">4. Types of Uncertainty</a></li>
+            <li><a href="kl-divergence.html">5. KL Divergence</a></li>
+            <li><a href="evidence-lower-bound.html">6. The ELBO</a></li>
+            <li class="section-label">Methods</li>
+            <li><a href="variational-inference.html" class="active">7. Variational Inference</a></li>
+            <li><a href="mc-dropout.html">8. MC Dropout</a></li>
+            <li><a href="laplace-approximation.html">9. Laplace Approximation</a></li>
+            <li><a href="mcmc-hmc.html">10. MCMC &amp; HMC</a></li>
+        </ul>
+    </nav>
+
+    <main class="main-content">
+        <a href="../index.html" class="back-link">← Back to main page</a>
+        <div class="breadcrumb"><a href="../index.html">Home</a> / Variational Inference</div>
+        <h1>7. Variational Inference — Bayes by Backprop</h1>
+
+        <div class="key-insight">
+            <strong>🎯 In one sentence</strong>
+            <p>Instead of finding the best <em>single</em> weight value, learn a Gaussian distribution for each weight (mean and standard deviation) by maximizing the ELBO using backpropagation and the reparameterization trick.</p>
+        </div>
+
+        <p>
+            This is among the most mathematically principled of the practical BNN methods
+            (though HMC, page 10, is more principled still — it samples from the exact posterior
+            rather than approximating it with a Gaussian family). This method is also known as
+            <strong>Bayes by Backprop</strong> (Blundell et al., 2015).
+        </p>
+
+        <!-- ======== THE KEY IDEA ======== -->
+        <h2>The Key Idea</h2>
+
+        <p>In a normal neural network, each weight <em>w</em> is a single number. In Bayes by Backprop:</p>
+
+        <div class="equation-box">
+            <div class="label">Each weight has two parameters</div>
+            <em>w</em> = μ + σ ⊙ ε, where ε ~ N(0, 1)
+            <br><br>
+            <strong>μ</strong>: the mean (best guess for the weight)<br>
+            <strong>σ</strong>: the standard deviation (how uncertain we are)<br>
+            <strong>ε</strong>: random noise (sampled fresh each forward pass)
+        </div>
+
+        <p>
+            The <strong>reparameterization trick</strong> is what makes this work.
+            By writing <em>w</em> = μ + σε, we separate the randomness (ε) from the parameters (μ, σ).
+            This lets gradients flow through the sampling step during backpropagation.
+        </p>
+
+        <!-- ======== THE MATHEMATICS ======== -->
+        <h2>The Mathematics</h2>
+
+        <p>We want to maximize the ELBO with respect to the variational parameters (μ, σ for each weight):</p>
+
+        <div class="equation-box">
+            <div class="label">Objective to maximize</div>
+            ELBO = E<sub><em>q</em></sub>[log <em>p(D|w)</em>] - KL[<em>q</em> || <em>p(w)</em>]
+        </div>
+
+        <p>The KL term can be computed in closed form when both <em>q</em> and the prior <em>p</em> are Gaussian:</p>
+
+        <div class="equation-box">
+            <div class="label">KL between two Gaussians</div>
+            KL[ N(μ<sub>q</sub>, σ<sub>q</sub>²) || N(μ<sub>p</sub>, σ<sub>p</sub>²) ] =
+            log(σ<sub>p</sub>/σ<sub>q</sub>) + (σ<sub>q</sub>² + (μ<sub>q</sub> - μ<sub>p</sub>)²) / (2σ<sub>p</sub>²) - ½
+        </div>
+
+        <p>The data term is approximated by a single Monte Carlo sample (one forward pass with sampled weights).</p>
+
+        <!-- ======== PRACTICAL CONSIDERATIONS ======== -->
+        <h2>Practical Implementation Details</h2>
+
+        <ul>
+            <li><strong>σ parameterization:</strong> We don't optimize σ directly (it must be positive).
+            Instead, we optimize ρ where σ = log(1 + exp(ρ)) (softplus). This lets us use unconstrained optimization.</li>
+            <li><strong>KL scaling:</strong> The KL is divided by the number of mini-batches for unbiased mini-batch training.</li>
+            <li><strong>Prior:</strong> Often a scale mixture of two Gaussians (one narrow, one wide) works better than a single Gaussian.</li>
+            <li><strong>Local reparameterization:</strong> Instead of sampling each weight independently, sample the <em>pre-activation</em> (the weighted sum) — this reduces gradient variance.</li>
+        </ul>
+
+        <!-- ======== FULL CODE EXAMPLE ======== -->
+        <h2>Complete PyTorch Implementation</h2>
+
+        <p>Here is a full implementation of a Bayesian linear layer using Bayes by Backprop:</p>
+
+        <pre><code><span class="code-keyword">import</span> torch
+<span class="code-keyword">import</span> torch.nn <span class="code-keyword">as</span> nn
+<span class="code-keyword">import</span> torch.nn.functional <span class="code-keyword">as</span> F
+<span class="code-keyword">import</span> math
+
+<span class="code-comment"># ---------- Bayesian Linear Layer ----------</span>
+<span class="code-keyword">class</span> <span class="code-class">BayesianLinear</span>(nn.Module):
+    <span class="code-keyword">def</span> <span class="code-function">__init__</span>(self, in_features, out_features,
+                 prior_sigma_1=1.5, prior_sigma_2=0.1, prior_pi=0.5):
+        <span class="code-keyword">super</span>().<span class="code-function">__init__</span>()
+        self.in_features  = in_features
+        self.out_features = out_features
+        
+        <span class="code-comment"># Variational parameters: mean and rho (for std)</span>
+        self.w_mu    = nn.Parameter(torch.randn(out_features, in_features) * 0.1)
+        self.w_rho   = nn.Parameter(torch.randn(out_features, in_features) * 0.1)
+        self.b_mu    = nn.Parameter(torch.randn(out_features) * 0.1)
+        self.b_rho   = nn.Parameter(torch.randn(out_features) * 0.1)
+        
+        <span class="code-comment"># Prior parameters (scale mixture of Gaussians)</span>
+        self.prior_sigma_1 = prior_sigma_1
+        self.prior_sigma_2 = prior_sigma_2
+        self.prior_pi      = prior_pi
+        
+        <span class="code-comment"># Store for KL computation</span>
+        self.kl_loss = 0.0
+    
+    <span class="code-comment"># Compute std from rho (softplus ensures positivity)</span>
+    <span class="code-keyword">def</span> <span class="code-function">_std</span>(self, rho):
+        <span class="code-keyword">return</span> torch.log(1 + torch.exp(rho))  <span class="code-comment"># softplus</span>
+    
+    <span class="code-comment"># Prior log-probability (scale mixture of two Gaussians)</span>
+    <span class="code-keyword">def</span> <span class="code-function">_log_prior</span>(self, w):
+        <span class="code-keyword">def</span> <span class="code-function">log_gauss</span>(w, sigma):
+            <span class="code-keyword">return</span> -0.5 * (w**2 / sigma**2 + math.log(2*math.pi) + 2*math.log(sigma))
+        log_p1 = log_gauss(w, self.prior_sigma_1)
+        log_p2 = log_gauss(w, self.prior_sigma_2)
+        <span class="code-keyword">return</span> torch.log(self.prior_pi * torch.exp(log_p1) +
+                       (1 - self.prior_pi) * torch.exp(log_p2))
+    
+    <span class="code-comment"># Variational posterior log-probability (Gaussian)</span>
+    <span class="code-keyword">def</span> <span class="code-function">_log_q</span>(self, w, mu, rho):
+        sigma = self._std(rho)
+        <span class="code-keyword">return</span> -0.5 * ((w - mu)**2 / sigma**2 +
+                       math.log(2*math.pi) + 2*torch.log(sigma))
+    
+    <span class="code-comment"># Forward pass with sampling</span>
+    <span class="code-keyword">def</span> <span class="code-function">forward</span>(self, x):
+        <span class="code-comment"># Sample noise</span>
+        eps_w = torch.randn_like(self.w_mu)
+        eps_b = torch.randn_like(self.b_mu)
+        
+        <span class="code-comment"># Reparameterization trick: w = mu + sigma * eps</span>
+        w = self.w_mu + self._std(self.w_rho) * eps_w
+        b = self.b_mu + self._std(self.b_rho) * eps_b
+        
+        <span class="code-comment"># Compute KL divergence for this layer</span>
+        <span class="code-comment"># This is a SINGLE-SAMPLE Monte Carlo estimate of KL[q || prior].</span>
+        <span class="code-comment"># The exact KL requires an intractable integral; we approximate it by</span>
+        <span class="code-comment"># drawing one sample w ~ q and computing log q(w) - log prior(w).</span>
+        <span class="code-comment"># This is unbiased (E[log q - log prior] = KL[q || prior]) but noisy.</span>
+        <span class="code-comment"># Thanks to the reparameterization trick (w = mu + sigma * eps),</span>
+        <span class="code-comment"># the gradient of this estimate w.r.t. mu and rho is unbiased.</span>
+        log_q    = self._log_q(w, self.w_mu, self.w_rho).sum()
+        log_prior = self._log_prior(w).sum()
+        log_q    += self._log_q(b, self.b_mu, self.b_rho).sum()
+        log_prior += self._log_prior(b).sum()
+        <span class="code-comment"># kl_loss = log_q - log_prior  is a Monte Carlo estimate of KL[q || prior]</span>
+        self.kl_loss = log_q - log_prior
+        
+        <span class="code-comment"># Linear transformation with sampled weights</span>
+        <span class="code-keyword">return</span> F.linear(x, w, b)
+
+
+<span class="code-comment"># ---------- Full Bayesian Model ----------</span>
+<span class="code-keyword">class</span> <span class="code-class">BayesianNN</span>(nn.Module):
+    <span class="code-keyword">def</span> <span class="code-function">__init__</span>(self):
+        <span class="code-keyword">super</span>().<span class="code-function">__init__</span>()
+        self.fc1 = BayesianLinear(784, 128)
+        self.fc2 = BayesianLinear(128, 64)
+        self.fc3 = BayesianLinear(64, 10)
+    
+    <span class="code-keyword">def</span> <span class="code-function">forward</span>(self, x, <span class="code-function">compute_kl</span>=True):
+        x = F.relu(self.fc1(x))
+        x = F.relu(self.fc2(x))
+        x = self.fc3(x)
+        
+        <span class="code-comment"># Sum KL from all layers</span>
+        <span class="code-keyword">if</span> compute_kl:
+            self.kl = self.fc1.kl_loss + self.fc2.kl_loss + self.fc3.kl_loss
+        <span class="code-keyword">return</span> x
+
+
+<span class="code-comment"># ---------- Training ----------</span>
+model = BayesianNN()
+optimizer = torch.optim.Adam(model.parameters(), lr=0.001)
+num_batches = 100  <span class="code-comment"># total mini-batches per epoch</span>
+
+<span class="code-keyword">for</span> x_batch, y_batch <span class="code-keyword">in</span> dataloader:
+    pred = model(x_batch)
+    
+    <span class="code-comment"># Negative log-likelihood (data fit term)</span>
+    nll = F.cross_entropy(pred, y_batch)
+    
+    <span class="code-comment"># ELBO = - (NLL + KL / num_batches)</span>
+    loss = nll + model.kl / num_batches
+    
+    optimizer.zero_grad()
+    loss.backward()
+    optimizer.step()
+
+
+<span class="code-comment"># ---------- Prediction with Uncertainty ----------</span>
+model.train()  <span class="code-comment"># keep sampling active</span>
+predictions = []
+<span class="code-keyword">for</span> _ <span class="code-keyword">in</span> <span class="code-function">range</span>(50):   <span class="code-comment"># 50 Monte Carlo samples</span>
+    pred = model(x_test, compute_kl=False)
+    predictions.append(F.softmax(pred, dim=1))
+
+predictions = torch.stack(predictions)  <span class="code-comment"># (50, batch, 10)</span>
+mean = predictions.mean(dim=0)           <span class="code-comment"># average prediction</span>
+var  = predictions.var(dim=0)           <span class="code-comment"># uncertainty estimate</span></code></pre>
+
+        <!-- ======== PROS AND CONS ======== -->
+        <h2>Pros and Cons</h2>
+
+        <table>
+            <tr><th>✅ Advantages</th><th>❌ Disadvantages</th></tr>
+            <tr>
+                <td>Principled variational objective (ELBO)</td>
+                <td>2× parameters (μ and σ per weight)</td>
+            </tr>
+            <tr>
+                <td>Provides full weight distributions</td>
+                <td>Gaussian posterior assumption is restrictive</td>
+            </tr>
+            <tr>
+                <td>Works with standard backpropagation</td>
+                <td>Gradient variance can be high</td>
+            </tr>
+            <tr>
+                <td>Captures both aleatoric and epistemic uncertainty</td>
+                <td>Tends to be overconfident (mode-seeking KL)</td>
+            </tr>
+        </table>
+
+        <div class="info-box">
+            <strong>🔗 Where to go next:</strong> This method is the foundation of modern VI for BNNs.
+            The <a href="mc-dropout.html">MC Dropout</a> method is simpler but less principled.
+            <a href="laplace-approximation.html">Laplace approximation</a> is another approach that's
+            much cheaper (post-hoc) but only gives local uncertainty.
+        </div>
+
+        <div class="bottom-nav">
+            <a href="evidence-lower-bound.html">← The ELBO</a>
+            <a href="mc-dropout.html">Next: MC Dropout →</a>
+        </div>
+    </main>
+</div>
+<script src="../nav.js"></script>
+<script src="../search.js"></script>
+</body>
+</html>

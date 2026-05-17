@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bayesian Neural Networks — Reference Compendium</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="wrapper">
+    <nav class="sidebar">
+        <h2>🧠 BNN References</h2>
+        <ul class="sidebar-nav">
+            <li><a href="index.html">🏠 References Main Page</a></li>
+            <li><a href="../index.html">🧠 Back to Main Tutorial</a></li>
+            <li class="section-label">Variational Inference</li>
+            <li><a href="pages/blundell-bayes-by-backprop.html">Blundell — Bayes by Backprop</a></li>
+            <li><a href="pages/hernandez-probabilistic-backprop.html">Hernández-Lobato — Prob. Backprop</a></li>
+            <li><a href="pages/louizos-normalizing-flows.html">Louizos — Normalizing Flows</a></li>
+            <li class="section-label">Dropout &amp; Approximations</li>
+            <li><a href="pages/gal-dropout-bayesian.html">Gal — Dropout as Bayesian</a></li>
+            <li class="section-label">Laplace Approximations</li>
+            <li><a href="pages/daxberger-laplace-redux.html">Daxberger — Laplace Redux</a></li>
+            <li class="section-label">Empirical Studies</li>
+            <li><a href="pages/izmailov-bnn-posteriors.html">Izmailov — BNN Posteriors</a></li>
+            <li class="section-label">Foundations &amp; MCMC</li>
+            <li><a href="pages/betancourt-hmc.html">Betancourt — HMC Intro</a></li>
+            <li class="section-label">Tutorials &amp; Surveys</li>
+            <li><a href="pages/jospin-hands-on-bnn.html">Jospin — Hands-on BNN</a></li>
+            <li><a href="pages/goan-fookes-survey.html">Goan &amp; Fookes — Survey</a></li>
+            <li><a href="pages/wang-yeung-survey.html">Wang &amp; Yeung — Survey</a></li>
+            <li><a href="pages/magris-bayesian-survey.html">Magris — Bayesian Learning Survey</a></li>
+        </ul>
+    </nav>
+
+    <main class="main-content">
+        <a href="../index.html" class="back-link">← Back to main tutorial</a>
+        <h1>
+            Bayesian Neural Networks
+            <span class="subtitle">Technical reference compendium — key papers, ideas, and mathematical foundations</span>
+        </h1>
+
+        <p>
+            This site collects <strong>freely available references</strong> on Bayesian Neural Networks (BNNs),
+            organized by approach. Each card links to a detailed technical page explaining the core ideas,
+            mathematical formulation, and relevance for practical neural network development.
+        </p>
+
+        <!-- Pipeline / Taxonomy -->
+        <h2>🔁 Taxonomy of BNN Approaches</h2>
+        <p>
+            Bayesian neural networks extend standard NNs by placing a <em>distribution over weights</em>
+            rather than using point estimates. Inference is generally intractable, so approximations are needed.
+            Here is the landscape:
+        </p>
+
+        <div class="pipeline">
+            <a href="pages/blundell-bayes-by-backprop.html" class="pipeline-step">VI (Bayes by Backprop)</a>
+            <span class="pipeline-arrow">→</span>
+            <a href="pages/gal-dropout-bayesian.html" class="pipeline-step">Dropout ≈ VI</a>
+            <span class="pipeline-arrow">→</span>
+            <a href="pages/daxberger-laplace-redux.html" class="pipeline-step">Laplace</a>
+            <span class="pipeline-arrow">→</span>
+            <a href="pages/betancourt-hmc.html" class="pipeline-step">HMC (Gold Standard)</a>
+            <span class="pipeline-arrow">→</span>
+            <a href="pages/izmailov-bnn-posteriors.html" class="pipeline-step">Posterior Analysis</a>
+        </div>
+
+        <p>
+            Each approach trades off <strong>computational cost vs. fidelity</strong>.
+            HMC is the gold standard but impractical at scale; VI and Laplace are fast but make strong assumptions.
+            Understanding these tradeoffs is essential for applied BNN work.
+        </p>
+
+        <!-- Section 1: Variational Inference -->
+        <h2>📐 1. Variational Inference for BNNs</h2>
+        <p>
+            Variational Inference (VI) approximates the true posterior <em>p(w|D)</em> with a simpler
+            distribution <em>q<sub>θ</sub>(w)</em> by minimizing KL-divergence. This is the most popular
+            family of methods for scaling BNNs.
+        </p>
+
+        <div class="card-grid">
+            <div class="card">
+                <h3><a href="pages/blundell-bayes-by-backprop.html">Bayes by Backprop</a></h3>
+                <p>Blundell et al., 2015 — The canonical VI method for BNNs. Uses the reparameterization trick to learn a Gaussian posterior over weights via standard backpropagation. Key innovation: local reparameterization reduces gradient variance.</p>
+                <span class="tag tag-variational">variational</span>
+                <span class="tag tag-foundational">foundational</span>
+            </div>
+            <div class="card">
+                <h3><a href="pages/hernandez-probabilistic-backprop.html">Probabilistic Backpropagation</a></h3>
+                <p>Hernández-Lobato &amp; Adams, 2015 — Propagates distributions through the network using analytical moment-matching, avoiding Monte Carlo sampling entirely. Fast and deterministic.</p>
+                <span class="tag tag-variational">variational</span>
+            </div>
+            <div class="card">
+                <h3><a href="pages/louizos-normalizing-flows.html">Multiplicative Normalizing Flows</a></h3>
+                <p>Louizos &amp; Welling, 2017 — Extends VI with structured posteriors using normalizing flows. Captures correlations between weights for richer uncertainty representation.</p>
+                <span class="tag tag-variational">variational</span>
+                <span class="tag tag-flow">flows</span>
+            </div>
+        </div>
+
+        <!-- Section 2: Dropout -->
+        <h2>🎲 2. Dropout as a Bayesian Approximation</h2>
+        <div class="card-grid">
+            <div class="card">
+                <h3><a href="pages/gal-dropout-bayesian.html">Dropout as Bayesian Approximation</a></h3>
+                <p>Gal &amp; Ghahramani, 2016 — A landmark result: standard dropout training is equivalent to variational inference in a deep Gaussian process. Enables uncertainty estimates from existing deterministic NNs with near-zero extra cost at training time (though more epochs may be needed for convergence).</p>
+                <span class="tag tag-dropout">dropout</span>
+                <span class="tag tag-foundational">foundational</span>
+            </div>
+        </div>
+
+        <!-- Section 3: Laplace -->
+        <h2>📊 3. Laplace Approximations</h2>
+        <div class="card-grid">
+            <div class="card">
+                <h3><a href="pages/daxberger-laplace-redux.html">Laplace Redux</a></h3>
+                <p>Daxberger et al., 2021 — Modern take on the classic Laplace approximation. After MAP training, approximate the posterior as a Gaussian around the mode using the Hessian (or its approximations). Scalable to modern architectures via Kronecker-factor or diagonal approximations.</p>
+                <span class="tag tag-laplace">laplace</span>
+            </div>
+        </div>
+
+        <!-- Section 4: MCMC -->
+        <h2>🎯 4. MCMC — The Gold Standard</h2>
+        <div class="card-grid">
+            <div class="card">
+                <h3><a href="pages/betancourt-hmc.html">Conceptual Introduction to HMC</a></h3>
+                <p>Betancourt, 2017 — The definitive modern tutorial on Hamiltonian Monte Carlo. Explains the geometry of HMC, the necessity of MCMC for BNNs, and practical diagnostic tools (R-hat, ESS).</p>
+                <span class="tag tag-mcmc">MCMC</span>
+            </div>
+        </div>
+
+        <!-- Section 5: Empirical -->
+        <h2>🔬 5. Empirical Understanding of BNNs</h2>
+        <div class="card-grid">
+            <div class="card">
+                <h3><a href="pages/izmailov-bnn-posteriors.html">What Are BNN Posteriors Really Like?</a></h3>
+                <p>Izmailov et al., 2021 — Large-scale empirical study comparing VI, Laplace, HMC, and SWAG across many architectures. Key findings: posteriors are highly complex (multi-modal, heavy-tailed); common VI assumptions (Gaussian, diagonal) are badly misspecified; HMC remains the reference standard.</p>
+                <span class="tag tag-survey">empirical</span>
+            </div>
+        </div>
+
+        <!-- Section 6: Tutorials & Surveys -->
+        <h2>📖 6. Tutorials &amp; Comprehensive Surveys</h2>
+        <p>Start here if you're new to the field or want a broad landscape view.</p>
+        <div class="card-grid">
+            <div class="card">
+                <h3><a href="pages/jospin-hands-on-bnn.html">Hands-on Bayesian Neural Networks</a></h3>
+                <p>Jospin et al., 2022 — A practical tutorial with code examples (PyTorch, TensorFlow Probability, Pyro). Covers VI, MC Dropout, ensembles, and Laplace from an implementation perspective.</p>
+                <span class="tag tag-tutorial">tutorial</span>
+            </div>
+            <div class="card">
+                <h3><a href="pages/goan-fookes-survey.html">Bayesian Neural Networks: An Introduction and Survey</a></h3>
+                <p>Goan &amp; Fookes, 2020 — Clear, pedagogical survey covering the full spectrum from probabilistic foundations to advanced variational methods.</p>
+                <span class="tag tag-survey">survey</span>
+            </div>
+            <div class="card">
+                <h3><a href="pages/wang-yeung-survey.html">A Survey on Bayesian Deep Learning</a></h3>
+                <p>Wang &amp; Yeung, 2020 — Broad coverage of Bayesian deep learning including BNNs, Bayesian CNNs, Bayesian RNNs, and connections to deep Gaussian processes.</p>
+                <span class="tag tag-survey">survey</span>
+            </div>
+            <div class="card">
+                <h3><a href="pages/magris-bayesian-survey.html">Bayesian Learning for Neural Networks: A Survey</a></h3>
+                <p>Magris &amp; Iosifidis, 2023 — The most recent comprehensive survey (2023). Up-to-date taxonomy, covers modern scalable VI, last-layer methods, and connections to uncertainty quantification.</p>
+                <span class="tag tag-survey">survey</span>
+            </div>
+        </div>
+
+        <!-- Quick Reference Table -->
+        <h2>⚡ Quick Comparison</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Method</th>
+                    <th>Posterior Type</th>
+                    <th>Training Cost</th>
+                    <th>Uncertainty Quality</th>
+                    <th>Scalability</th>
+                    <th>Key Limitation</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><a href="pages/blundell-bayes-by-backprop.html">Bayes by Backprop</a></td>
+                    <td>Gaussian (diag. cov.)</td>
+                    <td>2× forward pass</td>
+                    <td>Moderate</td>
+                    <td>Good</td>
+                    <td>Gaussian assumption too simple</td>
+                </tr>
+                <tr>
+                    <td><a href="pages/hernandez-probabilistic-backprop.html">Prob. Backprop</a></td>
+                    <td>Gaussian (moment-matched)</td>
+                    <td>≈ 1× (deterministic)</td>
+                    <td>Moderate</td>
+                    <td>Very good</td>
+                    <td>Limited to certain architectures</td>
+                </tr>
+                <tr>
+                    <td><a href="pages/gal-dropout-bayesian.html">MC Dropout</a></td>
+                    <td>Bernoulli approx.</td>
+                    <td>≈ 1× (same as standard)</td>
+                    <td>Moderate</td>
+                    <td>Excellent</td>
+                    <td>Approximation quality debated</td>
+                </tr>
+                <tr>
+                    <td><a href="pages/daxberger-laplace-redux.html">Laplace</a></td>
+                    <td>Gaussian (MAP + Hessian)</td>
+                    <td>≈ 1× (post-hoc)</td>
+                    <td>Good (last-layer)</td>
+                    <td>Excellent</td>
+                    <td>Local approximation around mode</td>
+                </tr>
+                <tr>
+                    <td><a href="pages/betancourt-hmc.html">HMC</a></td>
+                    <td>Unbiased (MCMC)</td>
+                    <td>100-1000×</td>
+                    <td>Gold standard</td>
+                    <td>Poor</td>
+                    <td>Computationally prohibitive for large nets</td>
+                </tr>
+                <tr>
+                    <td><a href="pages/louizos-normalizing-flows.html">Normalizing Flows</a></td>
+                    <td>Expressive (flows)</td>
+                    <td>2-5×</td>
+                    <td>Good</td>
+                    <td>Moderate</td>
+                    <td>Complex implementation, tuning</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="info-box">
+            <strong>💡 Recommendation for practitioners:</strong> For large-scale deep learning, start with <strong>MC Dropout</strong> (near-zero extra training cost, though may need more epochs) or <strong>Laplace approximation</strong> (post-hoc, lightweight). For smaller models where uncertainty quality matters, consider <strong>Bayes by Backprop</strong> or <strong>Normalizing Flows</strong>. Always benchmark against <strong>HMC</strong> on a small model to understand the true posterior before committing to an approximation.
+        </div>
+
+        <div class="bottom-nav">
+            <span class="nav-disabled">← Previous</span>
+            <a href="pages/blundell-bayes-by-backprop.html">Start Reading: Bayes by Backprop →</a>
+        </div>
+    </main>
+</div>
+<script src="nav.js"></script>
+</body>
+</html>

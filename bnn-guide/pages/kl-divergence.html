@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KL Divergence — BNN for Beginners</title>
+    <link rel="stylesheet" href="../style.css">
+</head>
+<body>
+<div class="wrapper">
+    <nav class="sidebar">
+        <h2>🧠 BNN for Beginners</h2>
+        <div class="tagline">from a mathematician's perspective</div>
+        <ul class="sidebar-nav">
+            <li><a href="../../notes.html" style="color:#f39c12; font-weight:600;">⬅ Back to Notes</a></li>
+            <li><a href="../index.html">🏠 Main Page</a></li>
+            <li class="section-label">Concepts</li>
+            <li><a href="neural-network.html">1. Neural Networks</a></li>
+            <li><a href="bayesian-inference.html">2. Bayesian Inference</a></li>
+            <li><a href="probability-distributions.html">3. Probability Distributions</a></li>
+            <li><a href="uncertainty.html">4. Types of Uncertainty</a></li>
+            <li><a href="kl-divergence.html" class="active">5. KL Divergence</a></li>
+            <li><a href="evidence-lower-bound.html">6. The ELBO</a></li>
+            <li class="section-label">Methods</li>
+            <li><a href="variational-inference.html">7. Variational Inference</a></li>
+            <li><a href="mc-dropout.html">8. MC Dropout</a></li>
+            <li><a href="laplace-approximation.html">9. Laplace Approximation</a></li>
+            <li><a href="mcmc-hmc.html">10. MCMC &amp; HMC</a></li>
+        </ul>
+    </nav>
+
+    <main class="main-content">
+        <a href="../index.html" class="back-link">← Back to main page</a>
+        <div class="breadcrumb"><a href="../index.html">Home</a> / KL Divergence</div>
+        <h1>5. KL Divergence</h1>
+
+        <div class="key-insight">
+            <strong>🎯 In one sentence</strong>
+            <p>KL divergence measures how "far apart" two probability distributions are. It's the central quantity in variational inference — we find the distribution <em>q</em> that minimizes KL[q || p].</p>
+        </div>
+
+        <p>
+            In BNNs, we have a true posterior <em>p(w|D)</em> that we can't compute, and we want to approximate
+            it with a simpler distribution <em>q(w)</em> (usually a Gaussian). KL divergence tells us how
+            bad our approximation is.
+        </p>
+
+        <!-- ======== DEFINITION ======== -->
+        <h2>Definition</h2>
+
+        <p>For two continuous distributions <em>p</em> and <em>q</em> over the same space:</p>
+
+        <div class="equation-box">
+            <div class="label">KL Divergence</div>
+            KL[ q || p ] =  &#8747; q(w) &#183; log( q(w) / p(w) ) dw
+            <br><br>
+            = E<sub>q</sub>[ log q(w) &#8722; log p(w) ]
+            <br><br>
+            <span style="font-size:0.9rem; color:#555;">
+            (The double vertical bar || separates the two distributions. Read it as:
+            "the average (expectation) of the log-ratio q/p, weighted by q".)
+            </span>
+        </div>
+
+        <p>Key properties:</p>
+        <ul>
+            <li><strong>KL[q || p] ≥ 0</strong> always, with equality iff <em>q</em> = <em>p</em> almost everywhere</li>
+            <li><strong>Not symmetric:</strong> KL[q || p] ≠ KL[p || q] in general</li>
+            <li><strong>Not a metric</strong> (doesn't satisfy triangle inequality), but behaves like a "distance"</li>
+        </ul>
+
+        <!-- ======== INTUITION ======== -->
+        <h2>Intuition</h2>
+
+        <div class="story">
+            <p><strong>Intuition:</strong> KL[q || p] is the "information lost" when we use <em>q</em> to approximate <em>p</em>.
+            Or: it's the number of extra bits of information needed to encode samples from <em>p</em> using a code
+            optimized for <em>q</em>.</p>
+        </div>
+
+        <p>
+            For our purposes, the most important interpretation is:
+            <strong>KL[q || p] is the penalty we pay for using <em>q</em> instead of <em>p</em></strong>.
+            When <em>q</em> puts probability mass where <em>p</em> has none, the penalty is huge.
+            When <em>q</em> puts mass everywhere <em>p</em> has mass (even if <em>q</em> is wider), the penalty is small.
+        </p>
+
+        <!-- ======== MODE-SEEKING VS COVERING ======== -->
+        <h2>Mode-Seeking vs. Covering Behavior</h2>
+
+        <p>
+            KL[q || p] is <strong>mode-seeking</strong> (also called "zero-avoiding").
+            To understand why, look at the formula again:
+        </p>
+
+        <div class="equation-box">
+            <span class="label">KL Divergence (integral form)</span>
+            <div style="margin-top:0.3rem;">
+            KL[ q || p ] = &#8747; q(w) &#183; log( q(w) / p(w) ) dw
+            </div>
+        </div>
+
+        <p>
+            The integrand has two factors: <strong>q(w)</strong> (the probability under q) multiplied by
+            <strong>log(q(w)/p(w))</strong> (how much q and p differ at w).
+            Let's examine two scenarios:
+        </p>
+
+        <table>
+            <tr><th>Scenario</th><th>What happens in the integral</th><th>Penalty</th></tr>
+            <tr>
+                <td><strong>q puts mass where p has none</strong><br>
+                (q is wider than p, or q is centered somewhere p isn't)</td>
+                <td>q(w) is large, p(w) ≈ 0, so q(w)/p(w) → ∞,<br>
+                log(∞) → ∞ → the integrand explodes</td>
+                <td style="color:#c62828; font-weight:bold;">HUGE PENALTY</td>
+            </tr>
+            <tr>
+                <td><strong>q puts no mass where p has mass</strong><br>
+                (q is narrower than p, or q misses a mode of p)</td>
+                <td>q(w) ≈ 0, so q(w) · log(...) ≈ 0 · anything = 0<br>
+                regardless of what p(w) is</td>
+                <td style="color:#2e7d32; font-weight:bold;">ZERO PENALTY</td>
+            </tr>
+        </table>
+
+        <div class="story">
+            <p><strong>Analogy:</strong> Imagine two photographers shooting a mountain range. The true landscape is <strong>p</strong> (the mountain range). You are <strong>q</strong> (the photographer). You can choose your lens:</p>
+            <ul>
+                <li><strong>Narrow lens (q is too narrow):</strong> Misses distant peaks entirely, but the penalty is small — you're penalized only for what you actually capture (q(w) &ne; 0), not for what you miss.</li>
+                <li><strong>Wide lens (q is too wide):</strong> Includes empty sky around the edges. The penalty is huge — trying to capture areas where there's no mountain (p(w) &asymp; 0) costs you dearly.</li>
+            </ul>
+            <p>That's why minimizing KL[q || p] produces a <em>narrow</em> q that covers <em>one mode</em> well: it's cheaper to be narrow and miss parts of p than to be wide and include areas where p is small.</p>
+        </div>
+
+        <h3>The "Zero-Avoiding" Property</h3>
+        <p>
+            KL[q || p] is called <strong>"zero-avoiding"</strong> because q absolutely <em>must not</em> have mass
+            where p has none — that's catastrophically expensive. But q is <em>allowed</em> to be zero where p
+            has mass — that costs nothing. This is entirely due to the q(w) factor <em>outside</em> the log:
+            where q(w) = 0, the whole term is zero regardless of p(w).
+        </p>
+
+        <p>
+            The asymmetry is the opposite for <strong>KL[p || q]</strong> (the reverse direction).
+            There, the roles are swapped: p(w) multiplies the log, so p being large where q is small
+            would be penalized. That's why KL[p || q] is "mass-covering" or "mean-seeking" —
+            it tries to make q cover all of p.
+        </p>
+
+        <h3>Consequence for Bayesian Neural Networks</h3>
+
+        <div class="concept-box">
+            <p>
+                <strong>KL[q || p(w|D)] minimization → q is too narrow → overconfident predictions</strong>
+            </p>
+            <p>
+                In variational inference (Bayes by Backprop), we minimize KL[q || p(w|D)] where q is our
+                Gaussian approximation and p(w|D) is the true (complex, multi-modal) posterior.
+            </p>
+            <ul>
+                <li>q finds <strong>one mode</strong> of the true posterior and fits itself to that mode.</li>
+                <li>q is typically <strong>narrower</strong> than the true posterior around that mode
+                (because being wider would include low-probability regions = expensive).</li>
+                <li>q <strong>ignores other modes</strong> entirely (no penalty for missing them).</li>
+                <li><strong>Result:</strong> the variational approximation underestimates uncertainty — it's overconfident.
+                This is a well-known limitation of mean-field VI for BNNs.</li>
+            </ul>
+        </div>
+
+        <p>
+            This is exactly what Izmailov et al. (2021) confirmed empirically: mean-field VI produces
+            posteriors that are too narrow compared to the gold standard HMC.
+            The <a href="variational-inference.html">next section on variational inference</a> shows
+            how this plays out in practice.
+        </p>
+
+        <!-- ======== PYTHON CODE ======== -->
+        <h2>Computing KL Divergence in PyTorch</h2>
+
+        <p>For two Gaussians, there's a closed-form formula:</p>
+
+        <pre><code><span class="code-keyword">import</span> torch
+
+<span class="code-keyword">def</span> <span class="code-function">kl_gaussian</span>(mu_q, sigma_q, mu_p, sigma_p):
+    <span class="code-string">"""
+    KL[q || p] for 1D Gaussians q = N(mu_q, sigma_q^2), p = N(mu_p, sigma_p^2)
+    Formula: KL[q||p] = log(σ_p/σ_q) + (σ_q² + (μ_q-μ_p)²) / (2σ_p²) - 1/2
+    """</span>
+    <span class="code-keyword">return</span> (
+        torch.log(sigma_p / sigma_q) +
+        (sigma_q**2 + (mu_q - mu_p)**2) / (2 * sigma_p**2) -
+        0.5
+    )
+
+<span class="code-comment"># Example: q = N(0, 1), p = N(0, 2)  (q is narrower)</span>
+kl = <span class="code-function">kl_gaussian</span>(0.0, 1.0, 0.0, 2.0)
+print(kl)  <span class="code-comment"># → about 0.35 (small: q is inside p)</span>
+
+<span class="code-comment"># Example: q = N(0, 2), p = N(0, 1)  (q is wider)</span>
+kl = <span class="code-function">kl_gaussian</span>(0.0, 2.0, 0.0, 1.0)
+print(kl)  <span class="code-comment"># → about 0.81 (larger: q has mass where p doesn't)</span></code></pre>
+
+        <p>
+            PyTorch also has a built-in KL divergence class for Gaussians
+            (useful when working with distributions):
+        </p>
+
+        <pre><code><span class="code-keyword">import</span> torch.distributions <span class="code-keyword">as</span> dist
+
+q = dist.Normal(0.0, 1.0)
+p = dist.Normal(0.0, 2.0)
+kl = dist.kl_divergence(q, p)
+print(kl)  <span class="code-comment"># → 0.35</span></code></pre>
+
+        <div class="info-box">
+            <strong>🔗 Connection:</strong> KL divergence is the <em>second</em> term in the ELBO (next page).
+            The first term (data fit) pushes <em>q</em> to explain the data; the KL term pushes <em>q</em> to stay
+            close to the prior. The balance between them determines the posterior approximation.
+        </div>
+
+        <div class="bottom-nav">
+            <a href="uncertainty.html">← Types of Uncertainty</a>
+            <a href="evidence-lower-bound.html">Next: The ELBO →</a>
+        </div>
+    </main>
+</div>
+<script src="../nav.js"></script>
+<script src="../search.js"></script>
+</body>
+</html>

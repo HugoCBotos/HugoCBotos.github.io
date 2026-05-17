@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dropout as Bayesian Approximation — Gal & Ghahramani 2016</title>
+    <link rel="stylesheet" href="../style.css">
+</head>
+<body>
+<div class="wrapper">
+    <nav class="sidebar">
+        <h2>🧠 BNN References</h2>
+        <ul class="sidebar-nav">
+            <li><a href="../index.html">🏠 Back to References</a></li>
+            <li><a href="../../index.html">🧠 Main Tutorial</a></li>
+            <li class="section-label">Variational Inference</li>
+            <li><a href="blundell-bayes-by-backprop.html">Blundell — Bayes by Backprop</a></li>
+            <li><a href="hernandez-probabilistic-backprop.html">Hernández-Lobato — Prob. Backprop</a></li>
+            <li><a href="louizos-normalizing-flows.html">Louizos — Normalizing Flows</a></li>
+            <li class="section-label">Dropout &amp; Approximations</li>
+            <li><a href="gal-dropout-bayesian.html" class="active">Gal — Dropout as Bayesian</a></li>
+            <li class="section-label">Laplace Approximations</li>
+            <li><a href="daxberger-laplace-redux.html">Daxberger — Laplace Redux</a></li>
+            <li class="section-label">Empirical Studies</li>
+            <li><a href="izmailov-bnn-posteriors.html">Izmailov — BNN Posteriors</a></li>
+            <li class="section-label">Foundations &amp; MCMC</li>
+            <li><a href="betancourt-hmc.html">Betancourt — HMC Intro</a></li>
+            <li class="section-label">Tutorials &amp; Surveys</li>
+            <li><a href="jospin-hands-on-bnn.html">Jospin — Hands-on BNN</a></li>
+            <li><a href="goan-fookes-survey.html">Goan &amp; Fookes — Survey</a></li>
+            <li><a href="wang-yeung-survey.html">Wang &amp; Yeung — Survey</a></li>
+            <li><a href="magris-bayesian-survey.html">Magris — Bayesian Learning Survey</a></li>
+        </ul>
+    </nav>
+    <main class="main-content">
+        <a href="../index.html" class="back-link">← Back to main page</a>
+        <div class="concept-header">
+            <div class="breadcrumb"><a href="../index.html">Home</a> / Dropout as Bayesian Approximation</div>
+            <h1>Dropout as Bayesian Approximation</h1>
+            <p><em>Dropout as a Bayesian Approximation: Representing Model Uncertainty in Deep Learning</em> — Gal &amp; Ghahramani (ICML 2016)</p>
+        </div>
+
+        <div class="citation">
+            <strong>📄 Paper:</strong> <a href="https://arxiv.org/abs/1506.02142">arXiv:1506.02142</a><br>
+            <strong>📁 Source:</strong> <code>2016_Gal_Dropout_Bayesian_Approximation.pdf</code>
+        </div>
+
+        <div class="key-insight">
+            <strong>🎯 Core Idea</strong>
+            <p>Standard dropout training (with dropout before every weight layer) is mathematically equivalent to variational inference in a deep Gaussian process. This means any neural network trained with dropout is already a Bayesian model — you just need to use Monte Carlo dropout at test time to extract uncertainty.</p>
+        </div>
+
+        <h2>Mathematical Formulation</h2>
+
+        <h3>Dropout as Variational Inference</h3>
+        <p>The key insight: dropout's stochastic binary mask can be interpreted as a variational distribution <em>q(w)</em> over the weights:</p>
+        <div class="equation-box">
+            <pre><code>q(w) = w ⊙ diag(z),   z_i ~ Bernoulli(p)</code></pre>
+            <p>where <em>p</em> is the keep probability. This is a mixture of a point mass at zero and the learned weight — a "multiplicative" Bernoulli noise on the weights.</p>
+        </div>
+
+        <p>Gal shows that optimizing the standard dropout objective (cross-entropy + L2 regularization) is equivalent to optimizing a valid ELBO, where:</p>
+        <div class="equation-box">
+            <pre><code>L_dropout ≈ L_ELBO = E_{q(w)}[log p(D|w)] - KL[q(w) || p(w)]</code></pre>
+            <p>The L2 regularization term corresponds to a Gaussian prior <em>p(w)</em>. The dropout rate controls the KL divergence.</p>
+        </div>
+
+        <h3>MC Dropout — Extracting Uncertainty</h3>
+        <p>At test time, instead of turning off dropout, <strong>keep it on</strong> and perform <em>T</em> stochastic forward passes:</p>
+        <div class="equation-box">
+            <pre><code>p(y*|x*, D) ≈ (1/T) Σ_{t=1}^T p(y*|x*, ŵ_t),   ŵ_t ~ q(w)</code></pre>
+        </div>
+        <p>This gives you:</p>
+        <ul>
+            <li><strong>Predictive mean:</strong> average of the <em>T</em> outputs</li>
+            <li><strong>Predictive uncertainty:</strong> variance of the <em>T</em> outputs</li>
+        </ul>
+
+        <h2>Practical Implementation</h2>
+        <pre><code><span class="code-comment"># Training: standard dropout (no change needed!)</span>
+model = nn.Sequential(
+    nn.Linear(128, 256),
+    nn.Dropout(0.5),
+    nn.ReLU(),
+    nn.Linear(256, 10)
+)
+
+<span class="code-comment"># Testing: MC Dropout</span>
+model.train()  <span class="code-comment"># keep dropout active!</span>
+predictions = []
+<span class="code-keyword">for</span> _ <span class="code-keyword">in</span> <span class="code-function">range</span>(T):
+    pred = model(x)
+    predictions.append(pred)
+predictions = torch.stack(predictions)
+mean = predictions.mean(dim=0)
+variance = predictions.var(dim=0)</code></pre>
+
+        <h2>Pros &amp; Cons</h2>
+        <table>
+            <tr><th>✅ Advantages</th><th>❌ Disadvantages</th></tr>
+            <tr>
+                <td>Zero extra training cost — use any existing model</td>
+                <td>The Bernoulli variational posterior is very restrictive</td>
+            </tr>
+            <tr>
+                <td>Trivial to implement (just keep dropout on at test time)</td>
+                <td>Uncertainty quality depends on dropout rate (needs tuning)</td>
+            </tr>
+            <tr>
+                <td>Works for any architecture with dropout</td>
+                <td>Not a "full" Bayesian treatment — no true distribution over weights</td>
+            </tr>
+            <tr>
+                <td>Provides calibrated uncertainty estimates in practice</td>
+                <td>Overconfident far from training data (unlike true Gaussian processes)</td>
+            </tr>
+        </table>
+
+        <h2>Key Takeaways for Practitioners</h2>
+        <ul>
+            <li><strong>You are probably already doing Bayesian deep learning</strong> if you use dropout. MC Dropout gives you uncertainty at near-zero extra training cost (though dropout may require more epochs to converge, so the effective cost is not exactly zero).</li>
+            <li>The quality of uncertainty depends on the dropout rate — higher rates give more conservative (wider) uncertainty but may hurt predictive accuracy.</li>
+            <li><strong>Concrete dropout</strong> (Gal et al., 2017 extension) learns the dropout rate automatically via gradient-based optimization.</li>
+            <li>For production systems where uncertainty matters, MC Dropout is often the most practical first step before trying more expensive methods.</li>
+        </ul>
+
+        <div class="info-box">
+            <strong>🔗 Connections:</strong> This paper bridges deterministic deep learning and Bayesian inference. It inspired later work on Bayesian approximations via other forms of stochastic regularization (e.g., DropConnect, Shake-Shake). Izmailov et al. (2021) benchmark MC Dropout against HMC and show it provides reasonable but not perfect uncertainty calibration.
+        </div>
+
+        <div class="bottom-nav">
+            <a href="blundell-bayes-by-backprop.html">← Bayes by Backprop</a>
+            <a href="daxberger-laplace-redux.html">Next: Laplace Redux →</a>
+        </div>
+    </main>
+</div>
+<script src="../nav.js"></script>
+</body>
+</html>

@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Types of Uncertainty — BNN for Beginners</title>
+    <link rel="stylesheet" href="../style.css">
+</head>
+<body>
+<div class="wrapper">
+    <nav class="sidebar">
+        <h2>🧠 BNN for Beginners</h2>
+        <div class="tagline">from a mathematician's perspective</div>
+        <ul class="sidebar-nav">
+            <li><a href="../../notes.html" style="color:#f39c12; font-weight:600;">⬅ Back to Notes</a></li>
+            <li><a href="../index.html">🏠 Main Page</a></li>
+            <li class="section-label">Concepts</li>
+            <li><a href="neural-network.html">1. Neural Networks</a></li>
+            <li><a href="bayesian-inference.html">2. Bayesian Inference</a></li>
+            <li><a href="probability-distributions.html">3. Probability Distributions</a></li>
+            <li><a href="uncertainty.html" class="active">4. Types of Uncertainty</a></li>
+            <li><a href="kl-divergence.html">5. KL Divergence</a></li>
+            <li><a href="evidence-lower-bound.html">6. The ELBO</a></li>
+            <li class="section-label">Methods</li>
+            <li><a href="variational-inference.html">7. Variational Inference</a></li>
+            <li><a href="mc-dropout.html">8. MC Dropout</a></li>
+            <li><a href="laplace-approximation.html">9. Laplace Approximation</a></li>
+            <li><a href="mcmc-hmc.html">10. MCMC &amp; HMC</a></li>
+        </ul>
+    </nav>
+
+    <main class="main-content">
+        <a href="../index.html" class="back-link">← Back to main page</a>
+        <div class="breadcrumb"><a href="../index.html">Home</a> / Types of Uncertainty</div>
+        <h1>4. Types of Uncertainty</h1>
+
+        <div class="key-insight">
+            <strong>🎯 In one sentence</strong>
+            <p>There are two kinds of uncertainty: <strong>aleatoric</strong> (irreducible, due to noise in the data) and <strong>epistemic</strong> (reducible, due to lack of knowledge). BNNs capture epistemic uncertainty; normal NNs only capture aleatoric.</p>
+        </div>
+
+        <!-- ======== NOTE ON NOTATION ======== -->
+        <div class="info-box">
+            <strong>📝 Notation note: what does "y | x, w" mean?</strong>
+            <p>
+                Throughout this page you'll see expressions like <strong>Var[ y | x, w ]</strong>.
+                The vertical bar <strong>|</strong> means <strong>"given"</strong> or <strong>"conditional on"</strong>.
+            </p>
+            <ul>
+                <li><strong>y | x, w</strong> = "the value of y, given that we know x and w"</li>
+                <li><strong>Var[ y | x, w ]</strong> = "the variance of y, assuming x and w are fixed"</li>
+                <li><strong>Var<sub>w ~ p(w|D)</sub>[ y | x, w ]</strong> = "the variance of y (knowing x and w), but now w itself is random — so we average over w"</li>
+            </ul>
+            <p>
+                The pipe <strong>|</strong> is the same notation used in conditional probability: <em>p(y|x)</em> means
+                "probability of y <em>given</em> x". Everything to the right of | is assumed known.
+            </p>
+        </div>
+
+        <!-- ======== ALEATORIC ======== -->
+        <h2>Aleatoric Uncertainty (Data Noise)</h2>
+
+        <div class="story">
+            <p><strong>Analogy:</strong> Imagine measuring the height of a random person. Even if you have the perfect measuring tool, people have different heights. There's inherent randomness in the process. That's aleatoric uncertainty.</p>
+        </div>
+
+        <p><strong>Characteristics:</strong></p>
+        <ul>
+            <li><strong>Irreducible</strong> — you can't eliminate it by collecting more data</li>
+            <li>Comes from inherent noise in the data-generating process</li>
+            <li>Examples: sensor noise, natural variation in measurements</li>
+            <li>In neural networks: the uncertainty of the output <em>given</em> fixed weights</li>
+        </ul>
+
+        <div class="equation-box">
+            <div class="label">Aleatoric uncertainty — noise in the data</div>
+            Var[ <em>y</em> | <em>x</em>, <em>w</em> ]
+            <br><span style="font-size:0.85rem; color:#666;">
+            (= variance of the prediction y, given that we know the input x and the weights w;
+            this is the inherent noise that remains even with perfect weights)</span>
+        </div>
+
+        <p>
+            A normal neural network <em>can</em> model aleatoric uncertainty by predicting a distribution
+            (e.g., mean and variance) instead of just a point. This is called
+            <strong>heteroscedastic regression</strong>.
+        </p>
+
+        <!-- ======== EPISTEMIC ======== -->
+        <h2>Epistemic Uncertainty (Model Uncertainty)</h2>
+
+        <div class="story">
+            <p><strong>Analogy:</strong> You're trying to fit a curve through a few data points. With only 3 points, there are many possible curves. That's epistemic uncertainty — you don't know which curve is right. With 1000 points, the uncertainty shrinks.</p>
+        </div>
+
+        <p><strong>Characteristics:</strong></p>
+        <ul>
+            <li><strong>Reducible</strong> — it shrinks as you collect more data</li>
+            <li>Comes from lack of knowledge about the true weights</li>
+            <li>Examples: uncertainty due to small training set, uncertainty about unseen inputs</li>
+            <li>In BNNs: the spread of the posterior <em>p(w|D)</em></li>
+        </ul>
+
+        <div class="equation-box">
+            <div class="label">Epistemic uncertainty — uncertainty about the weights</div>
+            Var<sub><em>w</em> ~ <em>p(w|D)</em></sub>[ <em>y</em> | <em>x</em>, <em>w</em> ]
+            <br><span style="font-size:0.85rem; color:#666;">
+            (= variance caused by not knowing the true weights; we sample different possible weights w
+            from the posterior p(w|D), and see how much the prediction y changes;
+            this shrinks as we get more data)</span>
+        </div>
+
+        <p>
+            This is what BNNs add that normal NNs lack. A normal NN gives you <em>one</em> set of weights.
+            A BNN gives you a <em>distribution</em> over weights. The spread of that distribution
+            tells you how uncertain the model is.
+        </p>
+
+        <!-- ======== TOTAL PREDICTIVE UNCERTAINTY ======== -->
+        <h2>Total Predictive Uncertainty</h2>
+
+        <p>When you make a prediction with a BNN, the total uncertainty is the sum of both types:</p>
+
+        <div class="equation-box">
+            <div class="label">Total Variance = Aleatoric + Epistemic</div>
+            Var[<em>y</em> | <em>x</em>, <em>D</em>] = 
+            <span style="color:#1565c0">E<sub><em>w</em>~<em>p(w|D)</em></sub>[Var(<em>y</em> | <em>x</em>, <em>w</em>)]</span>
+            <span style="color:#e65100">+ Var<sub><em>w</em>~<em>p(w|D)</em></sub>(E[<em>y</em> | <em>x</em>, <em>w</em>])</span>
+            <br>
+            <span style="color:#1565c0">⏤ aleatoric ⏤</span>
+            <span style="color:#e65100">⏤ epistemic ⏤</span>
+        </div>
+
+        <div class="info-box">
+            <strong>💡 Subtlety:</strong> The first term E<sub>w~p(w|D)</sub>[Var(y|x,w)] is labeled "aleatoric", but it averages the aleatoric variance over the posterior of <em>w</em>. This means it <em>implicitly</em> depends on epistemic uncertainty too — a wider posterior (more epistemic uncertainty) changes the average. The decomposition is conceptually useful but the two terms are not fully independent in practice.
+        </div>
+
+        <div class="info-box">
+            <strong>💡 Why this matters:</strong> If you deploy a neural network in a hospital, you need to know
+            when it's unsure. A normal NN will confidently predict "benign" even for a tumor that looks nothing
+            like anything in the training data. A BNN would say "I don't know" — the epistemic uncertainty would
+            be very high.
+        </div>
+
+        <!-- ======== WHAT BNNs GIVE YOU ======== -->
+        <h2>What BNNs Give You That Normal NNs Don't</h2>
+
+        <table>
+            <tr><th>Capability</th><th>Normal NN</th><th>BNN</th></tr>
+            <tr>
+                <td><strong>Point prediction</strong></td>
+                <td>✓ Yes</td>
+                <td>✓ Yes</td>
+            </tr>
+            <tr>
+                <td><strong>Aleatoric uncertainty</strong></td>
+                <td>✓ If trained for it</td>
+                <td>✓ Yes</td>
+            </tr>
+            <tr>
+                <td><strong>Epistemic uncertainty</strong></td>
+                <td>✗ No</td>
+                <td>✓ Yes</td>
+            </tr>
+            <tr>
+                <td><strong>Out-of-distribution detection</strong></td>
+                <td>✗ Poor</td>
+                <td>✓ Good</td>
+            </tr>
+            <tr>
+                <td><strong>Calibrated probabilities</strong></td>
+                <td>✗ Often overconfident</td>
+                <td>✓ Better calibrated</td>
+            </tr>
+            <tr>
+                <td><strong>Small data performance</strong></td>
+                <td>✗ Overfits easily</td>
+                <td>✓ More robust (with good prior)</td>
+            </tr>
+        </table>
+
+        <div class="warning-box">
+            <strong>⚠️ Important caveat:</strong> Whether these benefits materialize in practice depends heavily
+            on which approximation method you use and how well you tune it. A poorly-tuned BNN may be worse
+            than a well-tuned normal NN. Izmailov et al. (2021) showed that common BNN approximations
+            are systematically misspecified — the uncertainty they produce is not perfectly calibrated.
+        </div>
+
+        <div class="bottom-nav">
+            <a href="probability-distributions.html">← Probability Distributions</a>
+            <a href="kl-divergence.html">Next: KL Divergence →</a>
+        </div>
+    </main>
+</div>
+<script src="../nav.js"></script>
+<script src="../search.js"></script>
+</body>
+</html>

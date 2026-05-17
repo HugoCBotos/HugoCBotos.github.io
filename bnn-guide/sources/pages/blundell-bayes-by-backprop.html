@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bayes by Backprop — Blundell 2015</title>
+    <link rel="stylesheet" href="../style.css">
+</head>
+<body>
+<div class="wrapper">
+    <nav class="sidebar">
+        <h2>🧠 BNN References</h2>
+        <ul class="sidebar-nav">
+            <li><a href="../index.html">🏠 Back to References</a></li>
+            <li><a href="../../index.html">🧠 Main Tutorial</a></li>
+            <li class="section-label">Variational Inference</li>
+            <li><a href="blundell-bayes-by-backprop.html" class="active">Blundell — Bayes by Backprop</a></li>
+            <li><a href="hernandez-probabilistic-backprop.html">Hernández-Lobato — Prob. Backprop</a></li>
+            <li><a href="louizos-normalizing-flows.html">Louizos — Normalizing Flows</a></li>
+            <li class="section-label">Dropout &amp; Approximations</li>
+            <li><a href="gal-dropout-bayesian.html">Gal — Dropout as Bayesian</a></li>
+            <li class="section-label">Laplace Approximations</li>
+            <li><a href="daxberger-laplace-redux.html">Daxberger — Laplace Redux</a></li>
+            <li class="section-label">Empirical Studies</li>
+            <li><a href="izmailov-bnn-posteriors.html">Izmailov — BNN Posteriors</a></li>
+            <li class="section-label">Foundations &amp; MCMC</li>
+            <li><a href="betancourt-hmc.html">Betancourt — HMC Intro</a></li>
+            <li class="section-label">Tutorials &amp; Surveys</li>
+            <li><a href="jospin-hands-on-bnn.html">Jospin — Hands-on BNN</a></li>
+            <li><a href="goan-fookes-survey.html">Goan &amp; Fookes — Survey</a></li>
+            <li><a href="wang-yeung-survey.html">Wang &amp; Yeung — Survey</a></li>
+            <li><a href="magris-bayesian-survey.html">Magris — Bayesian Learning Survey</a></li>
+        </ul>
+    </nav>
+    <main class="main-content">
+        <a href="../index.html" class="back-link">← Back to main page</a>
+        <div class="concept-header">
+            <div class="breadcrumb"><a href="../index.html">Home</a> / Bayes by Backprop</div>
+            <h1>Bayes by Backprop</h1>
+            <p><em>Weight Uncertainty in Neural Networks</em> — Blundell, Cornebise, Kavukcuoglu, Wierstra (2015)</p>
+        </div>
+
+        <div class="citation">
+            <strong>📄 Paper:</strong> <a href="https://arxiv.org/abs/1505.05424">arXiv:1505.05424</a><br>
+            <strong>📁 Source:</strong> <code>2015_Blundell_Bayes_by_Backprop.pdf</code>
+        </div>
+
+        <div class="key-insight">
+            <strong>🎯 Core Idea</strong>
+            <p>Learn a distribution over neural network weights by optimizing a variational lower bound using the reparameterization trick — enabling standard backpropagation on Bayesian neural networks.</p>
+        </div>
+
+        <h2>Mathematical Formulation</h2>
+
+        <h3>Variational Objective</h3>
+        <p>We want to approximate the true posterior <em>p(w|D)</em> with a variational distribution <em>q(w|θ)</em> (typically a Gaussian with mean <em>μ</em> and standard deviation <em>σ</em>). Minimizing KL[q(w|θ) || p(w|D)] is equivalent to maximizing the Evidence Lower Bound (ELBO):</p>
+
+        <div class="equation-box">
+            <pre><code>ELBO = E_{q(w|θ)}[log p(D|w)] - KL[q(w|θ) || p(w)]</code></pre>
+            <p>where the first term is the data-likelihood (fitting the data) and the second term is a regularizer towards the prior.</p>
+        </div>
+
+        <h3>Reparameterization Trick</h3>
+        <p>The key enabler: instead of sampling <em>w ~ N(μ, σ²)</em> directly (which is non-differentiable), write:</p>
+        <div class="equation-box">
+            <pre><code>w = μ + σ ⊙ ε,    where ε ~ N(0, I)</code></pre>
+            <p>Now gradients can flow through <em>μ</em> and <em>σ</em> via the deterministic path.</p>
+        </div>
+
+        <h3>Local Reparameterization</h3>
+        <p>To reduce gradient variance, Blundell et al. sample the <em>pre-activation</em> (the weighted sum) rather than individual weights. For a layer with input <em>a</em> and weights <em>w ~ N(μ, σ²)</em>:</p>
+        <div class="equation-box">
+            <pre><code>b = wa  ⇒  b ~ N(μa, σ²a²)</code></pre>
+            <p>This makes the ELBO gradients much lower variance and stabilizes training.</p>
+        </div>
+
+        <h2>Algorithm Summary</h2>
+        <ol>
+            <li><strong>Forward pass:</strong> Sample weights from <em>q(w|θ)</em> via reparameterization.</li>
+            <li><strong>Compute loss:</strong> <code>loss = log_likelihood + (1/N) * KL[q || p]</code> (where N = number of mini-batches for unbiased estimation).</li>
+            <li><strong>Backward pass:</strong> Gradients w.r.t. <em>μ</em> and <em>ρ</em> (where σ = log(1 + exp(ρ))) flow through the sampled weights.</li>
+            <li><strong>Update:</strong> Standard optimizer (Adam, SGD) updates the variational parameters.</li>
+        </ol>
+
+        <h2>Practical Implementation Notes</h2>
+        <ul>
+            <li><strong>Prior choice:</strong> Scale mixture of Gaussians (two Gaussians with different variances) works better than a single Gaussian — encourages both large and small weights.</li>
+            <li><strong>Parameterization of σ:</strong> Use the softplus transformation: σ = log(1 + exp(ρ)) to ensure positivity and allow unconstrained optimization of ρ.</li>
+            <li><strong>Complexity:</strong> ≈ 2× the parameters of a deterministic network (μ and ρ per weight). Forward pass is ≈ 2× slower (due to sampling).</li>
+            <li><strong>KL annealing:</strong> Gradually increasing the KL weight during training often helps.</li>
+        </ul>
+
+        <h2>Pros &amp; Cons for NN Practitioners</h2>
+        <table>
+            <tr><th>✅ Advantages</th><th>❌ Disadvantages</th></tr>
+            <tr>
+                <td>Principled Bayesian inference with uncertainty estimates</td>
+                <td>Gaussian posterior assumption is restrictive — real posteriors are often multi-modal and heavy-tailed</td>
+            </tr>
+            <tr>
+                <td>Works with any architecture (MLP, CNN, RNN)</td>
+                <td>2× parameter blowup can be significant for large models</td>
+            </tr>
+            <tr>
+                <td>Standard backpropagation — easy to implement in PyTorch/TF</td>
+                <td>Gradient estimates can still be high-variance for deep networks</td>
+            </tr>
+            <tr>
+                <td>Provides both epistemic and aleatoric uncertainty</td>
+                <td>Diagonal covariance posterior ignores weight correlations</td>
+            </tr>
+        </table>
+
+        <div class="info-box">
+            <strong>🔗 Connections:</strong> This paper is the foundation for most modern VI-based BNN work. Louizos &amp; Welling (2017) extended it with normalizing flows for richer posteriors. Izmailov et al. (2021) showed that the Gaussian posterior assumption is often severely misspecified — consider this when interpreting uncertainty.
+        </div>
+
+        <div class="bottom-nav">
+            <a href="../index.html">← Main Page</a>
+            <a href="gal-dropout-bayesian.html">Next: Dropout as Bayesian Approximation →</a>
+        </div>
+    </main>
+</div>
+<script src="../nav.js"></script>
+</body>
+</html>

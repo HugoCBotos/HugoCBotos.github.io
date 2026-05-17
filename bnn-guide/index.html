@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bayesian Neural Networks — For Beginners</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="wrapper">
+    <nav class="sidebar">
+        <h2>🧠 BNN for Beginners</h2>
+        <div class="tagline">from a mathematician's perspective</div>
+        <ul class="sidebar-nav">
+            <li><a href="../notes.html" style="color:#f39c12; font-weight:600;">⬅ Back to Notes</a></li>
+            <li><a href="index.html" class="active">🏠 Main Page</a></li>
+            <li class="section-label">Concepts</li>
+            <li><a href="pages/neural-network.html">1. Neural Networks</a></li>
+            <li><a href="pages/bayesian-inference.html">2. Bayesian Inference</a></li>
+            <li><a href="pages/probability-distributions.html">3. Probability Distributions</a></li>
+            <li><a href="pages/uncertainty.html">4. Types of Uncertainty</a></li>
+            <li><a href="pages/kl-divergence.html">5. KL Divergence</a></li>
+            <li><a href="pages/evidence-lower-bound.html">6. The ELBO</a></li>
+            <li class="section-label">Methods</li>
+            <li><a href="pages/variational-inference.html">7. Variational Inference</a></li>
+            <li><a href="pages/mc-dropout.html">8. MC Dropout</a></li>
+            <li><a href="pages/laplace-approximation.html">9. Laplace Approximation</a></li>
+            <li><a href="pages/mcmc-hmc.html">10. MCMC &amp; HMC</a></li>
+        </ul>
+    </nav>
+
+    <main class="main-content">
+        <div class="hero">
+            <h1>Bayesian Neural Networks
+                <span class="subtitle">A beginner-friendly guide for mathematicians</span></h1>
+        </div>
+
+        <div class="story">
+            <p><strong>The short story:</strong> A normal neural network gives you a <em>single guess</em>.
+            A Bayesian neural network gives you a <em>guess plus a measure of how uncertain you should be</em>.
+            That extra uncertainty information is crucial when you're making decisions based on the network's output —
+            for example, in medical diagnosis, self-driving cars, or any scientific application.</p>
+        </div>
+
+        <!-- ==================== THE ROADMAP ==================== -->
+        <h2>🗺️ The Roadmap</h2>
+
+        <p>
+            Here is the path we will follow. Each box is a clickable link to a detailed page.
+            The pages are meant to be read <strong>in order</strong>, because each builds on the previous one.
+        </p>
+
+        <div class="card-grid">
+            <div class="card">
+                <h3><a href="pages/neural-network.html">1. Neural Networks</a></h3>
+                <p>What is a neural network mathematically? Weights, layers, activation functions, forward pass. The bare minimum you need to know.</p>
+                <span class="difficulty diff-beginner">beginner</span>
+            </div>
+            <div class="card">
+                <h3><a href="pages/bayesian-inference.html">2. Bayesian Inference</a></h3>
+                <p>What does "Bayesian" mean? Prior, likelihood, posterior, Bayes' theorem. The core philosophy of treating unknowns as distributions.</p>
+                <span class="difficulty diff-beginner">beginner</span>
+            </div>
+            <div class="card">
+                <h3><a href="pages/probability-distributions.html">3. Probability Distributions</a></h3>
+                <p>Random variables, PDFs, the Gaussian distribution, expectation, variance — the minimal probability toolkit you need for BNNs.</p>
+                <span class="difficulty diff-beginner">beginner</span>
+            </div>
+            <div class="card">
+                <h3><a href="pages/uncertainty.html">4. Types of Uncertainty</a></h3>
+                <p>Aleatoric vs epistemic uncertainty. Why we care. What BNNs give you that normal NNs don't.</p>
+                <span class="difficulty diff-intermediate">intermediate</span>
+            </div>
+            <div class="card">
+                <h3><a href="pages/kl-divergence.html">5. KL Divergence</a></h3>
+                <p>A measure of "distance" between probability distributions. The workhorse of variational Bayesian methods.</p>
+                <span class="difficulty diff-intermediate">intermediate</span>
+            </div>
+            <div class="card">
+                <h3><a href="pages/evidence-lower-bound.html">6. The ELBO</a></h3>
+                <p>The Evidence Lower BOund — the objective function we actually optimize. Connects Bayesian inference to optimization.</p>
+                <span class="difficulty diff-intermediate">intermediate</span>
+            </div>
+            <div class="card">
+                <h3><a href="pages/variational-inference.html">7. Variational Inference (Bayes by Backprop)</a></h3>
+                <p>The most popular approach: learn a distribution over weights by backpropagation. Full PyTorch code example.</p>
+                <span class="difficulty diff-advanced">advanced</span>
+            </div>
+            <div class="card">
+                <h3><a href="pages/mc-dropout.html">8. MC Dropout</a></h3>
+                <p>The simplest trick: use regular dropout at test time to get uncertainty. Near-zero extra cost, though dropout may require more training epochs to converge. PyTorch code.</p>
+                <span class="difficulty diff-intermediate">intermediate</span>
+            </div>
+            <div class="card">
+                <h3><a href="pages/laplace-approximation.html">9. Laplace Approximation</a></h3>
+                <p>Fit a Gaussian around the optimal weights after training. Elegant mathematics, simple implementation. PyTorch code.</p>
+                <span class="difficulty diff-advanced">advanced</span>
+            </div>
+            <div class="card">
+                <h3><a href="pages/mcmc-hmc.html">10. MCMC &amp; HMC</a></h3>
+                <p>The gold standard (gold standard in theory — too expensive in practice). Hamiltonian Monte Carlo explained conceptually.</p>
+                <span class="difficulty diff-advanced">advanced</span>
+            </div>
+        </div>
+
+        <!-- ==================== THE BIG PICTURE ==================== -->
+        <h2>🔁 The Big Picture in One Paragraph</h2>
+
+        <div class="concept-box">
+            <p>
+                A <strong>neural network</strong> is just a function <em>f(x; w)</em> where <em>x</em> is the input 
+                and <em>w</em> are the weights. Normal training finds a single best <em>w</em>.
+            </p>
+            <p>
+                In a <strong>Bayesian</strong> neural network, we replace the fixed weights <em>w</em> with 
+                a <strong>probability distribution</strong> over weights. Instead of saying "the weight is 0.5", 
+                we say "the weight is probably around 0.5, but could be a bit more or less". 
+            </p>
+            <p>
+                The catch: the exact distribution is impossible to compute. So we <strong>approximate</strong> it.
+                The different approaches (VI, MC Dropout, Laplace, HMC) are different approximation strategies.
+                Each trades off <strong>computational cost</strong> against <strong>approximation quality</strong>.
+            </p>
+        </div>
+
+        <!-- ==================== COMPARISON TABLE ==================== -->
+        <h2 id="comparison">⚡ Quick Comparison of Methods</h2>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Method</th>
+                    <th>Idea</th>
+                    <th>Bayesian part happens...</th>
+                    <th>Cost vs Normal NN</th>
+                    <th>Quality</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><a href="pages/variational-inference.html">Bayes by Backprop</a></td>
+                    <td>Learn mean &amp; variance of each weight</td>
+                    <td><strong>During training</strong> (learns &#956;, &#963;)</td>
+                    <td>&asymp; 2&times; slower, 2&times; parameters</td>
+                    <td>Good, but assumes Gaussian</td>
+                </tr>
+                <tr>
+                    <td><a href="pages/mc-dropout.html">MC Dropout</a></td>
+                    <td>Keep dropout on at test time, run multiple times</td>
+                    <td><strong>Both</strong> (dropout regularizes training, MC averaging at test time)</td>
+                    <td>&asymp; 1&times; training (may need more epochs), T&times; test cost</td>
+                    <td>Surprisingly good</td>
+                </tr>
+                <tr>
+                    <td><a href="pages/laplace-approximation.html">Laplace</a></td>
+                    <td>Gaussian around the optimal weights (post-hoc)</td>
+                    <td><strong>After training</strong> (purely post-hoc)</td>
+                    <td>&asymp; 1&times; training + Hessian computation</td>
+                    <td>Good for last layer</td>
+                </tr>
+                <tr>
+                    <td><a href="pages/mcmc-hmc.html">HMC</a></td>
+                    <td>Sample from the exact posterior (no approximation)</td>
+                    <td><strong>After training</strong> (but needs a completely different training procedure)</td>
+                    <td>100-1000&times; &mdash; usually impractical</td>
+                    <td>Gold standard (exact)</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="info-box">
+            <strong>💡 Recommendation:</strong> If you're just starting out, read pages 1–6 to build the foundations,
+            then jump to <strong>MC Dropout</strong> (page 8) — it's the simplest thing that actually works.
+            Come back to the other methods once you need more sophisticated uncertainty estimates.
+        </div>
+
+        <!-- ==================== REFERENCES ==================== -->
+        <h2>📚 Original Papers (all free on arXiv)</h2>
+        <p>Each tutorial page links to the original paper. Here are all the references in one place:</p>
+        <table>
+            <tr><th>Paper</th><th>arXiv</th><th>Discussed in</th></tr>
+            <tr>
+                <td>Blundell et al. — <em>Weight Uncertainty in Neural Networks</em> (2015)</td>
+                <td><a href="https://arxiv.org/abs/1505.05424">1505.05424</a></td>
+                <td><a href="pages/variational-inference.html">Variational Inference</a></td>
+            </tr>
+            <tr>
+                <td>Hern&aacute;ndez-Lobato &amp; Adams — <em>Probabilistic Backpropagation</em> (2015)</td>
+                <td><a href="https://arxiv.org/abs/1502.05336">1502.05336</a></td>
+                <td><a href="pages/variational-inference.html">Variational Inference</a></td>
+            </tr>
+            <tr>
+                <td>Gal &amp; Ghahramani — <em>Dropout as a Bayesian Approximation</em> (2016)</td>
+                <td><a href="https://arxiv.org/abs/1506.02142">1506.02142</a></td>
+                <td><a href="pages/mc-dropout.html">MC Dropout</a></td>
+            </tr>
+            <tr>
+                <td>Louizos &amp; Welling — <em>Multiplicative Normalizing Flows</em> (2017)</td>
+                <td><a href="https://arxiv.org/abs/1603.04779">1603.04779</a></td>
+                <td><a href="pages/variational-inference.html">Variational Inference</a></td>
+            </tr>
+            <tr>
+                <td>Betancourt — <em>A Conceptual Introduction to HMC</em> (2017)</td>
+                <td><a href="https://arxiv.org/abs/1701.02434">1701.02434</a></td>
+                <td><a href="pages/mcmc-hmc.html">MCMC &amp; HMC</a></td>
+            </tr>
+            <tr>
+                <td>Goan &amp; Fookes — <em>Bayesian Neural Networks Survey</em> (2020)</td>
+                <td><a href="https://arxiv.org/abs/2006.12024">2006.12024</a></td>
+                <td>Survey reference</td>
+            </tr>
+            <tr>
+                <td>Wang &amp; Yeung — <em>Bayesian Deep Learning Survey</em> (2020)</td>
+                <td><a href="https://arxiv.org/abs/1604.01662">1604.01662</a></td>
+                <td>Survey reference</td>
+            </tr>
+            <tr>
+                <td>Daxberger et al. — <em>Laplace Redux</em> (2021)</td>
+                <td><a href="https://arxiv.org/abs/2106.14806">2106.14806</a></td>
+                <td><a href="pages/laplace-approximation.html">Laplace Approximation</a></td>
+            </tr>
+            <tr>
+                <td>Izmailov et al. — <em>What Are BNN Posteriors Really Like?</em> (2021)</td>
+                <td><a href="https://arxiv.org/abs/2104.14421">2104.14421</a></td>
+                <td><a href="pages/uncertainty.html">Uncertainty</a></td>
+            </tr>
+            <tr>
+                <td>Jospin et al. — <em>Hands-on Bayesian Neural Networks</em> (2022)</td>
+                <td><a href="https://arxiv.org/abs/2008.06351">2008.06351</a></td>
+                <td>Survey reference</td>
+            </tr>
+            <tr>
+                <td>Magris &amp; Iosifidis — <em>Bayesian Learning for NNs Survey</em> (2023)</td>
+                <td><a href="https://arxiv.org/abs/2304.02868">2304.02868</a></td>
+                <td>Survey reference</td>
+            </tr>
+        </table>
+
+        <div class="bottom-nav">
+            <span class="nav-disabled">← Start Here</span>
+            <a href="pages/neural-network.html">Start: Neural Networks →</a>
+        </div>
+    </main>
+</div>
+<script src="nav.js"></script>
+<script src="search.js"></script>
+</body>
+</html>
