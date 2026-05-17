@@ -5,6 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MC Dropout — BNN for Beginners</title>
     <link rel="stylesheet" href="../style.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+        onload="renderMathInElement(document.body, {delimiters: [
+            {left: '$$', right: '$$', display: true},
+            {left: '$', right: '$', display: false}
+        ]});"></script>
 </head>
 <body>
 <div class="wrapper">
@@ -95,22 +102,22 @@
             <tr><th></th><th>Variational Inference (page 7)</th><th>Dropout Training</th></tr>
             <tr>
                 <td><strong>What we optimize</strong></td>
-                <td>ELBO = E<sub>q</sub>[log p(D|w)] &minus; KL[q || p(w)]</td>
+                <td>$\operatorname{ELBO} = \mathbb{E}_{q}[\log p(D \mid w)] - \operatorname{KL}[q \parallel p(w)]$</td>
                 <td>Loss = cross-entropy + &lambda; &middot; ||w||<sup>2</sup> (L2 weight decay)</td>
             </tr>
             <tr>
                 <td><strong>Posterior q(w)</strong></td>
-                <td>q(w) = N(&mu;, &sigma;<sup>2</sup>)</td>
-                <td>q(w) = w &#8855; z, &nbsp; z<sub>i</sub> ~ Bernoulli(1&minus;p)</td>
+                <td>$q(w) = \mathcal{N}(\mu, \sigma^2)$</td>
+                <td>$q(w) = w \odot z$, $z_i \sim \text{Bernoulli}(1-p)$</td>
             </tr>
             <tr>
                 <td><strong>Prior p(w)</strong></td>
-                <td>p(w) = N(0, &sigma;<sub>p</sub><sup>2</sup>)</td>
+                <td>$p(w) = \mathcal{N}(0, \sigma_p^2)$</td>
                 <td>Same! The L2 term &lambda;||w||<sup>2</sup> comes from a Gaussian prior</td>
             </tr>
             <tr>
                 <td><strong>Data term</strong></td>
-                <td>E<sub>q</sub>[log p(D|w)]</td>
+                <td>$\mathbb{E}_{q}[\log p(D \mid w)]$</td>
                 <td>Cross-entropy loss (with dropout = MC estimate of the expectation)</td>
             </tr>
         </table>
@@ -118,7 +125,7 @@
         <div class="concept-box">
             <p><strong>Equivalence (Gal &amp; Ghahramani, 2016):</strong></p>
             <p style="font-size:1.05rem;">
-                CrossEntropy(&#375;, y) + &lambda; &middot; ||w||<sup>2</sup> &nbsp;&hArr;&nbsp; &minus;E<sub>q</sub>[log p(D|w)] + KL[q || p(w)] / N
+                $$\text{CrossEntropy}(\hat{y}, y) + \lambda \,\|w\|^2 \;\Longleftrightarrow\; -\mathbb{E}_{q}[\log p(D \mid w)] + \frac{\operatorname{KL}[q \parallel p(w)]}{N}$$
             </p>
             <p>
                 Where N is the number of training points. The L2 weight decay &lambda; is determined by the prior variance.
@@ -144,11 +151,7 @@
 
         <div class="equation-box">
             <div class="label">Dropout</div>
-            During training: h<sub>out</sub> = h<sub>in</sub> &#8855; z, &nbsp; where z<sub>i</sub> ~ Bernoulli(1 &minus; p)
-            <br>
-            <span style="font-size:0.85rem; color:#555;">
-            (z is a random vector of 0s and 1s; &#8855; means elementwise multiplication)
-            </span>
+            $$\text{During training: } h_{\text{out}} = h_{\text{in}} \odot z, \quad z_i \sim \text{Bernoulli}(1-p)$$
         </div>
 
         <p>
@@ -174,12 +177,7 @@
 
         <div class="equation-box">
             <div class="label">Variational posterior implied by dropout</div>
-            q(w) &#8733; z &#8855; w<sub>MAP</sub>, &nbsp; &nbsp; &nbsp; z<sub>i</sub> ~ Bernoulli(1 &minus; p)
-            <br>
-            <span style="font-size:0.85rem; color:#555;">
-            (Each weight is either "on" (with probability 1&minus;p) or "off" (with probability p).
-            This is a much cruder posterior than the Gaussian used in Bayes by Backprop.)
-            </span>
+            $$q(w) \propto z \odot w_{\text{MAP}}, \quad z_i \sim \text{Bernoulli}(1-p)$$
         </div>
 
         <!-- ======== THE MC DROPOUT ALGORITHM ======== -->
@@ -192,10 +190,10 @@
 
         <div class="equation-box">
             <div class="label">Predictive distribution via MC Dropout</div>
-            p(y* | x*, D) &#8771; <span style="font-size:1.1em;">1</span>/<span style="font-size:1.1em;">T</span> &sum;<sub>t=1</sub><sup>T</sup> p(y* | x*, w<sub>t</sub>)
+            $$p(y^* \mid x^*, D) \approx \frac{1}{T} \sum_{t=1}^{T} p(y^* \mid x^*, w_t)$$
             <br>
             <span style="font-size:0.85rem; color:#555;">
-            where w<sub>t</sub> are weights with different dropout masks applied.
+            where $w_t$ are weights with different dropout masks applied.
             This is the same formula as in <a href="variational-inference.html">Bayes by Backprop</a>,
             but with Bernoulli noise instead of Gaussian noise on the weights.
             </span>

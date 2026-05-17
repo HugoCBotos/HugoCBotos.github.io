@@ -375,6 +375,29 @@ pre code {
 .diff-intermediate { background: #fff3e0; color: #e65100; }
 .diff-advanced { background: #fce4ec; color: #c62828; }
 
+/* === Tags (for source pages) === */
+.tag {
+    display: inline-block;
+    font-size: 0.65rem;
+    padding: 0.15rem 0.5rem;
+    border-radius: 4px;
+    margin-top: 0.5rem;
+    margin-right: 0.3rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.tag-variational { background: #e8eaf6; color: #283593; }
+.tag-foundational { background: #fce4ec; color: #c62828; }
+.tag-flow { background: #e0f2f1; color: #00695c; }
+.tag-dropout { background: #fff3e0; color: #e65100; }
+.tag-laplace { background: #f3e5f5; color: #6a1b9a; }
+.tag-hmc { background: #e8f5e9; color: #2e7d32; }
+.tag-mcmc { background: #e8f5e9; color: #2e7d32; }
+.tag-survey { background: #ede7f6; color: #4527a0; }
+.tag-tutorial { background: #e1f5fe; color: #01579b; }
+
 /* === Lists === */
 .main-content ul, .main-content ol {
     margin: 0.5rem 0 1rem 1.8rem;

@@ -5,6 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Neural Networks — BNN for Beginners</title>
     <link rel="stylesheet" href="../style.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+        onload="renderMathInElement(document.body, {delimiters: [
+            {left: '$$', right: '$$', display: true},
+            {left: '$', right: '$', display: false}
+        ]});"></script>
 </head>
 <body>
 <div class="wrapper">
@@ -49,7 +56,7 @@
 
         <p>
             The simplest piece of a neural network is a <strong>linear layer</strong>.
-            It takes an input vector <em>x</em> ∈ ℝ<sup>n</sup> and produces an output vector <em>y</em> ∈ ℝ<sup>m</sup>:
+            It takes an input vector $x \in \mathbb{R}^{n}$ and produces an output vector $y \in \mathbb{R}^{m}$:
         </p>
 
         <div class="equation-box">

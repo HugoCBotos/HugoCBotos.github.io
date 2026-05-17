@@ -5,6 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>KL Divergence — BNN for Beginners</title>
     <link rel="stylesheet" href="../style.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+        onload="renderMathInElement(document.body, {delimiters: [
+            {left: '$$', right: '$$', display: true},
+            {left: '$', right: '$', display: false}
+        ]});"></script>
 </head>
 <body>
 <div class="wrapper">
@@ -52,20 +59,13 @@
 
         <div class="equation-box">
             <div class="label">KL Divergence</div>
-            KL[ q || p ] =  &#8747; q(w) &#183; log( q(w) / p(w) ) dw
-            <br><br>
-            = E<sub>q</sub>[ log q(w) &#8722; log p(w) ]
-            <br><br>
-            <span style="font-size:0.9rem; color:#555;">
-            (The double vertical bar || separates the two distributions. Read it as:
-            "the average (expectation) of the log-ratio q/p, weighted by q".)
-            </span>
+            $$\operatorname{KL}[q \parallel p] = \int q(w) \log\frac{q(w)}{p(w)}\,dw = \mathbb{E}_{q}[\log q(w) - \log p(w)]$$
         </div>
 
         <p>Key properties:</p>
         <ul>
-            <li><strong>KL[q || p] ≥ 0</strong> always, with equality iff <em>q</em> = <em>p</em> almost everywhere</li>
-            <li><strong>Not symmetric:</strong> KL[q || p] ≠ KL[p || q] in general</li>
+            <li><strong>$\operatorname{KL}[q \parallel p] \ge 0$</strong> always, with equality iff $q = p$ almost everywhere</li>
+            <li><strong>Not symmetric:</strong> $\operatorname{KL}[q \parallel p] \neq \operatorname{KL}[p \parallel q]$ in general</li>
             <li><strong>Not a metric</strong> (doesn't satisfy triangle inequality), but behaves like a "distance"</li>
         </ul>
 
@@ -80,72 +80,70 @@
 
         <p>
             For our purposes, the most important interpretation is:
-            <strong>KL[q || p] is the penalty we pay for using <em>q</em> instead of <em>p</em></strong>.
-            When <em>q</em> puts probability mass where <em>p</em> has none, the penalty is huge.
-            When <em>q</em> puts mass everywhere <em>p</em> has mass (even if <em>q</em> is wider), the penalty is small.
+            <strong>$\operatorname{KL}[q \parallel p]$ is the penalty we pay for using $q$ instead of $p$</strong>.
+            When $q$ puts probability mass where $p$ has none, the penalty is huge.
+            When $q$ puts mass everywhere $p$ has mass (even if $q$ is wider), the penalty is small.
         </p>
 
         <!-- ======== MODE-SEEKING VS COVERING ======== -->
         <h2>Mode-Seeking vs. Covering Behavior</h2>
 
         <p>
-            KL[q || p] is <strong>mode-seeking</strong> (also called "zero-avoiding").
+            $\operatorname{KL}[q \parallel p]$ is <strong>mode-seeking</strong> (also called "zero-avoiding").
             To understand why, look at the formula again:
         </p>
 
         <div class="equation-box">
-            <span class="label">KL Divergence (integral form)</span>
-            <div style="margin-top:0.3rem;">
-            KL[ q || p ] = &#8747; q(w) &#183; log( q(w) / p(w) ) dw
-            </div>
+            <div class="label">KL Divergence (integral form)</div>
+            $$\operatorname{KL}[q \parallel p] = \int q(w) \log\frac{q(w)}{p(w)}\,dw$$
         </div>
 
         <p>
-            The integrand has two factors: <strong>q(w)</strong> (the probability under q) multiplied by
-            <strong>log(q(w)/p(w))</strong> (how much q and p differ at w).
+            The integrand has two factors: <strong>$q(w)$</strong> (the probability under $q$) multiplied by
+            <strong>$\log(q(w)/p(w))$</strong> (how much $q$ and $p$ differ at $w$).
             Let's examine two scenarios:
         </p>
 
         <table>
             <tr><th>Scenario</th><th>What happens in the integral</th><th>Penalty</th></tr>
             <tr>
-                <td><strong>q puts mass where p has none</strong><br>
-                (q is wider than p, or q is centered somewhere p isn't)</td>
-                <td>q(w) is large, p(w) ≈ 0, so q(w)/p(w) → ∞,<br>
-                log(∞) → ∞ → the integrand explodes</td>
+                <td><strong>$q$ puts mass where $p$ has none</strong><br>
+                ($q$ is wider than $p$, or $q$ is centered somewhere $p$ isn't)</td>
+                <td>$q(w)$ is large, $p(w) \approx 0$, so $q(w)/p(w) \to \infty$,<br>
+                $\log(\infty) \to \infty$ — the integrand explodes</td>
                 <td style="color:#c62828; font-weight:bold;">HUGE PENALTY</td>
             </tr>
             <tr>
-                <td><strong>q puts no mass where p has mass</strong><br>
-                (q is narrower than p, or q misses a mode of p)</td>
-                <td>q(w) ≈ 0, so q(w) · log(...) ≈ 0 · anything = 0<br>
-                regardless of what p(w) is</td>
+                <td><strong>$q$ puts no mass where $p$ has mass</strong><br>
+                ($q$ is narrower than $p$, or $q$ misses a mode of $p$)</td>
+                <td>$q(w) \approx 0$, so $q(w) \cdot \log(\dots) \approx 0 \cdot \text{anything} = 0$,<br>
+                regardless of what $p(w)$ is</td>
                 <td style="color:#2e7d32; font-weight:bold;">ZERO PENALTY</td>
             </tr>
         </table>
 
         <div class="story">
-            <p><strong>Analogy:</strong> Imagine two photographers shooting a mountain range. The true landscape is <strong>p</strong> (the mountain range). You are <strong>q</strong> (the photographer). You can choose your lens:</p>
+            <p><strong>Analogy:</strong> Imagine two photographers shooting a mountain range. The true landscape is $p$ (the mountain range). You are $q$ (the photographer). You can choose your lens:</p>
             <ul>
-                <li><strong>Narrow lens (q is too narrow):</strong> Misses distant peaks entirely, but the penalty is small — you're penalized only for what you actually capture (q(w) &ne; 0), not for what you miss.</li>
-                <li><strong>Wide lens (q is too wide):</strong> Includes empty sky around the edges. The penalty is huge — trying to capture areas where there's no mountain (p(w) &asymp; 0) costs you dearly.</li>
+                <li><strong>Narrow lens ($q$ is too narrow):</strong> Misses distant peaks entirely, but the penalty is small — you're penalized only for what you actually capture ($q(w) \neq 0$), not for what you miss.</li>
+                <li><strong>Wide lens ($q$ is too wide):</strong> Includes empty sky around the edges. The penalty is huge — trying to capture areas where there's no mountain ($p(w) \approx 0$) costs you dearly.</li>
             </ul>
-            <p>That's why minimizing KL[q || p] produces a <em>narrow</em> q that covers <em>one mode</em> well: it's cheaper to be narrow and miss parts of p than to be wide and include areas where p is small.</p>
+            <p>That's why minimizing $\operatorname{KL}[q \parallel p]$ produces a <em>narrow</em> $q$ that covers <em>one mode</em> well: it's cheaper to be narrow and miss parts of $p$ than to be wide and include areas where $p$ is small.</p>
         </div>
 
         <h3>The "Zero-Avoiding" Property</h3>
         <p>
-            KL[q || p] is called <strong>"zero-avoiding"</strong> because q absolutely <em>must not</em> have mass
-            where p has none — that's catastrophically expensive. But q is <em>allowed</em> to be zero where p
-            has mass — that costs nothing. This is entirely due to the q(w) factor <em>outside</em> the log:
-            where q(w) = 0, the whole term is zero regardless of p(w).
+            $\operatorname{KL}[q \parallel p]$ is called <strong>"zero-avoiding"</strong> because $q$ absolutely <em>must not</em> have mass
+            where $p$ has none — that's catastrophically expensive. But $q$ is <em>allowed</em> to be zero where $p$
+            has mass — that costs nothing. This is entirely due to the $q(w)$ factor <em>outside</em> the log:
+            where $q(w) = 0$, the whole term is zero regardless of $p(w)$.
         </p>
 
         <p>
-            The asymmetry is the opposite for <strong>KL[p || q]</strong> (the reverse direction).
-            There, the roles are swapped: p(w) multiplies the log, so p being large where q is small
-            would be penalized. That's why KL[p || q] is "mass-covering" or "mean-seeking" —
-            it tries to make q cover all of p.
+            The asymmetry is the opposite for <strong>$\operatorname{KL}[p \parallel q]$</strong> (the reverse direction).
+            There, the roles are swapped: $p(w)$ multiplies the log, so $p$ being large where $q$ is small
+            would be penalized. That's why $\operatorname{KL}[p \parallel q]$ is "mass-covering" or "mean-seeking" —
+            it tries to make $q$ cover all of $p$.
         </p>
 
         <h3>Consequence for Bayesian Neural Networks</h3>

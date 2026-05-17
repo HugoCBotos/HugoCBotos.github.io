@@ -5,6 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Laplace Redux — Daxberger 2021</title>
     <link rel="stylesheet" href="../style.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+        onload="renderMathInElement(document.body, {delimiters: [
+            {left: '$$', right: '$$', display: true},
+            {left: '$', right: '$', display: false}
+        ]});"></script>
 </head>
 <body>
 <div class="wrapper">
@@ -56,11 +63,11 @@
         <h3>The Laplace Approximation</h3>
         <p>Given a MAP estimate <em>w<sub>MAP</sub></em>, the log-posterior is approximated by a second-order Taylor expansion:</p>
         <div class="equation-box">
-            <pre><code>log p(w|D) ≈ log p(w_MAP|D) - ½(w - w_MAP)^T H (w - w_MAP)</code></pre>
-            <p>where <em>H = ∇² log p(w|D)</em> is the Hessian of the negative log-joint at the MAP estimate. This implies a Gaussian posterior:</p>
+            $$\log p(w \mid D) \approx \log p(w_{\text{MAP}} \mid D) - \frac{1}{2}(w - w_{\text{MAP}})^T H\,(w - w_{\text{MAP}})$$
+            <p>where $H = \nabla^2 \log p(w \mid D)$ is the Hessian of the negative log-joint at the MAP estimate. This implies a Gaussian posterior:</p>
         </div>
         <div class="equation-box">
-            <pre><code>p(w|D) ≈ N(w; w_MAP, H^{-1})</code></pre>
+            $$p(w \mid D) \approx \mathcal{N}(w;\, w_{\text{MAP}}, H^{-1})$$
         </div>
 
         <h3>Hessian Approximations for Scalability</h3>

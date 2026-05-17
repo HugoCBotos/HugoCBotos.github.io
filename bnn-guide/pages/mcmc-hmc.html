@@ -5,6 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MCMC & HMC — BNN for Beginners</title>
     <link rel="stylesheet" href="../style.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+        onload="renderMathInElement(document.body, {delimiters: [
+            {left: '$$', right: '$$', display: true},
+            {left: '$', right: '$', display: false}
+        ]});"></script>
 </head>
 <body>
 <div class="wrapper">
@@ -68,7 +75,7 @@
 
         <div class="equation-box">
             <div class="label">Predictive distribution via MCMC</div>
-            p(y* | x*, D) &asymp; <span style="font-size:1.15em;">1</span>/<span style="font-size:1.15em;">T</span> &sum;<sub>t=1</sub><sup>T</sup> p(y* | x*, w<sub>t</sub>)
+            $$p(y^* \mid x^*, D) \approx \frac{1}{T} \sum_{t=1}^{T} p(y^* \mid x^*, w_t)$$
         </div>
 
         <!-- ======== THE PROBLEM WITH NAIVE MCMC ======== -->
@@ -155,10 +162,9 @@
         <p>The mathematics:</p>
         <div class="equation-box">
             <div class="label">HMC Dynamics</div>
-            <strong>Hamiltonian:</strong> <em>H</em>(<em>w</em>, <em>p</em>) = -log <em>p(w|D)</em> + ½ <em>p</em><sup>T</sup> <em>M</em><sup>-1</sup> <em>p</em>
-            <br><br>
-            <strong>Potential energy:</strong> <em>U(w)</em> = -log <em>p(w|D)</em> (the posterior)<br>
-            <strong>Kinetic energy:</strong> <em>K(p)</em> = ½ <em>p</em><sup>T</sup> <em>M</em><sup>-1</sup> <em>p</em> (momentum <em>p</em>, mass <em>M</em>)
+            $$\text{Hamiltonian: } H(w, p) = -\log p(w \mid D) + \frac{1}{2} p^T M^{-1} p$$
+            $$\text{Potential energy: } U(w) = -\log p(w \mid D)$$
+            $$\text{Kinetic energy: } K(p) = \frac{1}{2} p^T M^{-1} p$$
         </div>
 
         <p>

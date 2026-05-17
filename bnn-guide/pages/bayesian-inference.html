@@ -5,6 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Bayesian Inference — BNN for Beginners</title>
     <link rel="stylesheet" href="../style.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+        onload="renderMathInElement(document.body, {delimiters: [
+            {left: '$$', right: '$$', display: true},
+            {left: '$', right: '$', display: false}
+        ]});"></script>
 </head>
 <body>
 <div class="wrapper">
@@ -82,7 +89,7 @@
 
         <div class="equation-box">
             <div class="label">Bayes' Theorem</div>
-            p(w | D) = p(D | w) &middot; p(w) / p(D)
+            $$p(w \mid D) = \frac{p(D \mid w) \, p(w)}{p(D)}$$
         </div>
 
         <p>In words:</p>
@@ -91,61 +98,86 @@
         </div>
 
         <ul>
-            <li><strong>Posterior</strong> <em>p(w|D)</em>: our updated belief after seeing data</li>
-            <li><strong>Likelihood</strong> <em>p(D|w)</em>: how well the data fits a particular <em>w</em></li>
-            <li><strong>Prior</strong> <em>p(w)</em>: our belief before data</li>
-            <li><strong>Evidence</strong> <em>p(D)</em>: a normalizing constant (total probability of the data)</li>
+            <li><strong>Posterior</strong> $p(w \mid D)$: our updated belief after seeing data</li>
+            <li><strong>Likelihood</strong> $p(D \mid w)$: how well the data fits a particular $w$</li>
+            <li><strong>Prior</strong> $p(w)$: our belief before data</li>
+            <li><strong>Evidence</strong> $p(D)$: a normalizing constant (total probability of the data)</li>
         </ul>
 
         <div class="info-box">
-            <strong>🔍 For the mathematician:</strong> The evidence <em>p(D)</em> = ∫ <em>p(D|w)</em> <em>p(w)</em> <em>dw</em> is just the constant that makes the posterior integrate to 1. It's often impossible to compute analytically — that's the central difficulty of Bayesian inference.
+            <strong>🔍 For the mathematician:</strong> The evidence $p(D) = \int p(D \mid w) \, p(w) \, dw$ is just the constant that makes the posterior integrate to 1. It's often impossible to compute analytically — that's the central difficulty of Bayesian inference.
         </div>
 
         <!-- ======== A CONCRETE EXAMPLE ======== -->
-        <h2>A Concrete Example: Coin Tossing</h2>
+        <h2>A Concrete Example: Rolling a Die</h2>
 
         <div class="story">
-            <p><strong>Scenario:</strong> You have a coin. You want to know its probability of landing heads (call it <em>w</em>).
-            You toss it 10 times and get 8 heads. What is <em>w</em>?</p>
+            <p><strong>Scenario:</strong> A six-sided die is rolled 60 times. The observed counts are:
+            15 ones, 10 twos, 8 threes, 12 fours, 7 fives, 8 sixes.
+            What is the probability vector <strong>p</strong> = (p₁, p₂, p₃, p₄, p₅, p₆)?</p>
         </div>
 
-        <p><strong>Frequentist answer:</strong> <em>w</em> = 8/10 = 0.8. A single number.</p>
+        <p><strong>Frequentist answer (MLE):</strong> Each probability is estimated by the observed frequency:</p>
+        <div class="equation-box">
+            $$\mathbf{\hat{p}} = \left(\frac{15}{60}, \frac{10}{60}, \frac{8}{60}, \frac{12}{60}, \frac{7}{60}, \frac{8}{60}\right) = (0.25, 0.17, 0.13, 0.20, 0.12, 0.13)$$
+        </div>
+        <p>A single point estimate. No notion of uncertainty — unless one computes confidence intervals
+        from the multinomial distribution (which requires asymptotic approximations).</p>
 
-        <p><strong>Bayesian answer:</strong> We keep a whole distribution.</p>
+        <p><strong>Bayesian answer:</strong> A whole distribution over all possible dice.</p>
 
         <ol>
-            <li><strong>Prior:</strong> Before tossing, we think any <em>w</em> ∈ [0, 1] is equally likely.
-            So <em>p(w)</em> = 1 (uniform distribution).</li>
-            <li><strong>Likelihood:</strong> The probability of exactly 8 heads in 10 tosses, given bias <em>w</em>,
-            is <em>p(D|w)</em> = C(10,8) <em>w</em><sup>8</sup> (1-<em>w</em>)<sup>2</sup>.</li>
-            <li><strong>Posterior:</strong> Multiply and normalize. The result is a <strong>Beta distribution</strong>
-            concentrated near 0.8, but with a spread that reflects our remaining uncertainty.</li>
+            <li><strong>Prior:</strong> Before rolling, any probability vector is equally plausible.
+            This is modeled by a <strong>Dir(1,1,1,1,1,1)</strong> distribution — the uniform
+            distribution over the 6-simplex (the set of all possible dice).</li>
+            <li><strong>Likelihood:</strong> Given a specific probability vector $\mathbf{p}$,
+            the probability of the observed counts is given by the multinomial distribution:
+            $p(D \mid \mathbf{p}) \propto p_1^{15} \cdot p_2^{10} \cdot p_3^{8} \cdot p_4^{12} \cdot p_5^{7} \cdot p_6^{8}$.</li>
+            <li><strong>Posterior:</strong> Multiply and normalize. The result is a <strong>Dir(16, 11, 9, 13, 8, 9)</strong>
+            distribution — a continuous distribution over the simplex that concentrates near the observed frequencies
+            but retains a spread reflecting remaining uncertainty.</li>
         </ol>
 
+        <div class="concept-box">
+            <p><strong>Why the die is a better example than a coin:</strong></p>
+            <ul>
+                <li>With a coin, the parameter is a single number $w \in [0, 1]$ — the frequentist can
+                give a full confidence interval from the Binomial distribution, so the Bayesian advantage
+                seems small.</li>
+                <li>With a die, the parameter is a 6-dimensional vector $\mathbf{p} \in \Delta^5$
+                (the 5-simplex). The frequentist gives only a point estimate.
+                The Bayesian gives a full posterior over the simplex — a much sharper contrast.</li>
+                <li>From the Bayesian posterior, one can answer questions like:
+                "what is the probability that the die is biased toward even numbers?
+                (i.e., that $p_2 + p_4 + p_6 > 0.5$)?" — a question the MLE cannot directly address.</li>
+            </ul>
+        </div>
+
         <p>Notice: the Bayesian answer is a <em>distribution</em>, not a point. That distribution tells us not just
-        "the most likely value is 0.8" but also "we're about 95% sure the true bias is between 0.55 and 0.95".
-        This uncertainty information is what BNNs bring to neural networks.</p>
+        "the most likely probability vector" but also how much uncertainty remains about each face.
+        This uncertainty information is what BNNs bring to neural networks — but instead of 6 categories
+        (die faces), they deal with millions of parameters (weights).</p>
 
         <!-- ======== CONNECTION TO NEURAL NETS ======== -->
         <h2>Connection to Neural Networks</h2>
 
-        <p>In a neural network, <em>w</em> is the set of all weights (millions of numbers).
-        The data <em>D</em> is the training dataset.</p>
+        <p>In a neural network, $w$ is the set of all weights (millions of numbers).
+        The data $D$ is the training dataset.</p>
 
         <ul>
-            <li><strong>Prior</strong> <em>p(w)</em>: our initial belief about the weights (usually "they should be small", i.e., a Gaussian centered at 0)</li>
-            <li><strong>Likelihood</strong> <em>p(D|w)</em>: how well the network predicts the training data given those weights</li>
-            <li><strong>Posterior</strong> <em>p(w|D)</em>: the distribution of weights that explain the data</li>
+            <li><strong>Prior</strong> $p(w)$: our initial belief about the weights (usually "they should be small", i.e., a Gaussian centered at 0)</li>
+            <li><strong>Likelihood</strong> $p(D \mid w)$: how well the network predicts the training data given those weights</li>
+            <li><strong>Posterior</strong> $p(w \mid D)$: the distribution of weights that explain the data</li>
         </ul>
 
         <p>
-            A <strong>Bayesian neural network</strong> doesn't just find the single best <em>w</em>.
-            It approximates the whole posterior <em>p(w|D)</em>. When making a prediction, we average over all plausible weights:
+            A <strong>Bayesian neural network</strong> doesn't just find the single best $w$.
+            It approximates the whole posterior $p(w \mid D)$. When making a prediction, we average over all plausible weights:
         </p>
 
         <div class="equation-box">
             <div class="label">Predictive Distribution</div>
-            <em>p(y*|x*, D)</em> = ∫ <em>p(y*|x*, w)</em> <em>p(w|D)</em> <em>dw</em>
+            $$p(y^* \mid x^*, D) = \int p(y^* \mid x^*, w) \, p(w \mid D) \, dw$$
         </div>
 
         <p>

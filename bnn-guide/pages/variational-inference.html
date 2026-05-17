@@ -5,6 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Variational Inference — BNN for Beginners</title>
     <link rel="stylesheet" href="../style.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+        onload="renderMathInElement(document.body, {delimiters: [
+            {left: '$$', right: '$$', display: true},
+            {left: '$', right: '$', display: false}
+        ]});"></script>
 </head>
 <body>
 <div class="wrapper">
@@ -53,16 +60,16 @@
 
         <div class="equation-box">
             <div class="label">Each weight has two parameters</div>
-            <em>w</em> = μ + σ ⊙ ε, where ε ~ N(0, 1)
-            <br><br>
-            <strong>μ</strong>: the mean (best guess for the weight)<br>
-            <strong>σ</strong>: the standard deviation (how uncertain we are)<br>
-            <strong>ε</strong>: random noise (sampled fresh each forward pass)
+            $$w = \mu + \sigma \odot \varepsilon, \quad \varepsilon \sim \mathcal{N}(0, 1)$$
+            <br>
+            <strong>$\mu$</strong>: the mean (best guess for the weight)<br>
+            <strong>$\sigma$</strong>: the standard deviation (how uncertain we are)<br>
+            <strong>$\varepsilon$</strong>: random noise (sampled fresh each forward pass)
         </div>
 
         <p>
             The <strong>reparameterization trick</strong> is what makes this work.
-            By writing <em>w</em> = μ + σε, we separate the randomness (ε) from the parameters (μ, σ).
+            By writing $w = \mu + \sigma\varepsilon$, we separate the randomness ($\varepsilon$) from the parameters ($\mu, \sigma$).
             This lets gradients flow through the sampling step during backpropagation.
         </p>
 
@@ -73,15 +80,14 @@
 
         <div class="equation-box">
             <div class="label">Objective to maximize</div>
-            ELBO = E<sub><em>q</em></sub>[log <em>p(D|w)</em>] - KL[<em>q</em> || <em>p(w)</em>]
+            $$\operatorname{ELBO} = \mathbb{E}_{q}[\log p(D \mid w)] - \operatorname{KL}[q \parallel p(w)]$$
         </div>
 
-        <p>The KL term can be computed in closed form when both <em>q</em> and the prior <em>p</em> are Gaussian:</p>
+        <p>The KL term can be computed in closed form when both $q$ and the prior $p$ are Gaussian:</p>
 
         <div class="equation-box">
             <div class="label">KL between two Gaussians</div>
-            KL[ N(μ<sub>q</sub>, σ<sub>q</sub>²) || N(μ<sub>p</sub>, σ<sub>p</sub>²) ] =
-            log(σ<sub>p</sub>/σ<sub>q</sub>) + (σ<sub>q</sub>² + (μ<sub>q</sub> - μ<sub>p</sub>)²) / (2σ<sub>p</sub>²) - ½
+            $$\operatorname{KL}[\mathcal{N}(\mu_q, \sigma_q^2) \parallel \mathcal{N}(\mu_p, \sigma_p^2)] = \log\frac{\sigma_p}{\sigma_q} + \frac{\sigma_q^2 + (\mu_q - \mu_p)^2}{2\sigma_p^2} - \frac{1}{2}$$
         </div>
 
         <p>The data term is approximated by a single Monte Carlo sample (one forward pass with sampled weights).</p>
@@ -90,8 +96,8 @@
         <h2>Practical Implementation Details</h2>
 
         <ul>
-            <li><strong>σ parameterization:</strong> We don't optimize σ directly (it must be positive).
-            Instead, we optimize ρ where σ = log(1 + exp(ρ)) (softplus). This lets us use unconstrained optimization.</li>
+            <li><strong>$\sigma$ parameterization:</strong> We don't optimize $\sigma$ directly (it must be positive).
+            Instead, we optimize $\rho$ where $\sigma = \log(1 + \exp(\rho))$ (softplus). This lets us use unconstrained optimization.</li>
             <li><strong>KL scaling:</strong> The KL is divided by the number of mini-batches for unbiased mini-batch training.</li>
             <li><strong>Prior:</strong> Often a scale mixture of two Gaussians (one narrow, one wide) works better than a single Gaussian.</li>
             <li><strong>Local reparameterization:</strong> Instead of sampling each weight independently, sample the <em>pre-activation</em> (the weighted sum) — this reduces gradient variance.</li>

@@ -5,6 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Laplace Approximation — BNN for Beginners</title>
     <link rel="stylesheet" href="../style.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+        onload="renderMathInElement(document.body, {delimiters: [
+            {left: '$$', right: '$$', display: true},
+            {left: '$', right: '$', display: false}
+        ]});"></script>
 </head>
 <body>
 <div class="wrapper">
@@ -86,9 +93,7 @@
 
         <div class="equation-box">
             <div class="label">Second-order expansion of log-posterior</div>
-            log <em>p(w|D)</em> ≈ log <em>p(w</em><sub>MAP</sub><em>|D)</em>
-            - ½ (<em>w</em> - <em>w</em><sub>MAP</sub>)<sup>T</sup>
-            <strong>H</strong> (<em>w</em> - <em>w</em><sub>MAP</sub>)
+            $$\log p(w \mid D) \approx \log p(w_{\text{MAP}} \mid D) - \frac{1}{2} (w - w_{\text{MAP}})^T H\,(w - w_{\text{MAP}})$$
         </div>
 
         <p>
@@ -101,7 +106,7 @@
 
         <div class="equation-box">
             <div class="label">Laplace Approximation</div>
-            <em>p(w|D)</em> ≈ N(<em>w</em>; <em>w</em><sub>MAP</sub>, <strong>H</strong><sup>-1</sup>)
+            $$p(w \mid D) \approx \mathcal{N}(w;\, w_{\text{MAP}}, H^{-1})$$
         </div>
 
         <p>

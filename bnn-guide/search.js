@@ -58,6 +58,13 @@
         ["metropolis hasting","Random-walk MCMC with acceptance rule",prefix+"mcmc-hmc.html"],
         ["leapfrog","Numerical integration for HMC dynamics",prefix+"mcmc-hmc.html"],
         ["nuts","No-U-Turn Sampler — automated HMC",prefix+"mcmc-hmc.html"],
+
+        // MLE & Conformal Prediction (on Uncertainty page)
+        ["mle","Maximum Likelihood Estimation — finding the single best w",prefix+"uncertainty.html"],
+        ["maximum likelihood","Training NNs = maximizing likelihood = minimizing cross-entropy",prefix+"uncertainty.html"],
+        ["prediction interval","What range will y fall in? Conformal prediction gives guarantees",prefix+"uncertainty.html"],
+        ["conformal prediction","Distribution-free prediction sets with finite-sample coverage",prefix+"uncertainty.html"],
+        ["conformal","Model-agnostic uncertainty quantification, no Bayesian assumptions",prefix+"uncertainty.html"],
     ];
 
     // Build search UI as a string of HTML

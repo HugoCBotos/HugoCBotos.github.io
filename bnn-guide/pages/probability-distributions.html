@@ -5,6 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Probability Distributions — BNN for Beginners</title>
     <link rel="stylesheet" href="../style.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+        onload="renderMathInElement(document.body, {delimiters: [
+            {left: '$$', right: '$$', display: true},
+            {left: '$', right: '$', display: false}
+        ]});"></script>
 </head>
 <body>
 <div class="wrapper">
@@ -70,13 +77,13 @@
 
         <div class="equation-box">
             <div class="label">Probability from PDF</div>
-            P(<em>a</em> ≤ <em>X</em> ≤ <em>b</em>) = ∫<sub>a</sub><sup>b</sup> <em>p(x)</em> <em>dx</em>
+            $$P(a \le X \le b) = \int_a^b p(x)\,dx$$
         </div>
 
         <p>The PDF must satisfy:</p>
         <ul>
-            <li><em>p(x)</em> ≥ 0 for all <em>x</em> (probabilities can't be negative)</li>
-            <li>∫<sub>-∞</sub><sup>∞</sup> <em>p(x)</em> <em>dx</em> = 1 (total probability = 1)</li>
+            <li>$p(x) \ge 0$ for all $x$ (probabilities can't be negative)</li>
+            <li>$\int_{-\infty}^{\infty} p(x)\,dx = 1$ (total probability = 1)</li>
         </ul>
 
         <!-- ======== EXPECTATION ======== -->
@@ -86,9 +93,9 @@
 
         <div class="equation-box">
             <div class="label">Expectation (for continuous variables)</div>
-            E[<em>X</em>] = ∫ <em>x</em> <em>p(x)</em> <em>dx</em>
+            $$\mathbb{E}[X] = \int x\,p(x)\,dx$$
             <br><span style="font-size:0.85rem; color:#666;">
-            (For discrete variables, replace the integral with a sum: E[X] = Σ x p(x).)</span>
+            (For discrete variables, replace the integral with a sum: $\mathbb{E}[X] = \sum x\,p(x)$.)</span>
         </div>
 
         <p>
@@ -96,7 +103,7 @@
             and sum them up. It's the average value you'd get if you sampled infinitely many times.
         </p>
 
-        <p>Expectation is linear: E[<em>aX</em> + <em>b</em>] = <em>a</em> E[<em>X</em>] + <em>b</em>.</p>
+        <p>Expectation is linear: $\mathbb{E}[aX + b] = a\,\mathbb{E}[X] + b$.</p>
 
         <!-- ======== VARIANCE ======== -->
         <h2>Variance (Spread)</h2>
@@ -107,7 +114,7 @@
 
         <div class="equation-box">
             <div class="label">Variance</div>
-            Var[<em>X</em>] = E[(<em>X</em> - E[<em>X</em>])<sup>2</sup>] = E[<em>X</em><sup>2</sup>] - E[<em>X</em>]<sup>2</sup>
+            $$\operatorname{Var}[X] = \mathbb{E}[(X - \mathbb{E}[X])^2] = \mathbb{E}[X^2] - \mathbb{E}[X]^2$$
         </div>
 
         <p>
@@ -125,13 +132,13 @@
 
         <div class="equation-box">
             <div class="label">Gaussian PDF</div>
-            p(x) = 1/(σ √(2π)) · exp( −½ ((x − μ)/σ)² )
+            $$p(x) = \frac{1}{\sigma\sqrt{2\pi}} \exp\left(-\frac{1}{2}\left(\frac{x-\mu}{\sigma}\right)^2\right)$$
         </div>
 
         <p>Where:</p>
         <ul>
-            <li><strong>μ</strong> (mean) controls where the bell is centered</li>
-            <li><strong>σ</strong> (standard deviation) controls how wide it is</li>
+            <li><strong>$\mu$</strong> (mean) controls where the bell is centered</li>
+            <li><strong>$\sigma$</strong> (standard deviation) controls how wide it is</li>
         </ul>
         <p>
             The formula says: the probability density at <em>x</em> decays exponentially with the

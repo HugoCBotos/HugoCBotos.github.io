@@ -5,6 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>The ELBO — BNN for Beginners</title>
     <link rel="stylesheet" href="../style.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+        onload="renderMathInElement(document.body, {delimiters: [
+            {left: '$$', right: '$$', display: true},
+            {left: '$', right: '$', display: false}
+        ]});"></script>
 </head>
 <body>
 <div class="wrapper">
@@ -52,98 +59,68 @@
         </p>
 
         <div class="equation-box">
-            p(w | D) = p(D | w) &middot; p(w) / p(D)
+            $$p(w \mid D) = \frac{p(D \mid w) \, p(w)}{p(D)}$$
         </div>
 
         <p>
-            The denominator <em>p(D)</em> = &#8747; p(D|w) &middot; p(w) dw involves integrating over
+            The denominator $p(D) = \int p(D \mid w) \, p(w) \, dw$ involves integrating over
             all possible weights — impossible for a neural network with millions of parameters.
         </p>
 
         <p>
             <strong>Idea:</strong> Instead of computing the posterior exactly, we choose a simple family of
-            distributions <em>Q</em> (e.g., Gaussians) and find the <em>q</em> ∈ <em>Q</em> that best
+            distributions $Q$ (e.g., Gaussians) and find the $q \in Q$ that best
             approximates the true posterior.
         </p>
 
         <!-- ======== DERIVATION ======== -->
         <h2>Deriving the ELBO</h2>
 
-        <p>We want to minimize KL[q(w) || p(w|D)]. Let's expand it step by step:</p>
+        <p>We want to minimize $\operatorname{KL}[q(w) \parallel p(w \mid D)]$. Let's expand it step by step:</p>
 
         <div class="equation-box">
             <div class="label">Step 1: Write the definition of KL</div>
-            KL[q || p(w|D)] = &int; q(w) log( q(w) / p(w|D) ) dw
-            <br>
-            = E<sub>q</sub>[ log q(w) ] &minus; E<sub>q</sub>[ log p(w|D) ]
+            $$\operatorname{KL}[q \parallel p(w \mid D)] = \int q(w) \log\frac{q(w)}{p(w \mid D)}\,dw$$
+            $$= \mathbb{E}_{q}[\log q(w)] - \mathbb{E}_{q}[\log p(w \mid D)]$$
         </div>
 
         <div class="equation-box">
-            <div class="label">Step 2: Replace p(w|D) using Bayes' theorem</div>
-            Recall: p(w|D) = p(D|w) p(w) / p(D)
-            <br>
-            Therefore: log p(w|D) = log p(D|w) + log p(w) &minus; log p(D)
-            <br><br>
-            Substitute into the KL:
-            <br>
-            KL = E<sub>q</sub>[log q] &minus; E<sub>q</sub>[log p(D|w) + log p(w) &minus; log p(D)]
-            <br>
-            = E<sub>q</sub>[log q] &minus; E<sub>q</sub>[log p(D|w)] &minus; E<sub>q</sub>[log p(w)] + log p(D)
-            <br>
-            = (E<sub>q</sub>[log q] &minus; E<sub>q</sub>[log p(w)]) &minus; E<sub>q</sub>[log p(D|w)] + log p(D)
+            <div class="label">Step 2: Replace $p(w \mid D)$ using Bayes' theorem</div>
+            $$\text{Recall: } p(w \mid D) = \frac{p(D \mid w)\,p(w)}{p(D)}$$
+            $$\text{Therefore: } \log p(w \mid D) = \log p(D \mid w) + \log p(w) - \log p(D)$$
+            $$\text{Substitute: } \operatorname{KL} = \mathbb{E}_{q}[\log q] - \mathbb{E}_{q}[\log p(D \mid w) + \log p(w) - \log p(D)]$$
+            $$= \mathbb{E}_{q}[\log q] - \mathbb{E}_{q}[\log p(D \mid w)] - \mathbb{E}_{q}[\log p(w)] + \log p(D)$$
+            $$= (\mathbb{E}_{q}[\log q] - \mathbb{E}_{q}[\log p(w)]) - \mathbb{E}_{q}[\log p(D \mid w)] + \log p(D)$$
         </div>
 
         <div class="equation-box">
-            <div class="label">Step 3: Recognize the KL between q and the prior</div>
-            The first term (E<sub>q</sub>[log q] &minus; E<sub>q</sub>[log p(w)]) is exactly KL[q || p(w)]
-            <br><br>
-            So: KL[q || p(w|D)] = KL[q || p(w)] &minus; E<sub>q</sub>[log p(D|w)] + log p(D)
+            <div class="label">Step 3: Recognize the KL between $q$ and the prior</div>
+            $$\mathbb{E}_{q}[\log q] - \mathbb{E}_{q}[\log p(w)] = \operatorname{KL}[q \parallel p(w)]$$
+            $$\operatorname{KL}[q \parallel p(w \mid D)] = \operatorname{KL}[q \parallel p(w)] - \mathbb{E}_{q}[\log p(D \mid w)] + \log p(D)$$
         </div>
 
         <div class="equation-box">
             <div class="label">Step 4: Rearrange to isolate the ELBO</div>
-            KL[q || p(w|D)] = E<sub>q</sub>[log q] &minus; E<sub>q</sub>[log p(D|w)] &minus; E<sub>q</sub>[log p(w)] + log p(D)
-            <br><br>
-            Group the terms involving q and the prior:
-            <br>
-            = (E<sub>q</sub>[log q] &minus; E<sub>q</sub>[log p(w)]) &minus; E<sub>q</sub>[log p(D|w)] + log p(D)
-            <br>
-            = <strong>KL[q || p(w)]</strong> &minus; E<sub>q</sub>[log p(D|w)] + log p(D)
-            <br><br>
-            Rearranging once more:
-            <br>
-            KL[q || p(w|D)] = &minus; ( <span style="color:#1565c0;">E<sub>q</sub>[log p(D|w)]</span> &minus; <span style="color:#e65100;">KL[q || p(w)]</span> ) + log p(D)
-            <br><br>
-            The term in parentheses is the <strong>ELBO</strong>:
-            <br>
-            <span style="font-size:1.1rem;">
-            ELBO[q] = <span style="color:#1565c0;">E<sub>q</sub>[log p(D|w)]</span> &minus; <span style="color:#e65100;">KL[q || p(w)]</span>
-            </span>
-            <br><br>
-            So: &emsp; KL[q || p(w|D)] = &minus;ELBO[q] + log p(D)
+            $$\operatorname{KL}[q \parallel p(w \mid D)] = \mathbb{E}_{q}[\log q] - \mathbb{E}_{q}[\log p(D \mid w)] - \mathbb{E}_{q}[\log p(w)] + \log p(D)$$
+            $$= (\mathbb{E}_{q}[\log q] - \mathbb{E}_{q}[\log p(w)]) - \mathbb{E}_{q}[\log p(D \mid w)] + \log p(D)$$
+            $$= \operatorname{KL}[q \parallel p(w)] - \mathbb{E}_{q}[\log p(D \mid w)] + \log p(D)$$
+            $$\operatorname{KL}[q \parallel p(w \mid D)] = -\bigl( \color{#1565c0}{\mathbb{E}_{q}[\log p(D \mid w)]} - \color{#e65100}{\operatorname{KL}[q \parallel p(w)]} \bigr) + \log p(D)$$
+            $$\boxed{\operatorname{ELBO}[q] = \color{#1565c0}{\mathbb{E}_{q}[\log p(D \mid w)]} - \color{#e65100}{\operatorname{KL}[q \parallel p(w)]}}$$
+            $$\operatorname{KL}[q \parallel p(w \mid D)] = -\operatorname{ELBO}[q] + \log p(D)$$
         </div>
 
         <div class="equation-box">
             <div class="label">Final result: the ELBO</div>
-            <span style="font-size:1.15rem;">
-            ELBO[q] = <span style="color:#1565c0;">E<sub>q</sub>[ log p(D|w) ]</span>  &minus;  <span style="color:#e65100;">KL[ q || p(w) ]</span>
-            </span>
-            <br><br>
-            <span style="color:#1565c0; font-size:0.85rem;">&#9632; Data fit term</span>
-            <span style="font-size:0.85rem; color:#555;"> &mdash; pushes q to put mass on weights that explain the data well</span>
-            <br>
-            <span style="color:#e65100; font-size:0.85rem;">&#9632; Regularization (KL) term</span>
-            <span style="font-size:0.85rem; color:#555;"> &mdash; pushes q to stay close to the prior</span>
+            $$\boxed{\operatorname{ELBO}[q] = \underbrace{\color{#1565c0}{\mathbb{E}_{q}[\log p(D \mid w)]}}_{\text{data fit}} - \underbrace{\color{#e65100}{\operatorname{KL}[q \parallel p(w)]}}_{\text{regularization}}}$$
         </div>
 
-        <p><em>Derivation summary:</em> Starting from KL[q || p(w|D)], we expand the definition, apply Bayes' theorem, separate terms, and recognize that one group forms KL[q || p(w)]. Rearranging isolates the ELBO as the negative of the gap between KL[q || p(w|D)] and log p(D).</p>
+        <p><em>Derivation summary:</em> Starting from $\operatorname{KL}[q \parallel p(w \mid D)]$, we expand the definition, apply Bayes' theorem, separate terms, and recognize that one group forms $\operatorname{KL}[q \parallel p(w)]$. Rearranging isolates the ELBO as the negative of the gap between $\operatorname{KL}[q \parallel p(w \mid D)]$ and $\log p(D)$.</p>
 
-        <p>Since KL &ge; 0, we have:</p>
+        <p>Since $\operatorname{KL} \ge 0$, we have:</p>
 
         <div class="equation-box">
-            KL[q || p(w|D)] = &minus;ELBO[q] + log p(D) &ge; 0
-            <br><br>
-            Therefore: &emsp; ELBO[q] &le; log p(D)
+            $$\operatorname{KL}[q \parallel p(w \mid D)] = -\operatorname{ELBO}[q] + \log p(D) \ge 0$$
+            $$\boxed{\operatorname{ELBO}[q] \le \log p(D)}$$
         </div>
 
         <p>
@@ -155,11 +132,11 @@
         <h2>Intuition: Two Competing Forces</h2>
 
         <div class="concept-box">
-            <p><strong>ELBO = Data Fit - KL[ q || Prior ]</strong></p>
+            <p><strong>$\operatorname{ELBO} = \text{Data Fit} - \operatorname{KL}[q \parallel \text{Prior}]$</strong></p>
             <p>The ELBO has two terms that pull in opposite directions:</p>
             <ul>
-                <li><strong>E<sub>q</sub>[log p(D|w)]</strong> (data fit): push <em>q</em> to put mass on weights that explain the data well. This is like the standard training loss.</li>
-                <li><strong>-KL[q || p(w)]</strong> (regularization): push <em>q</em> to stay close to the prior. This prevents overfitting and keeps the weights from becoming too extreme.</li>
+                <li><strong>$\mathbb{E}_{q}[\log p(D \mid w)]$</strong> (data fit): push $q$ to put mass on weights that explain the data well. This is like the standard training loss.</li>
+                <li><strong>$-\operatorname{KL}[q \parallel p(w)]$</strong> (regularization): push $q$ to stay close to the prior. This prevents overfitting and keeps the weights from becoming too extreme.</li>
             </ul>
         </div>
 
@@ -171,17 +148,17 @@
         <h2>Why Is It Called a "Lower Bound"?</h2>
 
         <p>
-            The ELBO is a lower bound on the log-evidence log <em>p(D)</em> (also called the "log marginal likelihood").
-            Since KL ≥ 0:
+            The ELBO is a lower bound on the log-evidence $\log p(D)$ (also called the "log marginal likelihood").
+            Since $\operatorname{KL} \ge 0$:
         </p>
 
         <div class="equation-box">
-            log <em>p(D)</em> ≥ ELBO[<em>q</em>]
+            $$\log p(D) \ge \operatorname{ELBO}[q]$$
         </div>
 
         <p>
-            The gap between the ELBO and log <em>p(D)</em> is exactly KL[q || p(w|D)] — the quality of our approximation.
-            If <em>q</em> perfectly matches the posterior, the gap is zero.
+            The gap between the ELBO and $\log p(D)$ is exactly $\operatorname{KL}[q \parallel p(w \mid D)]$ — the quality of our approximation.
+            If $q$ perfectly matches the posterior, the gap is zero.
         </p>
 
         <!-- ======== PRACTICAL COMPUTATION ======== -->
