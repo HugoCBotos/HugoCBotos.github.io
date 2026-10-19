@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Exponentials — Analysis</title>
+<link rel="stylesheet" href="../assets/book.css">
+<script defer src="../assets/book.js"></script>
+<link rel="stylesheet" href="../assets/vendor/jsxgraph.css">
+<link rel="stylesheet" href="../assets/interactive-figures.css">
+<script defer src="../assets/vendor/jsxgraphcore.js"></script>
+<script type="module" src="../assets/interactive-figures.mjs"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-chtml.js"></script>
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+<header class="book-header"><nav aria-label="Book"><a class="brand" href="../index.html">Analysis</a><div class="book-links"><a href="../index.html">Contents</a></div></nav></header><main id="main">
+<article class="chapter" data-source="content/Sequences.md">
+<h1 id="exponentials">Exponentials</h1>
+<p>Now we discuss exponentials <span class="math inline">\(y=a^x\)</span>, where <span class="math inline">\(a&gt;0\)</span>.</p>
+<p>All these curves pass through <span class="math inline">\((0,1)\)</span> because <span class="math inline">\(a^0=1\)</span>. For <span class="math inline">\(a&gt;1\)</span> the function is increasing, and for <span class="math inline">\(0&lt;a&lt;1\)</span> it is decreasing. For <span class="math inline">\(a=1\)</span> it is constant.</p>
+<figure>
+<picture><source type="image/svg+xml" srcset="../images/exponentials-varying-a.svg"><img src="../images/exponentials-varying-a.png" data-interactive-figure="exponential-family" data-figure-options="{&quot;type&quot;:&quot;exponential-family&quot;,&quot;title&quot;:&quot;Exponential family&quot;,&quot;static&quot;:&quot;images/exponentials-varying-a.svg&quot;,&quot;embed&quot;:&quot;figures/exponential-family.html&quot;,&quot;height&quot;:520,&quot;view&quot;:{&quot;xmin&quot;:-1.5,&quot;xmax&quot;:1.5,&quot;ymin&quot;:0,&quot;ymax&quot;:5.5,&quot;xticks&quot;:[-1.5,-1,-0.5,0,0.5,1,1.5]},&quot;a&quot;:{&quot;initial&quot;:2,&quot;min&quot;:0.1,&quot;max&quot;:4,&quot;step&quot;:0.01}}" data-vector-src="../images/exponentials-varying-a.svg" alt="The exponential curve y=a^x, controlled by a slider, passing through (0,1)." /></picture>
+
+</figure>
+<p>At <span class="math inline">\((0,1)\)</span> we can draw a tangent line <span class="math inline">\(y=1+kx\)</span>. For <span class="math inline">\(a&gt;1\)</span>, the slope <span class="math inline">\(k\)</span> is positive, and for <span class="math inline">\(0&lt;a&lt;1\)</span>, the slope <span class="math inline">\(k\)</span> is negative. In both cases, the curve is on or above the line: <span class="math display">\[a^x\geq 1+kx.\]</span></p>
+<figure>
+<picture><source type="image/svg+xml" srcset="../images/exponential-tangents.svg"><img src="../images/exponential-tangents.png" data-interactive-figure="exponential-tangent" data-figure-options="{&quot;type&quot;:&quot;exponential-tangent&quot;,&quot;title&quot;:&quot;Exponential tangents&quot;,&quot;static&quot;:&quot;images/exponential-tangents.svg&quot;,&quot;embed&quot;:&quot;figures/exponential-tangents.html&quot;,&quot;a&quot;:{&quot;initial&quot;:2,&quot;min&quot;:0.1,&quot;max&quot;:4,&quot;step&quot;:0.01},&quot;height&quot;:480,&quot;view&quot;:{&quot;xmin&quot;:-1.5,&quot;xmax&quot;:1.5,&quot;ymin&quot;:-0.15,&quot;ymax&quot;:3.05,&quot;xticks&quot;:[-1.5,-1,-0.5,0,0.5,1,1.5]}}" data-vector-src="../images/exponential-tangents.svg" alt="The exponential and its tangent at (0,1), for a=2 and a=1/2." /></picture>
+
+</figure>
+<p>When <span class="math inline">\(u\)</span> is very small, <span class="math inline">\(a^u\simeq 1+ku\)</span>. For any fixed <span class="math inline">\(x\)</span> and very large <span class="math inline">\(n\)</span>, <span class="math inline">\(u = \frac x n\)</span> is close to <span class="math inline">\(0\)</span> and <span class="math display">\[a^{x/n}\simeq 1+\frac{kx}{n},
+\qquad a^x\simeq\left(1+\frac{kx}{n}\right)^n.\]</span> This leads to the following conjecture: <span class="math display">\[\left(1+\frac{kx}{n}\right)^n\to a^x.\]</span></p>
+<p><strong>Theorem:</strong> For every real <span class="math inline">\(x\)</span>, <span class="math display">\[\left(1+\frac{kx}{n}\right)^n\to a^x.\]</span></p>
+<details class="proof-block" id="proof-exponentials-1"><summary>
+<strong>Proof:</strong>
+</summary><div class="proof-body">
+<p> Assume <span class="math inline">\(a&gt;1\)</span>. The slope <span class="math inline">\(k\)</span> must be positive. Also, we can always assume <span class="math inline">\(n\)</span> is sufficiently large and, as a consequence, we can assume <span class="math inline">\(1+\frac{kx}n&gt;0\)</span>.</p>
+<p>Since <span class="math display">\[a^{x/n}\geq 1+\frac{kx}{n},\]</span> we get <span class="math display">\[\left(1+\frac{kx}{n}\right)^n\leq a^x.\]</span></p>
+<p>Now, observe that <span class="math display">\[a^{-y/n}\geq 1-\frac{ky}{n},\]</span> and <span class="math display">\[a^{y/n}\leq\frac{1}{1-ky/n}
+=1+\frac{ky/n}{1-ky/n},\]</span>where we can assume <span class="math inline">\(1-ky/n&gt;0\)</span> for sufficiently large <span class="math inline">\(n\)</span>. Write <span class="math display">\[\frac{kx}{n}=\frac{ky/n}{1-ky/n}.\]</span> We get <span class="math display">\[x-\frac{kxy}{n}=y,
+\qquad y=\frac{nx}{n+kx}.\]</span> Therefore,</p>
+<p><span class="math display">\[a^{y/n}\leq1+\frac{ky/n}{1-ky/n},\]</span></p>
+<p><span class="math display">\[a^{\frac{x}{n+kx}}\leq 1+\frac{kx}{n},\]</span></p>
+<p><span class="math display">\[a^{\frac{nx}{n+kx}}\leq \left(1+\frac{kx}{n}\right)^n.\]</span> We obtain the inequalities <span class="math display">\[a^{\frac{nx}{n+kx}}\leq \left(1+\frac{kx}{n}\right)^n \leq a^x.\]</span> Now, <span class="math display">\[\frac{nx}{n+kx} = x - \frac{kx^2}{n+kx}\]</span> and <span class="math display">\[a^{\frac{nx}{n+kx}} = a^x a^{-\frac{kx^2}{n+kx}}.\]</span></p>
+<p>Because <span class="math inline">\(1- \frac{k^2x^2}{n+kx}\leq  a^{-\frac{kx^2}{n+kx}}\)</span>, we have the inequality <span class="math display">\[a^x\left(1- \frac{k^2x^2}{n+kx}\right)\leq \left(1+\frac{kx}{n}\right)^n \leq a^x\]</span> Therefore, <span class="math display">\[\left(1+\frac{kx}{n}\right)^n \to a^x.\]</span> For <span class="math inline">\(a=1\)</span>, we have <span class="math inline">\(k=0\)</span> and the result is automatically true.</p>
+<p>For <span class="math inline">\(0&lt;a&lt;1\)</span>, write <span class="math inline">\(b=1/a&gt;1\)</span>.</p>
+<figure>
+<picture><source type="image/svg+xml" srcset="../images/exponential-reflection.svg"><img src="../images/exponential-reflection.png" data-interactive-figure="exponential-reflection" data-figure-options="{&quot;type&quot;:&quot;exponential-reflection&quot;,&quot;title&quot;:&quot;Exponential reflection&quot;,&quot;static&quot;:&quot;images/exponential-reflection.svg&quot;,&quot;embed&quot;:&quot;figures/exponential-reflection.html&quot;,&quot;a&quot;:{&quot;initial&quot;:0.5,&quot;min&quot;:0.1,&quot;max&quot;:0.95,&quot;step&quot;:0.01},&quot;height&quot;:480,&quot;view&quot;:{&quot;xmin&quot;:-1.5,&quot;xmax&quot;:1.5,&quot;ymin&quot;:-0.15,&quot;ymax&quot;:3.05,&quot;xticks&quot;:[-1.5,-1,-0.5,0,0.5,1,1.5]}}" data-vector-src="../images/exponential-reflection.svg" alt="Reflection of y=a^x and its tangent across the y-axis, with a=1/2 and b=2." /></picture>
+
+</figure>
+<p>Reflecting the graph <span class="math inline">\(y=a^x\)</span> across the <span class="math inline">\(y\)</span>-axis, by <span class="math inline">\((x,y)\mapsto(-x,y)\)</span>, gives <span class="math inline">\(y=a^{-x}\)</span>. The same reflection sends the tangent line <span class="math inline">\(y=1+kx\)</span> to <span class="math inline">\(y=1-kx\)</span>. Thus, for <span class="math inline">\(b=1/a\)</span>, the tangent slope of <span class="math inline">\(y=b^x\)</span> at <span class="math inline">\((0,1)\)</span> is <span class="math inline">\(-k\)</span>. Applying the result above to <span class="math inline">\(b\)</span> and <span class="math inline">\(-x\)</span>, we get <span class="math display">\[\left(1+\frac{(-k)(-x)}{n}\right)^n\to b^{-x}=a^x.\]</span> So the result holds for every <span class="math inline">\(a&gt;0\)</span>. <strong>QED</strong></p>
+</div></details>
+<p>The result links <span class="math inline">\(a&gt;0\)</span> and <span class="math inline">\(k\)</span>, the slope of <span class="math inline">\(a^x\)</span> at <span class="math inline">\(x=0\)</span>. A natural question is: which base <span class="math inline">\(a\)</span> gives slope <span class="math inline">\(k=1\)</span>? This number is called Euler’s number and is denoted by <span class="math inline">\(e\)</span>. Its value is <span class="math inline">\(2.71828\ldots\)</span> and is one of the most important constants in Mathematics. Since we can write <span class="math display">\[\left(1+\frac 1n\right)^n \to e\]</span> we can estimate <span class="math inline">\(e\)</span>.</p>
+<div class="table-scroll" tabindex="0">
+<table>
+<thead>
+<tr>
+<th style="text-align: center;"><span class="math inline">\(n\)</span></th>
+<th style="text-align: center;"><span class="math inline">\(\left(1+\frac1n\right)^n\)</span> (approx.)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: center;">1</td>
+<td style="text-align: center;">2.0000000000</td>
+</tr>
+<tr>
+<td style="text-align: center;">2</td>
+<td style="text-align: center;">2.2500000000</td>
+</tr>
+<tr>
+<td style="text-align: center;">5</td>
+<td style="text-align: center;">2.4883200000</td>
+</tr>
+<tr>
+<td style="text-align: center;">10</td>
+<td style="text-align: center;">2.5937424601</td>
+</tr>
+<tr>
+<td style="text-align: center;">50</td>
+<td style="text-align: center;">2.6915880291</td>
+</tr>
+<tr>
+<td style="text-align: center;">100</td>
+<td style="text-align: center;">2.7048138294</td>
+</tr>
+<tr>
+<td style="text-align: center;">1000</td>
+<td style="text-align: center;">2.7169239322</td>
+</tr>
+<tr>
+<td style="text-align: center;">10000</td>
+<td style="text-align: center;">2.7181459268</td>
+</tr>
+<tr>
+<td style="text-align: center;">100000</td>
+<td style="text-align: center;">2.7182682372</td>
+</tr>
+<tr>
+<td style="text-align: center;">1000000</td>
+<td style="text-align: center;">2.7182804693</td>
+</tr>
+<tr>
+<td style="text-align: center;">10000000</td>
+<td style="text-align: center;">2.7182816925</td>
+</tr>
+</tbody>
+</table>
+</div>
+</article><nav class="page-navigation" aria-label="Chapter navigation"><a rel="prev" href="computing-pi.html">← Computing π</a></nav>
+</main>
+</body></html>

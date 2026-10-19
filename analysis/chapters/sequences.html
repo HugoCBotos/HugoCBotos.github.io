@@ -1,0 +1,466 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sequences — Analysis</title>
+<link rel="stylesheet" href="../assets/book.css">
+<script defer src="../assets/book.js"></script>
+<link rel="stylesheet" href="../assets/vendor/jsxgraph.css">
+<link rel="stylesheet" href="../assets/interactive-figures.css">
+<script defer src="../assets/vendor/jsxgraphcore.js"></script>
+<script type="module" src="../assets/interactive-figures.mjs"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-chtml.js"></script>
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+<header class="book-header"><nav aria-label="Book"><a class="brand" href="../index.html">Analysis</a><div class="book-links"><a href="../index.html">Contents</a></div></nav></header><main id="main">
+<article class="chapter" data-source="content/Sequences.md">
+<h2 id="what-is-a-sequence">What is a sequence?</h2>
+<p>A sequence of real numbers is a list <span class="math display">\[x_1,x_2,x_3,\ldots, x_n, x_{n+1},\ldots\]</span> We say a property holds for sufficiently large <span class="math inline">\(n\)</span> if it holds after some index. More precisely, if there exists an index <span class="math inline">\(N\)</span> such that the property holds for <span class="math inline">\(n \geq N\)</span>. For instance, we can have a sequence <span class="math inline">\(x_n\)</span> written as <span class="math display">\[1,2,3,5,1,2,3,0,0,0,0,0,\ldots\]</span> which stays zero forever after some index. So, we have that this sequence <span class="math inline">\(x_n\)</span> is <span class="math inline">\(0\)</span> for sufficiently large <span class="math inline">\(n\)</span>.</p>
+<p>Another example is the following. Imagine we have a sequence <span class="math inline">\(x_n\)</span> that starts negative, but eventually becomes positive. We would say <span class="math inline">\(x_n\)</span> is positive for sufficiently large <span class="math inline">\(n\)</span>.</p>
+<p>Sometimes, a sequence <span class="math inline">\(x_n\)</span> gets closer and closer to a unique value <span class="math inline">\(x\)</span>. Take for instance, <span class="math display">\[x_n = \frac1n.\]</span> As we increase <span class="math inline">\(n\)</span>, the value <span class="math inline">\(1/n\)</span> gets closer to <span class="math inline">\(0\)</span>.</p>
+<div class="table-scroll" tabindex="0">
+<table>
+<thead>
+<tr>
+<th style="text-align: center;"><span class="math inline">\(n\)</span></th>
+<th style="text-align: center;"><span class="math inline">\(1/n\)</span> (approx.)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: center;">1</td>
+<td style="text-align: center;">1.0000</td>
+</tr>
+<tr>
+<td style="text-align: center;">2</td>
+<td style="text-align: center;">0.5000</td>
+</tr>
+<tr>
+<td style="text-align: center;">3</td>
+<td style="text-align: center;">0.3333</td>
+</tr>
+<tr>
+<td style="text-align: center;">4</td>
+<td style="text-align: center;">0.2500</td>
+</tr>
+<tr>
+<td style="text-align: center;">5</td>
+<td style="text-align: center;">0.2000</td>
+</tr>
+<tr>
+<td style="text-align: center;">6</td>
+<td style="text-align: center;">0.1667</td>
+</tr>
+<tr>
+<td style="text-align: center;">7</td>
+<td style="text-align: center;">0.1429</td>
+</tr>
+<tr>
+<td style="text-align: center;">8</td>
+<td style="text-align: center;">0.1250</td>
+</tr>
+<tr>
+<td style="text-align: center;">9</td>
+<td style="text-align: center;">0.1111</td>
+</tr>
+<tr>
+<td style="text-align: center;">10</td>
+<td style="text-align: center;">0.1000</td>
+</tr>
+<tr>
+<td style="text-align: center;">11</td>
+<td style="text-align: center;">0.0909</td>
+</tr>
+<tr>
+<td style="text-align: center;">12</td>
+<td style="text-align: center;">0.0833</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>When this tendency happens, we say that the sequence is convergent. In this case, <span class="math inline">\(\frac1n\)</span> converges to 0. We denote this phenomenon by <span class="math inline">\(\frac1n \to 0\)</span>. Note that similar behavior occurs with <span class="math inline">\(\frac1{n+1}\)</span>, <span class="math inline">\(\frac1{2n+1}\)</span>, <span class="math inline">\(\frac1{n^2+1}\)</span>, and so on. They all converge to <span class="math inline">\(0\)</span>.</p>
+<p>The sequence I previously described, which becomes constant after some index, is also convergent. So, if <span class="math inline">\(x_n = x\)</span> for <span class="math inline">\(n\)</span> sufficiently large, then <span class="math inline">\(x_n \to x\)</span>.</p>
+<p>The value <span class="math inline">\(x\)</span> to which a sequence <span class="math inline">\(x_n\)</span> converges is called the limit of <span class="math inline">\(x_n\)</span> and it is common to denote this number by <span class="math inline">\(\lim_n x_n\)</span>. So, we have <span class="math inline">\(\lim_n \frac1n= 0\)</span> and for <span class="math inline">\(x_n\)</span> constant and equal to <span class="math inline">\(x\)</span> for <span class="math inline">\(n\)</span> sufficiently large we have <span class="math inline">\(\lim_n x_n = x\)</span>.</p>
+<p>Not all sequences have this behavior, take for instance <span class="math inline">\(x_n = (-1)^{n+1}\)</span>. <span class="math display">\[1,-1,1,-1,1,-1,\ldots\]</span> This sequence does not converge to a unique value, it oscillates between 1 and -1.</p>
+<p>Let me sketch a definition of convergence so we can stop being so vague. Consider once again <span class="math inline">\(\frac 1n\)</span>. We want to give a formal argument that <span class="math inline">\(\frac 1n\)</span> converges to <span class="math inline">\(0\)</span>. Let us collect a bit of evidence of this phenomenon.</p>
+<ol type="1">
+<li>For <span class="math inline">\(n&gt; 2\)</span> we have <span class="math inline">\(0&lt;\frac 1n&lt; \frac 12 = 0.5\)</span>,</li>
+<li>for <span class="math inline">\(n&gt;3\)</span> we have <span class="math inline">\(0&lt;\frac 1n&lt; \frac 13 = 0.333\ldots\)</span>,</li>
+<li>for <span class="math inline">\(n&gt;4\)</span> we have <span class="math inline">\(0&lt;\frac 1n&lt; \frac 14 = 0.25\)</span>,</li>
+<li>for <span class="math inline">\(n&gt;5\)</span> we have <span class="math inline">\(0&lt;\frac 1n&lt; \frac 15 = 0.20\)</span>,</li>
+<li><span class="math inline">\(\ldots\)</span></li>
+</ol>
+<p>So, given a number <span class="math inline">\(r&gt;0\)</span> we expect that <span class="math inline">\(0&lt;\frac 1n&lt;r\)</span> for <span class="math inline">\(n\)</span> sufficiently large. In fact, if we take <span class="math inline">\(n&gt;r^{-1}\)</span> we have <span class="math inline">\(0&lt;\frac1n&lt;r\)</span>.</p>
+<p>So, no matter how close we want to trap <span class="math inline">\(\frac 1n\)</span> to 0, we can do it with <span class="math inline">\(n\)</span> sufficiently large.</p>
+<p><strong>Definition</strong>: We say <span class="math inline">\(x_n\)</span> converges to <span class="math inline">\(x\)</span> if <span class="math display">\[ r&gt;0 \quad  \Longrightarrow \quad x-r&lt;x_n&lt;x+r \quad \text{for } n\text{ sufficiently large}.\]</span> In the case of <span class="math inline">\(x_n = (-1)^{n+1}\)</span>, if we assume that this sequence converges to a point <span class="math inline">\(x\)</span>, then for <span class="math inline">\(r=0.1\)</span> we must have <span class="math display">\[x - 0.1&lt;x_n&lt;x+0.1 \quad \text{for }n\text{ sufficiently large}.\]</span> For <span class="math inline">\(n\)</span> odd, we get <span class="math inline">\(x-0.1 &lt;1&lt;x+0.1\)</span>, which means <span class="math inline">\(0.9&lt;x&lt;1.1\)</span>. For <span class="math inline">\(n\)</span> even, <span class="math inline">\(x-0.1 &lt; -1&lt; x+0.1\)</span>, which means <span class="math inline">\(-1.1&lt;x&lt;-0.9\)</span>. So, if <span class="math inline">\(x_n\)</span> were to have limit <span class="math inline">\(x\)</span>, we would have <span class="math inline">\(x\)</span> positive and negative at the same time, which makes no sense. So, <span class="math inline">\(x_n\)</span> is not convergent.</p>
+<h2 id="examples-of-convergence">Examples of convergence</h2>
+<div class="table-scroll" tabindex="0">
+<table>
+<thead>
+<tr>
+<th style="text-align: center;"><span class="math inline">\(n\)</span></th>
+<th style="text-align: center;"><span class="math inline">\(x_n = n/(n+1)\)</span> (approx.)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: center;">1</td>
+<td style="text-align: center;">0.5000</td>
+</tr>
+<tr>
+<td style="text-align: center;">2</td>
+<td style="text-align: center;">0.6667</td>
+</tr>
+<tr>
+<td style="text-align: center;">3</td>
+<td style="text-align: center;">0.7500</td>
+</tr>
+<tr>
+<td style="text-align: center;">4</td>
+<td style="text-align: center;">0.8000</td>
+</tr>
+<tr>
+<td style="text-align: center;">5</td>
+<td style="text-align: center;">0.8333</td>
+</tr>
+<tr>
+<td style="text-align: center;">6</td>
+<td style="text-align: center;">0.8571</td>
+</tr>
+<tr>
+<td style="text-align: center;">7</td>
+<td style="text-align: center;">0.8750</td>
+</tr>
+<tr>
+<td style="text-align: center;">8</td>
+<td style="text-align: center;">0.8889</td>
+</tr>
+<tr>
+<td style="text-align: center;">9</td>
+<td style="text-align: center;">0.9000</td>
+</tr>
+<tr>
+<td style="text-align: center;">10</td>
+<td style="text-align: center;">0.9091</td>
+</tr>
+<tr>
+<td style="text-align: center;">11</td>
+<td style="text-align: center;">0.9167</td>
+</tr>
+<tr>
+<td style="text-align: center;">12</td>
+<td style="text-align: center;">0.9231</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="example">
+<p><strong>Example</strong></p>
+<p> <span class="math display">\[x_n = \frac{n}{n+1} \to 1.\]</span></p>
+<p>Note that the data shows a tendency towards 1. To see that this is the case, rewrite <span class="math inline">\(x_n\)</span> as <span class="math display">\[x_n = 1-\frac1{n+1}.\]</span> As we already observed, the <span class="math inline">\(\frac1{n+1}\)</span> converges to 0. Thus, <span class="math inline">\(x_n \to 1\)</span>. More formally, given an arbitrary <span class="math inline">\(r&gt;0\)</span> we have <span class="math display">\[\frac n{n+1} = 1-\frac 1{n+1},\]</span> which is smaller than <span class="math inline">\(1\)</span> and thus smaller than <span class="math inline">\(1+r\)</span>, and <span class="math display">\[\frac n{n+1} = 1-\frac 1{n+1} &gt;1-r\]</span> for <span class="math inline">\(n+1&gt;r^{-1}\)</span>. Thus, <span class="math display">\[1-r&lt;\frac n{n+1} &lt; 1+r\]</span> for sufficiently large <span class="math inline">\(n\)</span>.</p>
+</div>
+<div class="table-scroll" tabindex="0">
+<table>
+<thead>
+<tr>
+<th style="text-align: center;"><span class="math inline">\(n\)</span></th>
+<th style="text-align: center;"><span class="math inline">\(\left(\frac13\right)^n\)</span> (approx.)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: center;">1</td>
+<td style="text-align: center;">0.3333333333</td>
+</tr>
+<tr>
+<td style="text-align: center;">2</td>
+<td style="text-align: center;">0.1111111111</td>
+</tr>
+<tr>
+<td style="text-align: center;">3</td>
+<td style="text-align: center;">0.0370370370</td>
+</tr>
+<tr>
+<td style="text-align: center;">4</td>
+<td style="text-align: center;">0.0123456790</td>
+</tr>
+<tr>
+<td style="text-align: center;">5</td>
+<td style="text-align: center;">0.0041152263</td>
+</tr>
+<tr>
+<td style="text-align: center;">6</td>
+<td style="text-align: center;">0.0013717421</td>
+</tr>
+<tr>
+<td style="text-align: center;">7</td>
+<td style="text-align: center;">0.0004572474</td>
+</tr>
+<tr>
+<td style="text-align: center;">8</td>
+<td style="text-align: center;">0.0001524158</td>
+</tr>
+<tr>
+<td style="text-align: center;">9</td>
+<td style="text-align: center;">0.0000508053</td>
+</tr>
+<tr>
+<td style="text-align: center;">10</td>
+<td style="text-align: center;">0.0000169351</td>
+</tr>
+<tr>
+<td style="text-align: center;">11</td>
+<td style="text-align: center;">0.0000056450</td>
+</tr>
+<tr>
+<td style="text-align: center;">12</td>
+<td style="text-align: center;">0.0000018817</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="example">
+<p><strong>Example</strong></p>
+<p> <span class="math display">\[x_n = a^n \to 0 \quad \text{for} \quad 0&lt;a&lt;1.\]</span> This one is a bit tricky and we will need a special inequality. Observe that <span class="math inline">\(a\)</span> can be written as <span class="math inline">\(1/(1+h)\)</span> with <span class="math inline">\(h = a^{-1}-1&gt;0\)</span>. Now, by the binomial formula <span class="math display">\[(1+h)^n = {{n}\choose{0}}+{{n}\choose{1}}h+{{n}\choose{2}}h^2+\cdots\]</span> we get this neat inequality <span class="math display">\[(1+h)^n \geq 1+nh.\]</span> So, we obtain <span class="math display">\[a^n = \frac1{(1+h)^n} \leq \frac1{1+nh} \to 0.\]</span> and we conclude that <span class="math display">\[a^n \to 0.\]</span> The formal definition is also satisfied: given <span class="math inline">\(r&gt;0\)</span> we have <span class="math display">\[-r&lt;a^n&lt; r\]</span> for <span class="math inline">\(nh+1&gt;r^{-1}\)</span>, meaning it holds for sufficiently large <span class="math inline">\(n\)</span>.</p>
+</div>
+<p>This inequality used above is a particular case of the Bernoulli inequality. </p>
+<p><strong>Theorem</strong>: (Bernoulli inequality) If <span class="math inline">\(x&gt;-1\)</span> and <span class="math inline">\(n \geq 1\)</span>, then <span class="math inline">\((1+x)^n \geq 1+nx\)</span>. </p>
+<details class="proof-block" id="proof-sequences-1"><summary>
+<strong>Proof</strong>:
+</summary><div class="proof-body">
+<p> Proof by induction. It is true for <span class="math inline">\(n=1\)</span>. Assume it is true for <span class="math inline">\(n\)</span>. <span class="math display">\[(1+x)^{n+1} = (1+x)(1+x)^{n} \geq (1+x) (1+nx) = 1+(n+1)x+nx^2 \geq 1+(n+1)x.\]</span> <strong>QED</strong></p>
+</div></details>
+<p> <picture><source type="image/svg+xml" srcset="../images/one-plus-x-cubed.svg"><img src="../images/one-plus-x-cubed.png" data-interactive-figure="power-tangent" data-figure-options="{&quot;type&quot;:&quot;power-tangent&quot;,&quot;title&quot;:&quot;Integer power and tangent&quot;,&quot;static&quot;:&quot;images/one-plus-x-cubed.svg&quot;,&quot;embed&quot;:&quot;figures/power-integer.html&quot;,&quot;mode&quot;:&quot;integer&quot;,&quot;n&quot;:{&quot;initial&quot;:3,&quot;min&quot;:1,&quot;max&quot;:8,&quot;step&quot;:1},&quot;height&quot;:520,&quot;view&quot;:{&quot;xmin&quot;:-1,&quot;xmax&quot;:1,&quot;ymin&quot;:-2.4,&quot;ymax&quot;:8.4,&quot;xticks&quot;:[-1,-0.5,0,0.5,1]}}" data-vector-src="../images/one-plus-x-cubed.svg" alt="Graph of y=(1+x)^3 for x&gt;-1, with an open endpoint at (-1,0)." /></picture></p>
+<p><strong>Corollary</strong>: If <span class="math inline">\(x&gt;-1\)</span> and <span class="math inline">\(n \geq 1\)</span>, then <span class="math inline">\((1+x)^{\frac 1n} \leq 1+\frac xn\)</span>. </p>
+<details class="proof-block" id="proof-sequences-2"><summary>
+<strong>Proof</strong>:
+</summary><div class="proof-body">
+<p> From Bernoulli inequality <span class="math display">\[\left(1+\frac xn\right)^n \geq 1+x,\]</span> <span class="math display">\[1+\frac xn \geq (1+x)^{\frac 1n}.\]</span> <strong>QED</strong></p>
+</div></details>
+<p> <picture><source type="image/svg+xml" srcset="../images/one-plus-x-fourth-root.svg"><img src="../images/one-plus-x-fourth-root.png" data-interactive-figure="power-tangent" data-figure-options="{&quot;type&quot;:&quot;power-tangent&quot;,&quot;title&quot;:&quot;Root and tangent&quot;,&quot;static&quot;:&quot;images/one-plus-x-fourth-root.svg&quot;,&quot;embed&quot;:&quot;figures/power-root.html&quot;,&quot;mode&quot;:&quot;root&quot;,&quot;n&quot;:{&quot;initial&quot;:4,&quot;min&quot;:1,&quot;max&quot;:16,&quot;step&quot;:1},&quot;height&quot;:520,&quot;view&quot;:{&quot;xmin&quot;:-1,&quot;xmax&quot;:4,&quot;ymin&quot;:-0.12,&quot;ymax&quot;:2.15,&quot;xticks&quot;:[-1,0,1,2,3,4]}}" data-vector-src="../images/one-plus-x-fourth-root.svg" alt="Graph of y=(1+x)^(1/4) for x&gt;-1 and its tangent y=1+x/4 at (0,1)." /></picture></p>
+<div class="table-scroll" tabindex="0">
+<table>
+<thead>
+<tr>
+<th style="text-align: center;"><span class="math inline">\(n\)</span></th>
+<th style="text-align: center;"><span class="math inline">\(2^{1/n}\)</span> (approx.)</th>
+<th style="text-align: center;"><span class="math inline">\((1/2)^{1/n}\)</span> (approx.)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: center;">1</td>
+<td style="text-align: center;">2.0000000000</td>
+<td style="text-align: center;">0.5000000000</td>
+</tr>
+<tr>
+<td style="text-align: center;">2</td>
+<td style="text-align: center;">1.4142135624</td>
+<td style="text-align: center;">0.7071067812</td>
+</tr>
+<tr>
+<td style="text-align: center;">3</td>
+<td style="text-align: center;">1.2599210499</td>
+<td style="text-align: center;">0.7937005260</td>
+</tr>
+<tr>
+<td style="text-align: center;">4</td>
+<td style="text-align: center;">1.1892071150</td>
+<td style="text-align: center;">0.8408964153</td>
+</tr>
+<tr>
+<td style="text-align: center;">5</td>
+<td style="text-align: center;">1.1486983550</td>
+<td style="text-align: center;">0.8705505633</td>
+</tr>
+<tr>
+<td style="text-align: center;">6</td>
+<td style="text-align: center;">1.1224620483</td>
+<td style="text-align: center;">0.8908987181</td>
+</tr>
+<tr>
+<td style="text-align: center;">7</td>
+<td style="text-align: center;">1.1040895137</td>
+<td style="text-align: center;">0.9057236643</td>
+</tr>
+<tr>
+<td style="text-align: center;">8</td>
+<td style="text-align: center;">1.0905077327</td>
+<td style="text-align: center;">0.9170040432</td>
+</tr>
+<tr>
+<td style="text-align: center;">9</td>
+<td style="text-align: center;">1.0800597389</td>
+<td style="text-align: center;">0.9258747123</td>
+</tr>
+<tr>
+<td style="text-align: center;">10</td>
+<td style="text-align: center;">1.0717734625</td>
+<td style="text-align: center;">0.9330329915</td>
+</tr>
+<tr>
+<td style="text-align: center;">11</td>
+<td style="text-align: center;">1.0650410894</td>
+<td style="text-align: center;">0.9389309107</td>
+</tr>
+<tr>
+<td style="text-align: center;">12</td>
+<td style="text-align: center;">1.0594630944</td>
+<td style="text-align: center;">0.9438743127</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="example">
+<p><strong>Example</strong></p>
+<p> <span class="math display">\[a^{\frac 1n} \to 1 \quad \text{for} \quad a&gt;0.\]</span> Note that <span class="math inline">\(a = g+1\)</span> for <span class="math inline">\(g = a-1 &gt;-1\)</span> and <span class="math inline">\(a = \frac1{1+h}\)</span> for <span class="math inline">\(h = \frac 1 a -1 &gt;-1\)</span>. Using the corollary above we obtain <span class="math display">\[a^{\frac1n} = (1+g)^{\frac 1n} \leq  1 +\frac g n\]</span> <span class="math display">\[a^{\frac 1n} = \frac1{(1+h)^{\frac 1n}} \geq \frac 1{1+h/n} = \frac n{n+h}\]</span> Since <span class="math inline">\(1+\frac gn \to 1\)</span> and <span class="math inline">\(\frac n{n+h} = 1- \frac {h}{n+h}  \to 1\)</span>, we conclude that <span class="math inline">\(a^{\frac 1n} \to 1\)</span>.</p>
+</div>
+<p>Now, let me give you a more complicated example.</p>
+<div class="table-scroll" tabindex="0">
+<table>
+<thead>
+<tr>
+<th style="text-align: right;"><span class="math inline">\(n\)</span></th>
+<th style="text-align: right;"><span class="math inline">\(5^n\)</span></th>
+<th style="text-align: right;"><span class="math inline">\(n!\)</span></th>
+<th style="text-align: right;"><span class="math inline">\(5^n/n!\)</span> (approx.)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">5</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">5.0000</td>
+</tr>
+<tr>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">25</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">12.5000</td>
+</tr>
+<tr>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">125</td>
+<td style="text-align: right;">6</td>
+<td style="text-align: right;">20.8333</td>
+</tr>
+<tr>
+<td style="text-align: right;">4</td>
+<td style="text-align: right;">625</td>
+<td style="text-align: right;">24</td>
+<td style="text-align: right;">26.0417</td>
+</tr>
+<tr>
+<td style="text-align: right;">5</td>
+<td style="text-align: right;">3125</td>
+<td style="text-align: right;">120</td>
+<td style="text-align: right;">26.0417</td>
+</tr>
+<tr>
+<td style="text-align: right;">6</td>
+<td style="text-align: right;">15625</td>
+<td style="text-align: right;">720</td>
+<td style="text-align: right;">21.7014</td>
+</tr>
+<tr>
+<td style="text-align: right;">7</td>
+<td style="text-align: right;">78125</td>
+<td style="text-align: right;">5040</td>
+<td style="text-align: right;">15.5010</td>
+</tr>
+<tr>
+<td style="text-align: right;">8</td>
+<td style="text-align: right;">390625</td>
+<td style="text-align: right;">40320</td>
+<td style="text-align: right;">9.6881</td>
+</tr>
+<tr>
+<td style="text-align: right;">9</td>
+<td style="text-align: right;">1953125</td>
+<td style="text-align: right;">362880</td>
+<td style="text-align: right;">5.3823</td>
+</tr>
+<tr>
+<td style="text-align: right;">10</td>
+<td style="text-align: right;">9765625</td>
+<td style="text-align: right;">3628800</td>
+<td style="text-align: right;">2.6911</td>
+</tr>
+<tr>
+<td style="text-align: right;">11</td>
+<td style="text-align: right;">48828125</td>
+<td style="text-align: right;">39916800</td>
+<td style="text-align: right;">1.2232</td>
+</tr>
+<tr>
+<td style="text-align: right;">12</td>
+<td style="text-align: right;">244140625</td>
+<td style="text-align: right;">479001600</td>
+<td style="text-align: right;">0.5097</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="example">
+<p><strong>Example</strong></p>
+<p> <span class="math display">\[\frac{5^n}{n!} \to 0.\]</span> Let us first verify that <span class="math inline">\(5^n &lt; n!\)</span> for sufficiently large <span class="math inline">\(n\)</span>. By the table, we suspect that <span class="math inline">\(n\geq 12\)</span> is sufficiently large. Let's prove that by induction. For <span class="math inline">\(n=12\)</span> the result is true. Assume that <span class="math inline">\(5^n &lt; n!\)</span> for some <span class="math inline">\(n\geq12\)</span>. We have <span class="math display">\[(n+1)!  =  (n+1) n! &gt; 5 n! &gt; 5 \times 5^n = 5^{n+1}.\]</span>Therefore, <span class="math inline">\(5^n &lt; n!\)</span> is true for <span class="math inline">\(n\geq 12\)</span>. From here we can show that <span class="math inline">\(\frac {5^n}{n!} \to 0\)</span>. Just note that for <span class="math inline">\(n&gt;12\)</span> <span class="math display">\[\frac{5^n}{n!} = \frac{5^{12}}{12!} \frac{5}{13}\frac{5}{14} \cdots \frac 5{n}.\]</span> Since <span class="math inline">\(5^{12}&lt;12!\)</span> and <span class="math inline">\(\frac{5}{13},\frac{5}{14}, \ldots, \frac{5}{n}&lt;\frac12\)</span> we get <span class="math display">\[\frac{5^n}{n!} &lt; \frac1{2^{n-12}} = \frac{2^{12}}{2^n} \to 0.\]</span> Therefore, <span class="math inline">\(\frac {5^n}{n!} \to 0\)</span>.</p>
+</div>
+<p>In fact, <span class="math inline">\(5\)</span> is not special at all.</p>
+<figure>
+<picture><source type="image/svg+xml" srcset="../images/factorial-ratio-7p5.svg"><img src="../images/factorial-ratio-7p5.png" data-interactive-figure="factorial-sequence" data-figure-options="{&quot;type&quot;:&quot;factorial-sequence&quot;,&quot;title&quot;:&quot;Factorial sequence&quot;,&quot;static&quot;:&quot;images/factorial-ratio-7p5.svg&quot;,&quot;embed&quot;:&quot;figures/factorial-sequence.html&quot;,&quot;a&quot;:{&quot;initial&quot;:7.5,&quot;min&quot;:0.1,&quot;max&quot;:15,&quot;step&quot;:0.1},&quot;N&quot;:{&quot;initial&quot;:20,&quot;min&quot;:5,&quot;max&quot;:80,&quot;step&quot;:1},&quot;height&quot;:760}" data-vector-src="../images/factorial-ratio-7p5.svg" alt="The sequence 7.5^n/n! for integer n from 1 to 20." /></picture>
+
+</figure>
+<div class="example">
+<p><strong>Example</strong></p>
+<p> <span class="math display">\[\frac{a^n}{n!} \to 0 \quad \text{for } a&gt;0.\]</span> Fix a positive integer <span class="math inline">\(m\)</span> satisfying <span class="math inline">\(m&gt;2a\)</span>. Define <span class="math inline">\(c=a^m/m!\)</span>. For <span class="math inline">\(k\geq 1\)</span> we have <span class="math display">\[\frac{a^{k+m}}{(k+m)!} = \frac{a^m}{m!} \frac {a}{1+m}\frac {a}{2+m} \cdots \frac {a}{k+m} &lt; c  \left(\frac 12\right)^k,\]</span> where we used that <span class="math inline">\(1+m,2+m, \ldots, k+m &gt;2a\)</span>. Thus, writing <span class="math inline">\(n=k+m\)</span> we get <span class="math display">\[\frac{a^{n}}{n!}&lt; \frac{c}{2^{k}} = \frac{c}{2^{n-m}} = \frac{2^m c}{2^n} \to 0.\]</span></p>
+</div>
+<h2 id="basic-properties">Basic Properties</h2>
+<p>Let us discuss some basic properties before doing more examples.</p>
+<p><strong>Theorem</strong>: If <span class="math inline">\(x_n \to x\)</span> and <span class="math inline">\(y_n \to y\)</span>, then <span class="math inline">\(x_n+y_n \to x + y\)</span>. </p>
+<details class="proof-block" id="proof-sequences-3"><summary>
+<strong>Proof</strong>:
+</summary><div class="proof-body">
+<p> Note that <span class="math display">\[|x_n+y_n-(x+y)| \leq |x_n-x|+|y_n-y|.\]</span>Fix <span class="math inline">\(r&gt;0\)</span>. For <span class="math inline">\(n\)</span> sufficiently large we have <span class="math display">\[|x_n-x|&lt;\frac r2 \quad \text{and}\quad |y_n-y| &lt; \frac r2\]</span> and it follows <span class="math display">\[|(x_n+y_n) - (x+y)| \leq |x_n-x|+|y_n-y|&lt;r.\]</span> <strong>QED</strong></p>
+</div></details>
+<p>For instance, the sequence <span class="math inline">\(2^{\frac1n} + \frac n{n+1} \to 2\)</span>. Another example, <span class="math display">\[\frac{2(n-1)^3-\frac1n}{n^3} = \frac{2(n^3-3n^2+3n-1)}{n^3}-\frac{1}{n^4} =2-\frac{6}{n}+ \frac{6}{n^2}-\frac{2}{n^3} -\frac{1}{n^4} \to 2.\]</span></p>
+<p><strong>Theorem</strong>. If <span class="math inline">\(x_n \to 0\)</span> and <span class="math inline">\(y_n\)</span> is bounded, then <span class="math inline">\(x_ny_n \to 0\)</span>. </p>
+<details class="proof-block" id="proof-sequences-4"><summary>
+<strong>Proof</strong>:
+</summary><div class="proof-body">
+<p> There exists <span class="math inline">\(M&gt;0\)</span> such that <span class="math inline">\(|y_n|\leq M\)</span> and, as a consequence, <span class="math display">\[|x_n y_n| \leq M |x_n| \to 0.\]</span> <strong>QED</strong></p>
+</div></details>
+<p>A good example of this property is <span class="math inline">\(\frac{\sin(n)}n \to 0\)</span>. The sine function is bounded and, because of that, the <span class="math inline">\(\frac 1n\)</span> dominates the convergence.</p>
+<figure>
+<img src="../images/sine-over-n.svg" alt="The sequences 1/n and -1/n (dashed), and sin(n)/n, for n=1 through 30." />
+
+</figure>
+<p><strong>Theorem</strong>: If <span class="math inline">\(x_n \to x\)</span>, then <span class="math inline">\(x_n\)</span> is bounded.</p>
+<p>Just imagine a sequence converging towards <span class="math inline">\(x\)</span>, for <span class="math inline">\(n\)</span> sufficiently large we must have <span class="math inline">\(x_n\)</span> close to <span class="math inline">\(x\)</span>. The sequence <span class="math inline">\(x_n\)</span> might start far away from <span class="math inline">\(x\)</span>, but eventually it must get very close.</p>
+<details class="proof-block" id="proof-sequences-5"><summary>
+<strong>Proof</strong>:
+</summary><div class="proof-body">
+<p> The definition of convergence holds for any <span class="math inline">\(r&gt;0\)</span>, in particular <span class="math inline">\(r=1\)</span>:<span class="math display">\[x-1&lt;x_n&lt;x+1 \quad \text{for } n \text{ sufficiently large}.\]</span> As a consequence, we get <span class="math display">\[−|𝑥| −1 &lt;𝑥_𝑛 &lt;|𝑥| +1 \quad \text{for } n \text{ sufficiently large}.\]</span> Therefore, <span class="math display">\[|𝑥_𝑛| &lt;|𝑥| +1 \quad \text{for } n \text{ sufficiently large}.\]</span>Meaning that there exists <span class="math inline">\(𝑁\)</span> such that <span class="math display">\[|𝑥_𝑛|&lt;|𝑥|+1 \quad \text{for } 𝑛≥𝑁.\]</span> In particular, taking <span class="math inline">\(M\)</span> larger than <span class="math inline">\(1+|𝑥|,|𝑥_1|,…,|𝑥_𝑁|\)</span> we get <span class="math display">\[|𝑥_n|≤M \quad \text{for every }n\]</span> and we conclude <span class="math inline">\(x_n\)</span> is bounded. <strong>QED</strong></p>
+</div></details>
+<p><strong>Theorem</strong>: If <span class="math inline">\(x_n \to x\)</span> and <span class="math inline">\(y_n \to y\)</span>, then <span class="math inline">\(x_ny_n \to xy\)</span>.</p>
+<details class="proof-block" id="proof-sequences-6"><summary>
+<strong>Proof</strong>:
+</summary><div class="proof-body">
+<p> We write <span class="math display">\[x_ny_n - xy = (x_n-x)y_n + x(y_n-y)\]</span> and use that <span class="math inline">\(|y_n|\leq M\)</span> for some <span class="math inline">\(M&gt;0\)</span>, since convergent sequences are bounded. We obtain <span class="math display">\[|x_ny_n - xy| \leq M|x_n-x|+|x||y_n-y| \to 0.\]</span> <strong>QED</strong></p>
+</div></details>
+<p><strong>Theorem</strong> . If <span class="math inline">\(u_n \to u\)</span>, <span class="math inline">\(v_n \to v\)</span>, and <span class="math inline">\(v \neq 0\)</span>, then <span class="math inline">\(v_n\)</span> is non-zero for sufficiently large <span class="math inline">\(n\)</span> and the expression <span class="math inline">\(\frac{u_n}{v_n}\)</span> makes sense. Additionally, <span class="math display">\[\frac{u_n}{v_n} \to \frac uv.\]</span> </p>
+<details class="proof-block" id="proof-sequences-7"><summary>
+<strong>Proof</strong>:
+</summary><div class="proof-body">
+<p> Let us prove first that <span class="math inline">\(v_n\)</span> is non-zero for sufficiently large <span class="math inline">\(n\)</span>. By definition of limit, we have <span class="math display">\[v-r \leq v_n \leq v + r \quad \text{for sufficiently large }n\]</span> for any <span class="math inline">\(r&gt;0\)</span>. Taking <span class="math inline">\(r = \frac{|v|}2\)</span> we get <span class="math display">\[v-\frac{|v|}2&lt;v_n &lt; v+\frac{|v|}2\quad \text{for sufficiently large }n.\]</span> If <span class="math inline">\(v&gt;0\)</span>, then we get <span class="math inline">\(v_n &gt; \frac {|v|}2&gt;0\)</span>. If <span class="math inline">\(v&lt;0\)</span>, then we get <span class="math inline">\(v_n &lt; -\frac{|v|}2&lt;0\)</span>. Now using <span class="math inline">\(|v_n|&gt; |v|/2\)</span> we obtain <span class="math display">\[\left|\frac{1}{v_n} - \frac 1v \right| = \frac{|v_n-v|}{|v_n||v|} \leq \frac{|v_n-v|}{|v|^2/2} \to 0.\]</span> Therefore, <span class="math display">\[\frac1{v_n} \to \frac1{v}.\]</span> Combining this with the preceding theorem on products, we reach the result. <span class="math display">\[\frac{u_n}{v_n}  \to \frac u{v}.\]</span> <strong>QED</strong></p>
+</div></details>
+<div class="example">
+<p><strong>Example</strong></p>
+<p> <span class="math display">\[\frac{2n^{11}+23 n^3 +\sin(n)}{n^{11}+n-1} \to 2\]</span> Just write <span class="math display">\[\frac{2n^{11}+23 n^3 +\sin(n)}{n^{11}+n-1} = \frac{2+ \frac{23}{n^8} +\frac{\sin(n)}{n^{11}}}{1+\frac1{n^{10}}-\frac{1}{n^{11}}}\]</span> Since <span class="math display">\[2+ \frac{23}{n^8} +\frac{\sin(n)}{n^{11}} \to 2\]</span> and <span class="math display">\[1+\frac1{n^{10}}-\frac{1}{n^{11}} \to 1\]</span> we get <span class="math display">\[\frac{2n^{11}+23 n^3 +\sin(n)}{n^{11}+n-1} \to 2.\]</span></p>
+</div>
+<p>It is not hard to see, by the same argument as above, that if <span class="math inline">\(p(x)\)</span> and <span class="math inline">\(q(x)\)</span> are non-zero polynomials, then <span class="math display">\[\lim_n \frac{p(n)}{q(n)} = 0\]</span>when <span class="math display">\[\deg p &lt; \deg q.\]</span>This is the case for <span class="math display">\[\frac{2n^2-3}{32 n^3 +2} \to 0.\]</span></p>
+<p>If <span class="math inline">\(\deg p = \deg q\)</span>, then the limit is <span class="math inline">\(\frac ab\)</span> where <span class="math inline">\(a\)</span> and <span class="math inline">\(b\)</span> are the leading coefficients of <span class="math inline">\(p\)</span> and <span class="math inline">\(q\)</span>. For the reader not familiar with anatomy of polynomials, leading coefficient of a polynomial is the coefficient of the monomial of highest degree. For instance, the leading coefficient of <span class="math inline">\(2 x^2 +1\)</span> is <span class="math inline">\(2\)</span>. The leading coefficient of <span class="math inline">\(x^{10}-x+1\)</span> is <span class="math inline">\(1\)</span>. From here we get, <span class="math display">\[\frac{31 n^3+23n}{21 n^3+12n^2} \to \frac{31}{21}.\]</span></p>
+</article><nav class="page-navigation" aria-label="Chapter navigation"><a href="../index.html">← Contents</a><a rel="next" href="computing-pi.html">Computing π →</a></nav>
+</main>
+</body></html>
