@@ -22,7 +22,7 @@
 .figure-equation { display: inline-flex; align-items: baseline; gap: 2px; min-height: 28px; }
 .figure-math-buffer { position: absolute; visibility: hidden; width: max-content; pointer-events: none; }
 .figure-inline-power { position: relative; top: -.4em; font-size: .78em; line-height: 0; }
-.figure-base-input { appearance: textfield; box-sizing: content-box; width: 3.6ch; padding: 1px 2px; border: 0; border-bottom: 1px solid #a5b0b8; border-radius: 0; background: transparent; color: inherit; font: italic 16px/1.3 Georgia, serif; text-align: center; }
+.figure-base-input { appearance: textfield; box-sizing: content-box; width: 3.6ch; padding: 1px 2px; border: 0; border-bottom: 1px solid #a5b0b8; border-radius: 0; background: transparent; color: inherit; font: italic 16px/1.3 "STIX Two Text", "Times New Roman", Times, serif; text-align: center; }
 .figure-base-input::-webkit-inner-spin-button, .figure-base-input::-webkit-outer-spin-button { appearance: none; margin: 0; }
 .figure-toolbar { display: flex; align-items: center; gap: 15px; margin: 2px 4px 0; }
 .figure-toolbar[hidden] { display: none; }
@@ -52,7 +52,7 @@
 
 /* The factorial plot keeps its original full-width layout and two sliders. */
 .figure-legacy-factorial .figure-live { max-width: 620px; }
-.figure-legacy-factorial .figure-title { font: 21px/1.4 Georgia, serif; text-align: center; margin-bottom: .3rem; }
+.figure-legacy-factorial .figure-title { font: 21px/1.4 "STIX Two Text", "Times New Roman", Times, serif; text-align: center; margin-bottom: .3rem; }
 .figure-legacy-factorial .figure-board { aspect-ratio: 1.4; }
 .figure-legacy-factorial .figure-toolbar { display: block; margin: 0; }
 .figure-legacy-factorial .figure-control-list { display: block; }

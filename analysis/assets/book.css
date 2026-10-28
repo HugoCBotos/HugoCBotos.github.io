@@ -1,7 +1,7 @@
 :root { color-scheme: light; --paper: #faf9f5; --ink: #272b29; --muted: #687068; --line: #dedfd6; --link: #305b6a; }
 * { box-sizing: border-box; }
 html { scroll-padding-top: 2rem; }
-body { margin: 0; background: var(--paper); color: var(--ink); font-family: Georgia, "Times New Roman", serif; font-size: 19px; line-height: 1.8; -webkit-font-smoothing: antialiased; }
+body { margin: 0; background: var(--paper); color: var(--ink); font-family: "STIX Two Text", "Times New Roman", Times, serif; font-size: 19px; line-height: 1.8; font-kerning: normal; text-rendering: optimizeLegibility; -webkit-font-smoothing: antialiased; }
 a { color: var(--link); text-underline-offset: .2em; }
 a:hover { text-decoration-thickness: 2px; }
 a:focus-visible, summary:focus-visible, .table-scroll:focus-visible { outline: 2px solid var(--link); outline-offset: 5px; }
@@ -25,10 +25,10 @@ figure { margin: 2rem 0; }
 figure img { margin-bottom: .6rem; }
 figcaption { color: var(--muted); font: 13px/1.6 system-ui, sans-serif; text-align: center; }
 .table-scroll { overflow-x: auto; margin: 1.9rem 0; }
-table { width: 100%; border-collapse: collapse; font: 13px/1.6 system-ui, sans-serif; font-variant-numeric: tabular-nums; }
+table { width: 100%; border-collapse: collapse; font-family: inherit; font-size: 16px; line-height: 1.55; font-variant-numeric: lining-nums tabular-nums; }
 td, th { text-align: center !important; padding: .75rem .55rem; border-bottom: 1px solid var(--line); white-space: nowrap; }
 th { font-weight: 500; border-top: 1px solid var(--line); border-bottom-color: #b9beb3; }
-math { font-size: 1em; }
+math { font-family: "STIX Two Math", "Cambria Math", "Latin Modern Math", "TeX Gyre Termes Math", "Times New Roman", serif; font-size: 1em; }
 math[display="block"] { max-width: 100%; overflow-x: auto; overflow-y: hidden; margin: 1.3rem 0; padding: .15rem 0; }
 mjx-container[display="true"] { max-width: 100%; margin: .4rem 0 !important; }
 mjx-container { text-indent: 0; }
@@ -70,7 +70,7 @@ mjx-container { text-indent: 0; }
   main { margin-top: 2rem; width: calc(100% - 36px); }
   h1 { font-size: 34px; margin-bottom: 2rem; }
   h2 { font-size: 25px; }
-  table { font-size: 12px; }
+  table { font-size: 15px; }
   td, th { padding: .65rem .45rem; }
   .example { padding-left: 1rem; }
   .proof-body { padding: 1rem .85rem .2rem; }
