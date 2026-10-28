@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="760" height="350" viewBox="0 0 760 350" role="img" aria-labelledby="title desc">
+  <title id="title">Choosing a half in the bisection algorithm</title>
+  <desc id="desc">The value of p is positive at r and negative at s. If p at the middle point x n is negative, keep the left half from r to x n. If it is positive, keep the right half from x n to s. The kept half is a solid teal segment; the other half is dashed gray.</desc>
+  <g font-family="Georgia, 'Times New Roman', serif" fill="#292d29" text-anchor="middle">
+    <text x="380" y="30" font-size="23">p(x<tspan baseline-shift="sub" font-size="16">n</tspan>) &lt; 0</text>
+    <path d="M90 91 H670" fill="none" stroke="#b7bbb5" stroke-width="3" stroke-dasharray="7 7"/>
+    <path d="M90 91 H380" fill="none" stroke="#296d65" stroke-width="7"/>
+    <circle cx="90" cy="91" r="16" fill="#296d65"/>
+    <circle cx="380" cy="91" r="16" fill="#a14b36"/>
+    <circle cx="670" cy="91" r="16" fill="#a14b36"/>
+    <g fill="white" font-size="24">
+      <text x="90" y="99">+</text><text x="380" y="99">−</text><text x="670" y="99">−</text>
+    </g>
+    <g font-size="23" font-style="italic">
+      <text x="90" y="130">r</text>
+      <text x="380" y="130">x<tspan baseline-shift="sub" font-size="16">n</tspan></text>
+      <text x="670" y="130">s</text>
+    </g>
+    <text x="235" y="164" font-size="21" fill="#296d65">keep [r, x<tspan baseline-shift="sub" font-size="15">n</tspan>]</text>
+
+    <text x="380" y="211" font-size="23">p(x<tspan baseline-shift="sub" font-size="16">n</tspan>) &gt; 0</text>
+    <path d="M90 272 H670" fill="none" stroke="#b7bbb5" stroke-width="3" stroke-dasharray="7 7"/>
+    <path d="M380 272 H670" fill="none" stroke="#296d65" stroke-width="7"/>
+    <circle cx="90" cy="272" r="16" fill="#296d65"/>
+    <circle cx="380" cy="272" r="16" fill="#296d65"/>
+    <circle cx="670" cy="272" r="16" fill="#a14b36"/>
+    <g fill="white" font-size="24">
+      <text x="90" y="280">+</text><text x="380" y="280">+</text><text x="670" y="280">−</text>
+    </g>
+    <g font-size="23" font-style="italic">
+      <text x="90" y="311">r</text>
+      <text x="380" y="311">x<tspan baseline-shift="sub" font-size="16">n</tspan></text>
+      <text x="670" y="311">s</text>
+    </g>
+    <text x="525" y="345" font-size="21" fill="#296d65">keep [x<tspan baseline-shift="sub" font-size="15">n</tspan>, s]</text>
+  </g>
+</svg>
