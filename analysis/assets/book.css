@@ -28,7 +28,7 @@ figcaption { color: var(--muted); font: 13px/1.6 system-ui, sans-serif; text-ali
 table { width: 100%; border-collapse: collapse; font: 13px/1.6 system-ui, sans-serif; font-variant-numeric: tabular-nums; }
 td, th { text-align: center !important; padding: .75rem .55rem; border-bottom: 1px solid var(--line); white-space: nowrap; }
 th { font-weight: 500; border-top: 1px solid var(--line); border-bottom-color: #b9beb3; }
-math { font-size: 1.25em; }
+math { font-size: 1em; }
 math[display="block"] { max-width: 100%; overflow-x: auto; overflow-y: hidden; margin: 1.3rem 0; padding: .15rem 0; }
 mjx-container[display="true"] { max-width: 100%; margin: .4rem 0 !important; }
 mjx-container { text-indent: 0; }
