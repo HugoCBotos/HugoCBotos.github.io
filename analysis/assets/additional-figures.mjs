@@ -1,4 +1,4 @@
-import { circumscribedPolygon, sectorModel, factorialTerms, powerModel, exponentialModel, clipPolyline } from './figure-models.mjs';
+import { circumscribedPolygon, sectorModel, factorialTerms, powerModel, exponentialModel, convexityModel, clipPolyline } from './figure-models.mjs';
 import { inscribedPolygon } from './polygon-model.mjs';
 
 const BLUE = '#1d5fbf', ORANGE = '#c54b16', PURPLE = '#8426aa', TEAL = '#008071', INK = '#4b5563', GOLD = '#9a651b';
@@ -574,11 +574,60 @@ function mountReflection(image, options) {
   });
 }
 
+function mountConvexity(image, options) {
+  const fig = new Figure(image, options);
+  const sInput = fig.control('s', 's', options.s, 'Convex weight s');
+  const tInput = fig.control('t', 't', options.t, 'Convex weight t');
+  const linked = (source, targetKey) => {
+    const target = fig.inputs.find(item => item.key === targetKey);
+    const value = Number((1 - Number(source.value)).toFixed(10));
+    target.input.value = String(value);
+    target.output.value = number(value);
+    fig.values[targetKey] = value;
+  };
+  sInput.addEventListener('input', () => linked(sInput, 't'));
+  tInput.addEventListener('input', () => linked(tInput, 's'));
+  sInput.addEventListener('change', () => { linked(sInput, 't'); fig.refresh?.(); });
+  tInput.addEventListener('change', () => { linked(tInput, 's'); fig.refresh?.(); });
+
+  let model = convexityModel(fig.values.s, options.a, options.b);
+  const getFrame = () => options.view;
+  const panel = fig.board(() => frameBounds(getFrame()));
+  fig.key('y=e^x', BLUE);
+  fig.key('\\ell(x)', ORANGE);
+  const weightedKey = fig.key('', PURPLE);
+  const xReadout = fig.readout('x', 'Weighted point x');
+  const gapReadout = fig.readout('\\ell(x)-e^x', 'Vertical gap between chord and exponential', TEAL);
+
+  fig.mount(() => {
+    const board = panel.board;
+    axes(board, getFrame);
+    plotCurve(board, () => samples(model.value, getFrame().xmin, getFrame().xmax), getFrame, BLUE, { layer: 5 });
+    plotCurve(board, () => samples(model.line, model.a, model.b, 1), getFrame, ORANGE, { strokeWidth: 2, layer: 6 });
+    curve(board, () => [[model.x, model.curve], [model.x, model.chord]], TEAL, { dash: 2, strokeWidth: 1.8, layer: 7 });
+    point(board, () => model.a, () => model.value(model.a), { fillColor: ORANGE, strokeColor: ORANGE });
+    point(board, () => model.b, () => model.value(model.b), { fillColor: ORANGE, strokeColor: ORANGE });
+    point(board, () => model.x, () => model.curve, { fillColor: BLUE, strokeColor: BLUE, size: 3 });
+    point(board, () => model.x, () => model.chord, { fillColor: TEAL, strokeColor: TEAL, size: 3 });
+    label(board, model.a - .08, model.value(model.a) + .16, 'a');
+    label(board, model.b + .08, model.value(model.b) + .16, 'b');
+  }, () => {
+    model = convexityModel(fig.values.s, options.a, options.b);
+    fig.values.t = model.t;
+    weightedKey(`x=${number(model.s, 2)}a+${number(model.t, 2)}b`);
+    xReadout(number(model.x, 4));
+    gapReadout(number(model.gap, 4));
+    fig.widget.dataset.x = String(model.x);
+    fig.widget.dataset.gap = String(model.gap);
+    panel.element.setAttribute('aria-label', `The exponential curve and the chord from a equals ${model.a} to b equals ${model.b}. At x equals ${model.x}, the chord is ${model.gap} above the curve.`);
+  });
+}
+
 const mounts = {
   'inscribed-polygon': mountPolygon, 'circumscribed-polygon': mountPolygon, 'sine-sector': mountSector,
   'power-tangent': mountPower, 'factorial-sequence': mountFactorial,
   'exponential-family': mountFamily, 'exponential-tangent': mountTangents,
-  'exponential-reflection': mountReflection,
+  'exponential-reflection': mountReflection, 'exponential-convexity': mountConvexity,
 };
 export function mountAdditionalFigure(image, options) {
   const mount = mounts[options.type];

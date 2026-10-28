@@ -1,0 +1,46 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="500" viewBox="0 0 800 500" role="img" aria-labelledby="title desc">
+  <title id="title">Convexity of the exponential</title>
+  <desc id="desc">The graph of y equals e to the x and the chord between a equals minus one and b equals one. At s equals t equals one half, the chord lies above the curve.</desc>
+  <defs>
+    <clipPath id="plot"><rect x="70" y="50" width="500" height="380"/></clipPath>
+  </defs>
+  <g fill="none" stroke="#e1e4e8" stroke-width="1" opacity=".75">
+    <path d="M70 430H570 M70 370.6H570 M70 311.3H570 M70 251.9H570 M70 192.5H570 M70 133.1H570 M70 73.8H570"/>
+    <path d="M70 50V430 M153.3 50V430 M236.7 50V430 M320 50V430 M403.3 50V430 M486.7 50V430 M570 50V430"/>
+  </g>
+  <g fill="none" stroke="#4b5563" stroke-width="1.2">
+    <path d="M70 430H580"/>
+    <path d="M320 440V44"/>
+  </g>
+  <g fill="#6b7280" font-family="system-ui, sans-serif" font-size="12" text-anchor="middle">
+    <text x="70" y="450">−1.5</text><text x="153.3" y="450">−1</text><text x="236.7" y="450">−0.5</text>
+    <text x="320" y="450">0</text><text x="403.3" y="450">0.5</text><text x="486.7" y="450">1</text><text x="570" y="450">1.5</text>
+  </g>
+  <g fill="#6b7280" font-family="system-ui, sans-serif" font-size="12" text-anchor="end">
+    <text x="310" y="434">0</text><text x="310" y="374.6">0.5</text><text x="310" y="315.3">1</text>
+    <text x="310" y="255.9">1.5</text><text x="310" y="196.5">2</text><text x="310" y="137.1">2.5</text><text x="310" y="77.8">3</text>
+  </g>
+  <g fill="#4b5563" font-family="Georgia, serif" font-size="17">
+    <text x="586" y="435">x</text><text x="306" y="38">y</text>
+  </g>
+  <g clip-path="url(#plot)">
+    <polyline points="70.0,403.5 86.4,400.8 102.8,397.7 119.3,394.4 135.7,390.7 152.1,386.6 168.5,382.1 184.9,377.2 201.4,371.7 217.8,365.7 234.2,359.0 250.6,351.7 267.0,343.6 283.5,334.6 299.9,324.8 316.3,313.9 332.7,301.8 349.1,288.6 365.6,273.9 382.0,257.8 398.4,239.9 414.8,220.3 431.2,198.5 447.7,174.6 464.1,148.1 480.5,118.9 496.9,86.7 513.3,51.2" fill="none" stroke="#1d5fbf" stroke-width="3" stroke-linejoin="round"/>
+    <path d="M153.3 386.3L486.7 107.2" stroke="#c54b16" stroke-width="2.5"/>
+    <path d="M320 311.3V246.8" stroke="#008071" stroke-width="2" stroke-dasharray="6 5"/>
+  </g>
+  <g stroke-width="2">
+    <circle cx="153.3" cy="386.3" r="4" fill="#c54b16" stroke="#c54b16"/>
+    <circle cx="486.7" cy="107.2" r="4" fill="#c54b16" stroke="#c54b16"/>
+    <circle cx="320" cy="311.3" r="5" fill="#1d5fbf" stroke="#1d5fbf"/>
+    <circle cx="320" cy="246.8" r="5" fill="#008071" stroke="#008071"/>
+  </g>
+  <g fill="#4b5563" font-family="Georgia, serif" font-size="16">
+    <text x="135" y="374">a</text><text x="500" y="96">b</text>
+  </g>
+  <g font-family="Georgia, serif" font-size="17" fill="#27313a">
+    <circle cx="625" cy="118" r="4" fill="#1d5fbf"/><text x="640" y="124">y = eˣ</text>
+    <circle cx="625" cy="158" r="4" fill="#c54b16"/><text x="640" y="164">ℓ(x)</text>
+    <circle cx="625" cy="198" r="4" fill="#8426aa"/><text x="640" y="204">x = 0.5a+0.5b</text>
+    <circle cx="625" cy="253" r="4" fill="#008071"/><text x="640" y="259">ℓ(x)−eˣ = 0.5431</text>
+  </g>
+</svg>

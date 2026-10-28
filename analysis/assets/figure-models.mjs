@@ -43,6 +43,18 @@ export function exponentialModel(a) {
     reflected: x => Math.exp(-k * x), reflectedTangent: x => 1 - k * x };
 }
 
+export function convexityModel(s, a = -1, b = 1) {
+  if (!Number.isFinite(s) || s < 0 || s > 1 || !Number.isFinite(a) || !Number.isFinite(b) || !(a < b)) {
+    throw new RangeError('Use 0 <= s <= 1 and finite endpoints a < b.');
+  }
+  const t = 1 - s;
+  const x = s * a + t * b;
+  const fa = Math.exp(a), fb = Math.exp(b);
+  const line = value => fa + (value - a) * (fb - fa) / (b - a);
+  const curve = Math.exp(x), chord = s * fa + t * fb;
+  return { a, b, s, t, x, curve, chord, gap: chord - curve, value: Math.exp, line };
+}
+
 /** Intersect each plotted segment with a fixed coordinate window. */
 export function clipPolyline(points, view) {
   const result = [];
