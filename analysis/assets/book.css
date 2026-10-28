@@ -25,7 +25,7 @@ figure { margin: 2rem 0; }
 figure img { margin-bottom: .6rem; }
 figcaption { color: var(--muted); font: 13px/1.6 system-ui, sans-serif; text-align: center; }
 .table-scroll { overflow-x: auto; margin: 1.9rem 0; }
-table { width: 100%; border-collapse: collapse; font-family: inherit; font-size: 16px; line-height: 1.55; font-variant-numeric: lining-nums tabular-nums; }
+table { width: 100%; border-collapse: collapse; font-family: inherit; font-size: .95em; line-height: 1.55; font-variant-numeric: lining-nums tabular-nums; }
 td, th { text-align: center !important; padding: .75rem .55rem; border-bottom: 1px solid var(--line); white-space: nowrap; }
 th { font-weight: 500; border-top: 1px solid var(--line); border-bottom-color: #b9beb3; }
 math { font-family: "STIX Two Math", "Cambria Math", "Latin Modern Math", "TeX Gyre Termes Math", "Times New Roman", serif; font-size: 1em; }
@@ -70,7 +70,6 @@ mjx-container { text-indent: 0; }
   main { margin-top: 2rem; width: calc(100% - 36px); }
   h1 { font-size: 34px; margin-bottom: 2rem; }
   h2 { font-size: 25px; }
-  table { font-size: 15px; }
   td, th { padding: .65rem .45rem; }
   .example { padding-left: 1rem; }
   .proof-body { padding: 1rem .85rem .2rem; }
