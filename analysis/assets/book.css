@@ -1,4 +1,5 @@
 :root { color-scheme: light; --paper: #faf9f5; --ink: #272b29; --muted: #687068; --line: #dedfd6; --link: #305b6a; }
+@font-face { font-family: "Analysis Math"; src: url("vendor/DejaVuMathTeXGyre.ttf") format("truetype"); font-style: normal; font-weight: 400; font-display: block; }
 * { box-sizing: border-box; }
 html { scroll-padding-top: 2rem; }
 body { margin: 0; background: var(--paper); color: var(--ink); font-family: "STIX Two Text", "Times New Roman", Times, serif; font-size: 19px; line-height: 1.8; font-kerning: normal; text-rendering: optimizeLegibility; -webkit-font-smoothing: antialiased; }
@@ -28,7 +29,7 @@ figcaption { color: var(--muted); font: 13px/1.6 system-ui, sans-serif; text-ali
 table { width: 100%; border-collapse: collapse; font-family: inherit; font-size: .95em; line-height: 1.55; font-variant-numeric: lining-nums tabular-nums; }
 td, th { text-align: center !important; padding: .75rem .55rem; border-bottom: 1px solid var(--line); white-space: nowrap; }
 th { font-weight: 500; border-top: 1px solid var(--line); border-bottom-color: #b9beb3; }
-math { font-family: "STIX Two Math", "Cambria Math", "Latin Modern Math", "TeX Gyre Termes Math", "Times New Roman", serif; font-size: 1em; }
+math { font-family: "Analysis Math", "STIX Two Math", "Cambria Math", "Latin Modern Math", "TeX Gyre Termes Math", math; font-size: 1em; }
 math[display="block"] { max-width: 100%; overflow-x: auto; overflow-y: hidden; margin: 1.3rem 0; padding: .15rem 0; }
 mjx-container[display="true"] { max-width: 100%; margin: .4rem 0 !important; }
 mjx-container { text-indent: 0; }
