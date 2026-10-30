@@ -16,6 +16,16 @@ export function sectorModel(x) {
     triangleArea: Math.sin(angle) / 2, sectorArea: angle / 2 };
 }
 
+export function circularSegmentModel(theta) {
+  if (!Number.isFinite(theta) || theta < 0 || theta >= Math.PI / 2) {
+    throw new RangeError('Use 0 <= theta < pi/2.');
+  }
+  const cosine = Math.cos(theta), sine = Math.sin(theta);
+  const width = 1 - cosine;
+  return { angle: theta, q: [cosine, sine], width, height: sine,
+    segmentArea: (theta - sine) / 2, rectangleArea: width * sine };
+}
+
 export function factorialTerms(a, count) {
   if (!(a > 0) || !Number.isFinite(a) || !Number.isInteger(count) || count < 1 || count > 80) {
     throw new RangeError('Use a positive base and 1 to 80 integer terms.');

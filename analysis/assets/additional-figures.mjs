@@ -1,4 +1,4 @@
-import { circumscribedPolygon, sectorModel, factorialTerms, powerModel, exponentialModel, convexityModel, clipPolyline } from './figure-models.mjs';
+import { circumscribedPolygon, sectorModel, circularSegmentModel, factorialTerms, powerModel, exponentialModel, convexityModel, clipPolyline } from './figure-models.mjs';
 import { inscribedPolygon } from './polygon-model.mjs';
 
 const BLUE = '#1d5fbf', ORANGE = '#c54b16', PURPLE = '#8426aa', TEAL = '#008071', INK = '#4b5563', GOLD = '#9a651b';
@@ -442,6 +442,65 @@ function mountSector(image, options) {
   });
 }
 
+function mountCircularSegment(image, options) {
+  const fig = new Figure(image, options);
+  fig.control('theta', '\\theta', options.theta, 'Angle theta in radians');
+  let g = circularSegmentModel(fig.values.theta);
+  const panel = fig.board(() => [-.16, 1.25, 1.55, -.33], true);
+  const segment = fig.readout('\\frac{\\theta-\\sin\\theta}{2}', 'Circular segment area', BLUE);
+  const rectangle = fig.readout('\\left(1-\\cos\\theta\\right)\\sin\\theta', 'Rectangle area', ORANGE);
+  fig.mount(() => {
+    const board = panel.board;
+    const arc = () => Array.from({ length: 181 }, (_, i) => {
+      const angle = g.angle * i / 180;
+      return [Math.cos(angle), Math.sin(angle)];
+    });
+    curve(board, () => Array.from({ length: 181 }, (_, i) => {
+      const angle = Math.PI * i / 360;
+      return [Math.cos(angle), Math.sin(angle)];
+    }), INK, { strokeWidth: 1.2, strokeOpacity: .6, layer: 2 });
+    curve(board, () => [[0, 0], [1, 0], g.q, [0, 0]], INK,
+      { fillColor: '#e6e8e4', fillOpacity: .5, strokeWidth: 1.2, layer: 1 });
+    curve(board, () => [[g.q[0], 0], [1, 0], [1, g.height], g.q, [g.q[0], 0]], ORANGE,
+      { fillColor: '#ffedd5', fillOpacity: .65, strokeWidth: 1.7, dash: 2, layer: 3 });
+    curve(board, () => [...arc(), [1, 0]], BLUE,
+      { fillColor: '#bad7f3', fillOpacity: .95, strokeWidth: 2, layer: 4 });
+    curve(board, () => arc().map(([x, y]) => [.19 * x, .19 * y]), INK,
+      { strokeWidth: 1, layer: 5 });
+    const dimensionY = -.13;
+    curve(board, () => [[g.q[0], dimensionY], [1, dimensionY]], ORANGE,
+      { strokeWidth: 1, layer: 5 });
+    for (const x of [() => g.q[0], () => 1]) {
+      curve(board, () => [[x(), dimensionY - .025], [x(), dimensionY + .025]], ORANGE,
+        { strokeWidth: 1, layer: 5 });
+    }
+    curve(board, () => [[1.14, 0], [1.14, g.height]], ORANGE,
+      { strokeWidth: 1, layer: 5 });
+    for (const y of [() => 0, () => g.height]) {
+      curve(board, () => [[1.115, y()], [1.165, y()]], ORANGE,
+        { strokeWidth: 1, layer: 5 });
+    }
+    point(board, 0, 0, { size: 1.5, fillColor: INK, strokeColor: INK });
+    point(board, 1, 0, { size: 1.5, fillColor: INK, strokeColor: INK });
+    point(board, () => g.q[0], () => g.q[1], { size: 2, fillColor: BLUE, strokeColor: BLUE });
+    label(board, -.08, -.055, 'O');
+    label(board, 1.035, -.055, 'P');
+    label(board, () => g.q[0] - .09, () => g.q[1] + .055, 'Q');
+    label(board, () => .32 * Math.cos(g.angle / 2), () => .32 * Math.sin(g.angle / 2), '\\theta');
+    label(board, .48, -.045, '1', { fontSize: 14 });
+    label(board, () => (1 + g.q[0]) / 2, -.235, '1-\\cos\\theta',
+      { fontSize: 14, anchorX: 'middle' });
+    label(board, 1.205, () => g.height / 2, '\\sin\\theta', { fontSize: 14 });
+  }, () => {
+    g = circularSegmentModel(fig.values.theta);
+    segment(number(g.segmentArea, 6));
+    rectangle(number(g.rectangleArea, 6));
+    fig.widget.dataset.segmentArea = String(g.segmentArea);
+    fig.widget.dataset.rectangleArea = String(g.rectangleArea);
+    panel.element.setAttribute('aria-label', `The blue circular segment between chord PQ and the unit-circle arc lies inside the orange rectangle. Angle ${number(g.angle)} radians; segment area ${g.segmentArea}; rectangle area ${g.rectangleArea}.`);
+  });
+}
+
 function mountPower(image, options) {
   const fig = new Figure(image, options), root = options.mode === 'root';
   fig.control('n', 'n', options.n, root ? 'Root denominator n' : 'Power exponent n');
@@ -625,6 +684,7 @@ function mountConvexity(image, options) {
 
 const mounts = {
   'inscribed-polygon': mountPolygon, 'circumscribed-polygon': mountPolygon, 'sine-sector': mountSector,
+  'circular-segment': mountCircularSegment,
   'power-tangent': mountPower, 'factorial-sequence': mountFactorial,
   'exponential-family': mountFamily, 'exponential-tangent': mountTangents,
   'exponential-reflection': mountReflection, 'exponential-convexity': mountConvexity,

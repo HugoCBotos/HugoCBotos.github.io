@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="760" height="440" viewBox="0 0 760 440" role="img" aria-labelledby="title description" data-angle="1.05">
+  <title id="title">Circular segment and rectangle</title>
+  <desc id="description">At theta = 1.05 radians, triangle OPQ lies inside the sector. The blue region between chord PQ and the unit-circle arc lies inside an orange rectangle of width 1 minus cos theta and height sin theta.</desc>
+  <g fill="none" stroke-linejoin="round" stroke-linecap="round">
+    <path d="M80 320 L300 320 L189.465631 129.166890 Z" fill="#e6e8e4" fill-opacity=".5" stroke="#4b5563" stroke-width="1.2"/>
+    <path d="M300 320 A220 220 0 0 0 80 100" stroke="#4b5563" stroke-opacity=".6" stroke-width="1.2"/>
+    <path d="M189.465631 320 H300 V129.166890 H189.465631 Z" fill="#ffedd5" fill-opacity=".65" stroke="#c54b16" stroke-width="1.7" stroke-dasharray="6 5"/>
+    <path d="M300 320 A220 220 0 0 0 189.465631 129.166890 Z" fill="#bad7f3" fill-opacity=".95" stroke="#1d5fbf" stroke-width="2"/>
+    <path d="M122 320 A42 42 0 0 0 100.897984 283.568225" stroke="#4b5563" stroke-width="1"/>
+    <path d="M189.465631 348 H300 M189.465631 343 V353 M300 343 V353 M333 320 V129.166890 M328 320 H338 M328 129.166890 H338" stroke="#c54b16" stroke-width="1"/>
+  </g>
+  <g fill="#4b5563">
+    <circle cx="80" cy="320" r="2.5"/>
+    <circle cx="300" cy="320" r="2.5"/>
+  </g>
+  <circle cx="189.465631" cy="129.166890" r="3" fill="#1d5fbf"/>
+  <g fill="#272b29" font-family="STIX Two Text, Times New Roman, serif" font-size="19">
+    <text x="60" y="337" font-style="italic">O</text>
+    <text x="309" y="337" font-style="italic">P</text>
+    <text x="170" y="117" font-style="italic">Q</text>
+    <text x="138" y="293" font-style="italic">θ</text>
+    <text x="183" y="338" font-size="17">1</text>
+    <text x="244.733" y="379" text-anchor="middle" font-size="18">1 − cos θ</text>
+    <text x="352" y="230" font-size="18">sin θ</text>
+  </g>
+  <g font-family="STIX Two Text, Times New Roman, serif" font-size="18" fill="#272b29">
+    <circle cx="456" cy="193" r="4" fill="#1d5fbf"/>
+    <text x="472" y="199">(θ − sin θ)/2 = 0.091288</text>
+    <circle cx="456" cy="247" r="4" fill="#c54b16"/>
+    <text x="472" y="253">(1 − cos θ) sin θ = 0.435819</text>
+  </g>
+</svg>
