@@ -51,6 +51,14 @@ function number(value, places = 4) {
   if (Math.abs(value) >= 1e5 || Math.abs(value) < 1e-4) return value.toExponential(3);
   return Number(value.toFixed(places)).toString();
 }
+function controlNumber(range, value) {
+  return value === range.max && range.endLabel ? range.endLabel : number(value);
+}
+function controlValue(range, input) {
+  const value = Number(input.value);
+  // Browsers may shorten the decimal form of pi/2 in a range input.
+  return range.endLabel && value >= range.max - 1e-12 ? range.max : value;
+}
 
 class Figure {
   constructor(image, options) {
@@ -80,7 +88,7 @@ class Figure {
     this.reset.addEventListener('click', () => {
       for (const { input, output, key, range } of this.inputs) {
         input.value = String(range.initial);
-        if (output) output.value = number(range.initial);
+        if (output) output.value = controlNumber(range, range.initial);
         this.values[key] = range.initial;
       }
       this.refresh?.();
@@ -114,7 +122,7 @@ class Figure {
     input.value = String(range.initial);
     input.setAttribute('aria-label', name);
     label.htmlFor = input.id;
-    const output = el('output', '', number(range.initial));
+    const output = el('output', '', controlNumber(range, range.initial));
     output.htmlFor = input.id;
     label.append(math(tex), document.createTextNode(' = '), output);
     row.append(label, input);
@@ -122,14 +130,14 @@ class Figure {
     this.values[key] = range.initial;
     this.inputs.push({ input, output, key, range });
     input.addEventListener('input', () => {
-      const value = Number(input.value);
-      output.value = number(value);
+      const value = controlValue(range, input);
+      output.value = controlNumber(range, value);
       if (value === this.values[key]) return;
       this.values[key] = value;
       this.scheduleRefresh();
     });
     input.addEventListener('change', () => {
-      this.values[key] = Number(input.value);
+      this.values[key] = controlValue(range, input);
       if (this.pendingRefresh) cancelAnimationFrame(this.pendingRefresh);
       this.pendingRefresh = 0;
       this.refresh?.();
@@ -444,7 +452,7 @@ function mountSector(image, options) {
 
 function mountCircularSegment(image, options) {
   const fig = new Figure(image, options);
-  fig.control('theta', '\\theta', options.theta, 'Angle theta in radians');
+  fig.control('theta', '\\theta', options.theta, 'Angle theta in radians, 0 to pi over 2');
   let g = circularSegmentModel(fig.values.theta);
   const panel = fig.board(() => [-.16, 1.25, 1.55, -.33], true);
   const segment = fig.readout('\\frac{\\theta-\\sin\\theta}{2}', 'Circular segment area', BLUE);

@@ -17,8 +17,8 @@ export function sectorModel(x) {
 }
 
 export function circularSegmentModel(theta) {
-  if (!Number.isFinite(theta) || theta < 0 || theta >= Math.PI / 2) {
-    throw new RangeError('Use 0 <= theta < pi/2.');
+  if (!Number.isFinite(theta) || theta < 0 || theta > Math.PI / 2) {
+    throw new RangeError('Use 0 <= theta <= pi/2.');
   }
   const cosine = Math.cos(theta), sine = Math.sin(theta);
   const width = 1 - cosine;

@@ -11,7 +11,7 @@
 <script>window.MathJax={options:{enableMenu:false},svg:{fontCache:"local"}};</script>
 <script defer src="../assets/vendor/mathjax-3.2.2-tex-svg-full.js"></script>
 <script type="module">
-import { mountAdditionalFigure } from "../assets/additional-figures.mjs?v=16fc9cc7743b";
+import { mountAdditionalFigure } from "../assets/additional-figures.mjs?v=c28bb2ddef8c";
 if (document.readyState !== "complete") {
   await new Promise(resolve => window.addEventListener("load", resolve, { once: true }));
 }
@@ -24,6 +24,6 @@ for (const image of document.querySelectorAll("img[data-interactive-figure]")) {
 </head>
 <body>
 <main id="main">
-<figure><picture><source type="image/svg+xml" srcset="../images/circular-segment.svg"><img src="../images/circular-segment.svg" alt="The blue circular segment lies inside the orange rectangle of width 1-cos(theta) and height sin(theta)." data-interactive-figure="circular-segment" data-figure-options="{&quot;type&quot;:&quot;circular-segment&quot;,&quot;title&quot;:&quot;Circular segment and rectangle&quot;,&quot;static&quot;:&quot;images/circular-segment.svg&quot;,&quot;embed&quot;:&quot;figures/circular-segment.html&quot;,&quot;theta&quot;:{&quot;initial&quot;:1.05,&quot;min&quot;:0,&quot;max&quot;:1.5,&quot;step&quot;:0.01},&quot;height&quot;:520}"></picture></figure>
+<figure><picture><source type="image/svg+xml" srcset="../images/circular-segment.svg"><img src="../images/circular-segment.svg" alt="The blue circular segment lies inside the orange rectangle of width 1-cos(theta) and height sin(theta)." data-interactive-figure="circular-segment" data-figure-options="{&quot;type&quot;:&quot;circular-segment&quot;,&quot;title&quot;:&quot;Circular segment and rectangle&quot;,&quot;static&quot;:&quot;images/circular-segment.svg&quot;,&quot;embed&quot;:&quot;figures/circular-segment.html&quot;,&quot;theta&quot;:{&quot;initial&quot;:1.05,&quot;min&quot;:0,&quot;max&quot;:1.5707963267948966,&quot;step&quot;:&quot;any&quot;,&quot;endLabel&quot;:&quot;\u03c0/2&quot;},&quot;height&quot;:520}"></picture></figure>
 </main>
 </body></html>
