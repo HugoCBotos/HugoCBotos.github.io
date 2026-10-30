@@ -26,11 +26,15 @@ figure { margin: 2rem 0; }
 figure img { margin-bottom: .6rem; }
 figcaption { color: var(--muted); font: 13px/1.6 system-ui, sans-serif; text-align: center; }
 .table-scroll { overflow-x: auto; margin: 1.9rem 0; }
-table { width: 100%; border-collapse: collapse; font-family: inherit; font-size: .95em; line-height: 1.55; font-variant-numeric: lining-nums tabular-nums; }
+table { width: auto; margin-inline: auto; border-collapse: collapse; font-family: inherit; font-size: .95em; line-height: 1.55; font-variant-numeric: lining-nums tabular-nums; }
 td, th { text-align: center !important; padding: .75rem .55rem; border-bottom: 1px solid var(--line); white-space: nowrap; }
 th { font-weight: 500; border-top: 1px solid var(--line); border-bottom-color: #b9beb3; }
 math { font-family: "Analysis Math", "STIX Two Math", "Cambria Math", "Latin Modern Math", "TeX Gyre Termes Math", math; font-size: 1em; }
 math[display="block"] { max-width: 100%; overflow-x: auto; overflow-y: hidden; margin: 1.3rem 0; padding: .15rem 0; }
+/* Pandoc omits array rules in MathML; keep the titled LaTeX tables framed. */
+math > semantics > mtable:has(> mtr:first-child > mtd > mtext):has(> mtr > mtd > mtable) { border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+math > semantics > mtable:has(> mtr > mtd > mtable) > mtr:first-child > mtd { border-bottom: 1px solid var(--line); padding: .4em; }
+math > semantics > mtable > mtr > mtd > mtable > mtr:first-child > mtd { border-bottom: 1px solid var(--line); padding-bottom: .35em; }
 mjx-container[display="true"] { max-width: 100%; margin: .4rem 0 !important; }
 mjx-container { text-indent: 0; }
 .example { border-left: 2px solid var(--line); padding: .2rem 0 .2rem 1.5rem; margin: 2rem 0; }

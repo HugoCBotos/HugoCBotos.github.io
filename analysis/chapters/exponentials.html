@@ -3,7 +3,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Exponentials — Analysis</title>
-<link rel="stylesheet" href="../assets/book.css?v=84212c03773e">
+<link rel="stylesheet" href="../assets/book.css?v=7b0ad295acce">
 <script defer src="../assets/book.js"></script>
 <link rel="stylesheet" href="../assets/vendor/jsxgraph.css">
 <link rel="stylesheet" href="../assets/interactive-figures.css">
@@ -53,62 +53,29 @@
 <p>Reflecting the graph <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>y</mi><mo>=</mo><msup><mi>a</mi><mi>x</mi></msup></mrow><annotation encoding="application/x-tex">y=a^x</annotation></semantics></math> across the <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>y</mi><annotation encoding="application/x-tex">y</annotation></semantics></math>-axis, by <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false" form="prefix">(</mo><mi>x</mi><mo>,</mo><mi>y</mi><mo stretchy="false" form="postfix">)</mo><mo>↦</mo><mo stretchy="false" form="prefix">(</mo><mi>−</mi><mi>x</mi><mo>,</mo><mi>y</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">(x,y)\mapsto(-x,y)</annotation></semantics></math>, gives <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>y</mi><mo>=</mo><msup><mi>a</mi><mrow><mi>−</mi><mi>x</mi></mrow></msup></mrow><annotation encoding="application/x-tex">y=a^{-x}</annotation></semantics></math>. The same reflection sends the tangent line <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>y</mi><mo>=</mo><mn>1</mn><mo>+</mo><mi>k</mi><mi>x</mi></mrow><annotation encoding="application/x-tex">y=1+kx</annotation></semantics></math> to <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>y</mi><mo>=</mo><mn>1</mn><mo>−</mo><mi>k</mi><mi>x</mi></mrow><annotation encoding="application/x-tex">y=1-kx</annotation></semantics></math>. Thus, for <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>b</mi><mo>=</mo><mn>1</mn><mi>/</mi><mi>a</mi></mrow><annotation encoding="application/x-tex">b=1/a</annotation></semantics></math>, the tangent slope of <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>y</mi><mo>=</mo><msup><mi>b</mi><mi>x</mi></msup></mrow><annotation encoding="application/x-tex">y=b^x</annotation></semantics></math> at <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false" form="prefix">(</mo><mn>0</mn><mo>,</mo><mn>1</mn><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">(0,1)</annotation></semantics></math> is <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>−</mi><mi>k</mi></mrow><annotation encoding="application/x-tex">-k</annotation></semantics></math>. Applying the result above to <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>b</mi><annotation encoding="application/x-tex">b</annotation></semantics></math> and <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>−</mi><mi>x</mi></mrow><annotation encoding="application/x-tex">-x</annotation></semantics></math>, we get <math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mrow><mo stretchy="true" form="prefix">(</mo><mn>1</mn><mo>+</mo><mfrac><mrow><mo stretchy="false" form="prefix">(</mo><mi>−</mi><mi>k</mi><mo stretchy="false" form="postfix">)</mo><mo stretchy="false" form="prefix">(</mo><mi>−</mi><mi>x</mi><mo stretchy="false" form="postfix">)</mo></mrow><mi>n</mi></mfrac><mo stretchy="true" form="postfix">)</mo></mrow><mi>n</mi></msup><mo>→</mo><msup><mi>b</mi><mrow><mi>−</mi><mi>x</mi></mrow></msup><mo>=</mo><msup><mi>a</mi><mi>x</mi></msup><mi>.</mi></mrow><annotation encoding="application/x-tex">\left(1+\frac{(-k)(-x)}{n}\right)^n\to b^{-x}=a^x.</annotation></semantics></math> So the result holds for every <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>a</mi><mo>&gt;</mo><mn>0</mn></mrow><annotation encoding="application/x-tex">a&gt;0</annotation></semantics></math>. <strong>QED</strong></p>
 </div></details>
 <p>The result links <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>a</mi><mo>&gt;</mo><mn>0</mn></mrow><annotation encoding="application/x-tex">a&gt;0</annotation></semantics></math> and <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>k</mi><annotation encoding="application/x-tex">k</annotation></semantics></math>, the slope of <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msup><mi>a</mi><mi>x</mi></msup><annotation encoding="application/x-tex">a^x</annotation></semantics></math> at <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>x</mi><mo>=</mo><mn>0</mn></mrow><annotation encoding="application/x-tex">x=0</annotation></semantics></math>. A natural question is: which base <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>a</mi><annotation encoding="application/x-tex">a</annotation></semantics></math> gives slope <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>k</mi><mo>=</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">k=1</annotation></semantics></math>? This number is called Euler’s number and is denoted by <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>e</mi><annotation encoding="application/x-tex">e</annotation></semantics></math>. Its value is <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>2.71828</mn><mi>…</mi></mrow><annotation encoding="application/x-tex">2.71828\ldots</annotation></semantics></math>, and it is one of the most important constants in mathematics. Since we can write <math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mrow><mo stretchy="true" form="prefix">(</mo><mn>1</mn><mo>+</mo><mfrac><mn>1</mn><mi>n</mi></mfrac><mo stretchy="true" form="postfix">)</mo></mrow><mi>n</mi></msup><mo>→</mo><mi>e</mi></mrow><annotation encoding="application/x-tex">\left(1+\frac 1n\right)^n \to e</annotation></semantics></math> we can estimate <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>e</mi><annotation encoding="application/x-tex">e</annotation></semantics></math>.</p>
-<div class="table-scroll" tabindex="0">
-<table>
-<thead>
-<tr>
-<th style="text-align: center;"><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>n</mi><annotation encoding="application/x-tex">n</annotation></semantics></math></th>
-<th style="text-align: center;"><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msup><mrow><mo stretchy="true" form="prefix">(</mo><mn>1</mn><mo>+</mo><mfrac><mn>1</mn><mi>n</mi></mfrac><mo stretchy="true" form="postfix">)</mo></mrow><mi>n</mi></msup><annotation encoding="application/x-tex">\left(1+\frac1n\right)^n</annotation></semantics></math> (approx.)</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align: center;">1</td>
-<td style="text-align: center;">2.0000000000</td>
-</tr>
-<tr>
-<td style="text-align: center;">2</td>
-<td style="text-align: center;">2.2500000000</td>
-</tr>
-<tr>
-<td style="text-align: center;">5</td>
-<td style="text-align: center;">2.4883200000</td>
-</tr>
-<tr>
-<td style="text-align: center;">10</td>
-<td style="text-align: center;">2.5937424601</td>
-</tr>
-<tr>
-<td style="text-align: center;">50</td>
-<td style="text-align: center;">2.6915880291</td>
-</tr>
-<tr>
-<td style="text-align: center;">100</td>
-<td style="text-align: center;">2.7048138294</td>
-</tr>
-<tr>
-<td style="text-align: center;">1000</td>
-<td style="text-align: center;">2.7169239322</td>
-</tr>
-<tr>
-<td style="text-align: center;">10000</td>
-<td style="text-align: center;">2.7181459268</td>
-</tr>
-<tr>
-<td style="text-align: center;">100000</td>
-<td style="text-align: center;">2.7182682372</td>
-</tr>
-<tr>
-<td style="text-align: center;">1000000</td>
-<td style="text-align: center;">2.7182804693</td>
-</tr>
-<tr>
-<td style="text-align: center;">10000000</td>
-<td style="text-align: center;">2.7182816925</td>
-</tr>
-</tbody>
-</table>
-</div>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mtable><mtr><mtd columnalign="center" style="text-align: center"><msub><mi>x</mi><mi>n</mi></msub><mo>=</mo><msup><mrow><mo stretchy="true" form="prefix">(</mo><mn>1</mn><mo>+</mo><mfrac><mn>1</mn><mi>n</mi></mfrac><mo stretchy="true" form="postfix">)</mo></mrow><mi>n</mi></msup></mtd></mtr><mtr><mtd columnalign="center" style="text-align: center"><mtable><mtr><mtd columnalign="center" style="text-align: center"><mi>n</mi></mtd><mtd columnalign="center" style="text-align: center"><msub><mi>x</mi><mi>n</mi></msub></mtd></mtr><mtr><mtd columnalign="center" style="text-align: center"><mn>1</mn></mtd><mtd columnalign="center" style="text-align: center"><mn>2.0000000000</mn></mtd></mtr><mtr><mtd columnalign="center" style="text-align: center"><mn>2</mn></mtd><mtd columnalign="center" style="text-align: center"><mn>2.2500000000</mn></mtd></mtr><mtr><mtd columnalign="center" style="text-align: center"><mn>5</mn></mtd><mtd columnalign="center" style="text-align: center"><mn>2.4883200000</mn></mtd></mtr><mtr><mtd columnalign="center" style="text-align: center"><mn>10</mn></mtd><mtd columnalign="center" style="text-align: center"><mn>2.5937424601</mn></mtd></mtr><mtr><mtd columnalign="center" style="text-align: center"><mn>50</mn></mtd><mtd columnalign="center" style="text-align: center"><mn>2.6915880291</mn></mtd></mtr><mtr><mtd columnalign="center" style="text-align: center"><mn>100</mn></mtd><mtd columnalign="center" style="text-align: center"><mn>2.7048138294</mn></mtd></mtr><mtr><mtd columnalign="center" style="text-align: center"><mn>1000</mn></mtd><mtd columnalign="center" style="text-align: center"><mn>2.7169239322</mn></mtd></mtr><mtr><mtd columnalign="center" style="text-align: center"><mn>10000</mn></mtd><mtd columnalign="center" style="text-align: center"><mn>2.7181459268</mn></mtd></mtr><mtr><mtd columnalign="center" style="text-align: center"><mn>100000</mn></mtd><mtd columnalign="center" style="text-align: center"><mn>2.7182682372</mn></mtd></mtr><mtr><mtd columnalign="center" style="text-align: center"><mn>1000000</mn></mtd><mtd columnalign="center" style="text-align: center"><mn>2.7182804693</mn></mtd></mtr><mtr><mtd columnalign="center" style="text-align: center"><mn>10000000</mn></mtd><mtd columnalign="center" style="text-align: center"><mn>2.7182816925</mn></mtd></mtr><mtr><mtd columnalign="center" style="text-align: center"></mtd></mtr></mtable></mtd></mtr><mtr><mtd columnalign="center" style="text-align: center"></mtd></mtr></mtable><annotation encoding="application/x-tex">
+\begin{array}{c}
+\hline
+x_n=\left(1+\frac1n\right)^n \\[4pt]
+\hline
+\begin{array}{cc}
+n &amp; x_n \\[3pt]
+\hline
+1 &amp; 2.0000000000 \\[3pt]
+2 &amp; 2.2500000000 \\[3pt]
+5 &amp; 2.4883200000 \\[3pt]
+10 &amp; 2.5937424601 \\[3pt]
+50 &amp; 2.6915880291 \\[3pt]
+100 &amp; 2.7048138294 \\[3pt]
+1000 &amp; 2.7169239322 \\[3pt]
+10000 &amp; 2.7181459268 \\[3pt]
+100000 &amp; 2.7182682372 \\[3pt]
+1000000 &amp; 2.7182804693 \\[3pt]
+10000000 &amp; 2.7182816925 \\[3pt]
+\end{array} \\[2pt]
+\hline
+\end{array}
+</annotation></semantics></math></p>
 <p>Note in particular that <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msup><mi>a</mi><mi>x</mi></msup><annotation encoding="application/x-tex">a^x</annotation></semantics></math> with slope <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>k</mi><annotation encoding="application/x-tex">k</annotation></semantics></math> can be written as <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mi>e</mi><mrow><mi>k</mi><mi>x</mi></mrow></msup><mo>,</mo></mrow><annotation encoding="application/x-tex">e^{kx},</annotation></semantics></math> because <math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mi>a</mi><mi>x</mi></msup><mo>=</mo><munder><mi mathvariant="normal">lim</mi><mrow><mi>n</mi><mo>→</mo><mi>∞</mi></mrow></munder><msup><mrow><mo stretchy="true" form="prefix">(</mo><mn>1</mn><mo>+</mo><mfrac><mrow><mi>k</mi><mi>x</mi></mrow><mi>n</mi></mfrac><mo stretchy="true" form="postfix">)</mo></mrow><mi>n</mi></msup><mo>=</mo><msup><mi>e</mi><mrow><mi>k</mi><mi>x</mi></mrow></msup></mrow><annotation encoding="application/x-tex">a^x = \lim\limits_{n \to \infty}\left(1+\frac {kx}{n}\right)^n = e^{kx}</annotation></semantics></math></p>
 <div class="example">
 <p><strong>Example</strong></p>
