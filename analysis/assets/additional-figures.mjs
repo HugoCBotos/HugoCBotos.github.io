@@ -1,4 +1,5 @@
-import { circumscribedPolygon, sectorModel, circularSegmentModel, factorialTerms, powerModel, exponentialModel, convexityModel, clipPolyline } from './figure-models.mjs';
+const { circumscribedPolygon, sectorModel, circularSegmentModel, factorialTerms, powerModel, exponentialModel, convexityModel, complexAverageModel, clipPolyline } =
+  await import(`./figure-models.mjs${new URL(import.meta.url).search}`);
 import { inscribedPolygon } from './polygon-model.mjs';
 
 const BLUE = '#1d5fbf', ORANGE = '#c54b16', PURPLE = '#8426aa', TEAL = '#008071', INK = '#4b5563', GOLD = '#9a651b';
@@ -61,14 +62,15 @@ function controlValue(range, input) {
 }
 
 class Figure {
-  constructor(image, options) {
+  constructor(placeholder, options) {
     this.options = options;
     this.values = {};
     this.inputs = [];
     this.boards = [];
     this.pendingRefresh = 0;
-    this.source = image.closest('picture') || image;
-    this.widget = el('div', 'interactive-figure');
+    this.widget = placeholder;
+    this.widget.classList.remove('figure-placeholder');
+    this.widget.classList.add('interactive-figure');
     this.widget.id = options.embed.split('/').pop().replace('.html', '') + '-1';
     this.widget.dataset.figure = options.type;
     this.widget.dataset.variant = options.mode || '';
@@ -97,9 +99,7 @@ class Figure {
     this.stage.append(this.panels, this.aside);
     this.toolbar.append(this.controls, this.reset);
     this.live.append(this.stage, this.toolbar);
-    this.source.before(this.widget);
-    this.source.classList.add('figure-static');
-    this.widget.append(this.source, this.live);
+    this.widget.replaceChildren(this.live);
   }
 
   scheduleRefresh() {
@@ -260,7 +260,6 @@ class Figure {
           this.refresh();
           for (const { board } of this.boards) board.unsuspendUpdate();
           this.widget.classList.add('is-ready');
-          this.source.setAttribute('aria-hidden', 'true');
           window.MathJax?.typesetPromise?.([this.live]).catch(console.error);
         }
         for (const item of this.boards) {
@@ -277,8 +276,8 @@ class Figure {
         for (const { board } of this.boards) if (board) window.JXG.JSXGraph.freeBoard(board);
         this.live.hidden = true;
         this.widget.classList.remove('is-ready');
-        this.source.removeAttribute('aria-hidden');
-        console.error(`The static figure is shown instead: ${this.options.type}`, error);
+        this.widget.append(el('p', 'figure-error', 'Unable to load this figure.'));
+        console.error(`Unable to draw the interactive figure: ${this.options.type}`, error);
       }
     };
     // A proof can start closed. Initialize its figures when the boards become measurable.
@@ -336,14 +335,15 @@ function niceTicks(min, max, count = 6) {
 }
 function frameBounds(f) {
   const dx = f.xmax - f.xmin, dy = f.ymax - f.ymin;
-  return [f.xmin - .13 * dx, f.ymax + .10 * dy, f.xmax + .07 * dx, f.ymin - .18 * dy];
+  return [f.xmin - .13 * dx, f.ymax + .14 * dy, f.xmax + .10 * dx, f.ymin - .18 * dy];
 }
-function axes(board, frame, xName = 'x') {
+function axes(board, frame, xName = 'x', yName = 'y') {
   const get = () => {
     const f = frame();
     return { ...f, dx: f.xmax - f.xmin, dy: f.ymax - f.ymin,
       x0: Math.max(f.xmin, Math.min(f.xmax, 0)), y0: Math.max(f.ymin, Math.min(f.ymax, 0)),
-      xticks: f.xticks || niceTicks(f.xmin, f.xmax), yticks: f.yticks || niceTicks(f.ymin, f.ymax) };
+      xticks: f.xticks || niceTicks(f.xmin, f.xmax), yticks: f.yticks || niceTicks(f.ymin, f.ymax),
+      hasOrigin: f.xmin <= 0 && f.xmax >= 0 && f.ymin <= 0 && f.ymax >= 0 };
   };
   curve(board, () => { const f = get(); return [[f.xmin, f.y0], [f.xmax, f.y0]]; }, INK, { strokeWidth: 1, layer: 2 });
   curve(board, () => { const f = get(); return [[f.x0, f.ymin], [f.x0, f.ymax]]; }, INK, { strokeWidth: 1, layer: 2 });
@@ -351,22 +351,28 @@ function axes(board, frame, xName = 'x') {
     for (let index = 0; index < 9; index++) {
       curve(board, () => {
         const f = get(), tick = (horizontal ? f.yticks : f.xticks)[index];
-        if (tick === undefined) return [];
-        return horizontal ? [[f.xmin, tick], [f.xmax, tick]] : [[tick, f.ymin], [tick, f.ymax]];
+        if (f.grid === false || horizontal || tick === undefined || tick === f.x0) return [];
+        return [[tick, f.ymin], [tick, f.ymax]];
       }, '#e1e4e8', { strokeWidth: .7, strokeOpacity: .6, layer: 0 });
       board.create('text', [
-        () => { const f = get(); return horizontal ? f.x0 - .035 * f.dx : f.xticks[index] ?? NaN; },
-        () => { const f = get(); return horizontal ? f.yticks[index] ?? NaN : f.y0 - .055 * f.dy; },
+        () => { const f = get(); return horizontal ? f.x0 - 9 / board.unitX : f.xticks[index] ?? NaN; },
+        () => { const f = get(); return horizontal ? f.yticks[index] ?? NaN : f.y0 - 9 / board.unitY; },
         () => { const f = get(), tick = (horizontal ? f.yticks : f.xticks)[index]; return tick === undefined ? '' : number(tick, 3).replace('-', '−'); },
-      ], { ...FIXED, fontSize: 12, anchorX: horizontal ? 'right' : 'middle', anchorY: 'middle',
-        visible: () => { const f = get(); return (horizontal ? f.yticks : f.xticks)[index] !== undefined; },
+      ], { ...FIXED, fontSize: 12, anchorX: horizontal ? 'right' : 'middle', anchorY: horizontal ? 'middle' : 'top',
+        visible: () => { const f = get(), tick = (horizontal ? f.yticks : f.xticks)[index]; return tick !== undefined && !(f.hasOrigin && tick === 0); },
         cssClass: 'figure-tick-label', layer: 7 });
     }
   }
-  label(board, () => { const f = get(); return f.xmax + .035 * f.dx; },
-    () => { const f = get(); return f.y0 - .05 * f.dy; }, xName, { fontSize: 15 });
-  label(board, () => { const f = get(); return f.x0 - .045 * f.dx; },
-    () => { const f = get(); return f.ymax + .055 * f.dy; }, 'y', { fontSize: 15 });
+  board.create('text', [
+    () => get().x0 - 9 / board.unitX,
+    () => get().y0 - 9 / board.unitY,
+    '0',
+  ], { ...FIXED, fontSize: 12, anchorX: 'right', anchorY: 'top',
+    visible: () => get().hasOrigin, cssClass: 'figure-tick-label', layer: 7 });
+  label(board, () => get().xmax + 14 / board.unitX,
+    () => get().y0, xName, { fontSize: 15 });
+  label(board, () => get().x0,
+    () => get().ymax + 16 / board.unitY, yName, { fontSize: 15 });
 }
 function originOne(board, frame) {
   point(board, 0, 1, { fillColor: INK, strokeColor: INK });
@@ -677,7 +683,7 @@ function mountConvexity(image, options) {
     point(board, () => model.x, () => model.curve, { fillColor: BLUE, strokeColor: BLUE, size: 3 });
     point(board, () => model.x, () => model.chord, { fillColor: TEAL, strokeColor: TEAL, size: 3 });
     label(board, model.a - .08, model.value(model.a) + .16, 'a');
-    label(board, model.b + .08, model.value(model.b) + .16, 'b');
+    label(board, () => model.b + 14 / board.unitX, () => model.value(model.b), 'b', { anchorX: 'left' });
   }, () => {
     model = convexityModel(fig.values.s, options.a, options.b);
     fig.values.t = model.t;
@@ -690,7 +696,89 @@ function mountConvexity(image, options) {
   });
 }
 
+function mountComplexAverage(placeholder, options) {
+  const fig = new Figure(placeholder, options);
+  fig.widget.classList.add('figure-complex-average');
+  fig.control('n', 'n', options.n, 'Number of points n');
+  let selected = [...options.c], radius = 1.35, handle;
+  const modelFor = () => complexAverageModel(Math.hypot(...selected), Math.atan2(selected[1], selected[0]), fig.values.n);
+  let model = modelFor();
+  const frame = extent => {
+    const tick = extent < 2 ? 1 : 10 ** Math.floor(Math.log10(extent));
+    return { xmin: -extent, xmax: extent, ymin: -extent, ymax: extent,
+      xticks: [-tick, 0, tick], yticks: [-tick, 0, tick], grid: false };
+  };
+  const inView = p => p && Math.abs(p[0]) <= radius && Math.abs(p[1]) <= radius;
+  const inputPanel = fig.board(() => frameBounds(frame(1.35)), true, '\\text{Drag }c');
+  const outputPanel = fig.board(() => frameBounds(frame(radius)), true, '1,c,\\ldots,c^{n-1}');
+  const fit = el('button', 'figure-reset', 'Fit points');
+  fit.type = 'button';
+  fit.hidden = true;
+  fit.setAttribute('aria-label', 'Fit all powers and their average in view');
+  fig.toolbar.insertBefore(fit, fig.reset);
+  fit.addEventListener('click', () => {
+    radius = Math.max(1.35, 1.12 * Math.max(...model.points.map(p => Math.hypot(...p))));
+    fig.refresh?.();
+  });
+  fig.reset.addEventListener('click', () => {
+    selected = [...options.c];
+    radius = 1.35;
+    handle?.setPosition(window.JXG.COORDS_BY_USER, selected);
+    fig.refresh?.();
+  });
+  fig.mount(() => {
+    const input = inputPanel.board, output = outputPanel.board;
+    axes(input, () => frame(1.35));
+    axes(output, () => frame(radius));
+    for (const board of [input, output]) {
+      curve(board, () => Array.from({ length: 181 }, (_, k) =>
+        [Math.cos(k * Math.PI / 90), Math.sin(k * Math.PI / 90)]),
+      '#c4c8ce', { strokeWidth: 1, layer: 2 });
+    }
+    handle = point(input, ...selected, {
+      fixed: false, highlight: true, size: 5, fillColor: BLUE, strokeColor: '#fff', strokeWidth: 1.5,
+      highlightFillColor: BLUE, highlightStrokeColor: BLUE, highlightSize: 6,
+      snapToGrid: false, showInfobox: false, name: 'c',
+    });
+    label(input, () => handle.X() + 12 / input.unitX, () => handle.Y() + 12 / input.unitY,
+      'c', { anchorX: 'left', anchorY: 'bottom' });
+    handle.on('drag', () => {
+      let x = Math.max(-1.25, Math.min(1.25, handle.X()));
+      let y = Math.max(-1.25, Math.min(1.25, handle.Y()));
+      // Magnetic targets make the origin, axes and unit circle easy to select.
+      const tolerance = 4 / input.unitX;
+      if (Math.abs(x) < tolerance) x = 0;
+      if (Math.abs(y) < tolerance) y = 0;
+      const length = Math.hypot(x, y);
+      if (Math.abs(length - 1) < tolerance) { x /= length; y /= length; }
+      selected = [x, y];
+      handle.setPosition(window.JXG.COORDS_BY_USER, selected);
+      fig.scheduleRefresh();
+    });
+    for (let k = 0; k < options.n.max; k++) {
+      point(output, () => model.points[k]?.[0] ?? 0, () => model.points[k]?.[1] ?? 0,
+        { size: 2.6, visible: () => Boolean(inView(model.points[k])) });
+    }
+    point(output, () => model.average[0], () => model.average[1],
+      { fillColor: ORANGE, strokeColor: '#fff', strokeWidth: 1.4, size: 4.8,
+        visible: () => inView(model.average), layer: 10 });
+    label(output, () => model.average[0] + (model.average[0] <= 0 ? -30 : 11) / output.unitX, () => model.average[1] + 11 / output.unitY,
+      'z_n', { anchorX: 'left', anchorY: 'bottom', color: ORANGE, visible: () => inView(model.average) });
+  }, () => {
+    model = modelFor();
+    fit.hidden = model.points.every(inView);
+    fig.widget.dataset.cReal = String(selected[0]);
+    fig.widget.dataset.cImaginary = String(selected[1]);
+    fig.widget.dataset.averageReal = String(model.average[0]);
+    fig.widget.dataset.averageImaginary = String(model.average[1]);
+    fig.widget.dataset.viewRadius = String(radius);
+    inputPanel.element.setAttribute('aria-label', 'Drag the blue point c in this plane. The circle has radius one.');
+    outputPanel.element.setAttribute('aria-label', `${fig.values.n} powers of c as separate blue points; their average z_n is orange. x and y axes.`);
+  });
+}
+
 const mounts = {
+  'complex-average': mountComplexAverage,
   'inscribed-polygon': mountPolygon, 'circumscribed-polygon': mountPolygon, 'sine-sector': mountSector,
   'circular-segment': mountCircularSegment,
   'power-tangent': mountPower, 'factorial-sequence': mountFactorial,

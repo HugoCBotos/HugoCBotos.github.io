@@ -1,4 +1,20 @@
 .interactive-figure { margin: 1.6rem auto 1rem; scroll-margin-top: 20px; }
+.figure-placeholder { min-height: 360px; }
+/* Two quiet planes: choose c on the left, inspect its powers on the right. */
+.figure-complex-average .figure-stage { display: block; }
+.figure-complex-average .figure-panels { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px; }
+.figure-complex-average .figure-board { aspect-ratio: 1; }
+.figure-complex-average .figure-panel:first-child .figure-board { touch-action: none; cursor: grab; }
+.figure-complex-average .figure-panel:first-child .figure-board:active { cursor: grabbing; }
+.figure-complex-average .figure-aside { display: none; }
+.figure-complex-average .figure-panel-title { min-height: 24px; text-align: center; font-size: 15px; }
+.figure-complex-average .figure-panel:last-child .figure-panel-title { color: #1d5fbf; }
+.figure-complex-average .figure-controls { grid-template-columns: 50px minmax(70px, 1fr); }
+.figure-complex-average .figure-reset[hidden] { display: none; }
+@media (max-width: 480px) {
+  .figure-complex-average .figure-panels { gap: 6px; }
+  .figure-complex-average .figure-board-label { font-size: 12px !important; }
+}
 .figure-live { max-width: 760px; margin: auto; }
 .figure-stage { display: grid; grid-template-columns: minmax(0, 1fr) 185px; align-items: center; gap: 12px; }
 .figure-panels, .figure-panel { min-width: 0; }
@@ -33,8 +49,6 @@
 .figure-reset { appearance: none; display: inline-block; background: transparent; color: var(--link); border: 1px solid var(--line); border-radius: 4px; padding: .4rem .75rem; font: 14px/1.6 system-ui, sans-serif; cursor: pointer; }
 .figure-reset:hover { color: var(--link); }
 .figure-reset:focus-visible, .figure-slider:focus-visible, .figure-key-button:focus-visible, .figure-base-input:focus-visible { outline: 2px solid var(--link); outline-offset: 4px; }
-.interactive-figure.is-ready > .figure-static { display: none; }
-.interactive-figure .figure-static img { margin: 0 auto; }
 .figure-live[hidden] { display: none; }
 @media (max-width: 480px) {
   .figure-stage { grid-template-columns: minmax(0, 1fr); gap: 4px; }
@@ -46,13 +60,12 @@
   .figure-readout { font-size: 14px; }
 }
 @media print {
-  .interactive-figure .figure-live { display: none; }
-  .interactive-figure.is-ready > .figure-static { display: block; }
+  .interactive-figure .figure-toolbar, .interactive-figure .figure-reset { display: none; }
 }
 
 /* The factorial plot keeps its original full-width layout and two sliders. */
 .figure-legacy-factorial .figure-live { max-width: 620px; }
-.figure-legacy-factorial .figure-title { font: 21px/1.4 "STIX Two Text", "Times New Roman", Times, serif; text-align: center; margin-bottom: .3rem; }
+.figure-legacy-factorial .figure-title { font: 16px/1.4 "STIX Two Text", "Times New Roman", Times, serif; text-align: center; margin-bottom: .3rem; }
 .figure-legacy-factorial .figure-board { aspect-ratio: 1.4; }
 .figure-legacy-factorial .figure-toolbar { display: block; margin: 0; }
 .figure-legacy-factorial .figure-control-list { display: block; }
@@ -63,7 +76,6 @@
 .figure-legacy-factorial .figure-readout { font-size: 15px; }
 .figure-legacy-factorial .figure-reset { display: block; margin: .6rem 0 .4rem auto; font: 14px/1.6 system-ui, sans-serif; color: var(--link); border: 1px solid var(--line); border-radius: 4px; padding: .4rem .75rem; }
 @media (max-width: 650px) {
-  .figure-legacy-factorial .figure-title { font-size: 19px; }
   .figure-legacy-factorial .figure-board { aspect-ratio: 1.15; }
   .figure-legacy-factorial .figure-readouts { font-size: 14px; gap: .5rem 1.2rem; }
 }

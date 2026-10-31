@@ -1,5 +1,22 @@
 import { inscribedPolygon } from './polygon-model.mjs';
 
+export function complexAverageModel(r, theta, n) {
+  if (!Number.isFinite(r) || r < 0 || r > 2 || !Number.isFinite(theta) ||
+      !Number.isInteger(n) || n < 1 || n > 60) {
+    throw new RangeError('Use 0 <= r <= 2, a finite angle, and 1 to 60 terms.');
+  }
+  const c = [r * Math.cos(theta), r * Math.sin(theta)];
+  const points = [];
+  let x = 1, y = 0, sx = 0, sy = 0;
+  // Sum the powers directly, including at c = 1 where the quotient is undefined.
+  for (let k = 0; k < n; k++) {
+    points.push([x, y]);
+    sx += x; sy += y;
+    [x, y] = [x * c[0] - y * c[1], x * c[1] + y * c[0]];
+  }
+  return { c, points, average: [sx / n, sy / n] };
+}
+
 export function circumscribedPolygon(n) {
   const inner = inscribedPolygon(n);
   const radius = 1 / Math.cos(Math.PI / inner.sides);
