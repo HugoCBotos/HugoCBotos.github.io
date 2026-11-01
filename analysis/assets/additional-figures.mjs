@@ -1,4 +1,4 @@
-const { circumscribedPolygon, sectorModel, circularSegmentModel, factorialTerms, powerModel, exponentialModel, convexityModel, complexAverageModel, geometricSum, clipPolyline } =
+const { circumscribedPolygon, sectorModel, circularSegmentModel, factorialTerms, powerModel, exponentialModel, convexityModel, complexAverageModel, geometricSum, elementarySeriesModel, clipPolyline } =
   await import(`./figure-models.mjs${new URL(import.meta.url).search}`);
 import { inscribedPolygon } from './polygon-model.mjs';
 
@@ -575,10 +575,82 @@ function tangentEquation(slope) {
   return `y=1${slope < 0 ? '-' : '+'}${number(Math.abs(slope))}x`;
 }
 
+function polynomialHeading(fig, tex) {
+  const heading = el('div', 'figure-polynomial');
+  const dot = el('span', 'figure-key-dot');
+  dot.style.backgroundColor = BLUE;
+  const formula = math(tex);
+  heading.append(dot, formula);
+  fig.stage.before(fig.aside);
+  fig.aside.classList.add('figure-top-legend');
+  fig.stage.classList.add('figure-stage-full');
+  fig.live.prepend(heading);
+  return next => setMath(formula, next);
+}
+
+function mountElementarySeries(image, options) {
+  const fig = new Figure(image, options);
+  const functions = [
+    { value: 'exp', label: 'e^x', polynomial: 'S_n=1+x+\\frac{x^2}{2!}+\\frac{x^3}{3!}+\\cdots+\\frac{x^n}{n!}' },
+    { value: 'sin', label: '\\sin(x)', polynomial: 'S_n=x-\\frac{x^3}{3!}+\\frac{x^5}{5!}-\\frac{x^7}{7!}+\\cdots+(-1)^n\\frac{x^{2n+1}}{(2n+1)!}' },
+    { value: 'cos', label: '\\cos(x)', polynomial: 'S_n=1-\\frac{x^2}{2!}+\\frac{x^4}{4!}-\\frac{x^6}{6!}+\\cdots+(-1)^n\\frac{x^{2n}}{(2n)!}' },
+  ];
+  fig.values.function = options.function;
+  const row = el('div', 'figure-controls');
+  row.append(el('span', 'figure-control-label', 'Function'));
+  const choices = el('div', 'figure-function-options');
+  choices.setAttribute('role', 'radiogroup');
+  choices.setAttribute('aria-label', 'Function');
+  const radios = [];
+  for (const item of functions) {
+    const label = el('label', 'figure-function-choice');
+    const input = el('input');
+    input.type = 'radio';
+    input.name = `${fig.widget.id}-function`;
+    input.value = item.value;
+    input.checked = item.value === options.function;
+    input.setAttribute('aria-label', item.value === 'exp' ? 'e^x' : `${item.value}(x)`);
+    input.addEventListener('change', () => {
+      if (!input.checked) return;
+      fig.values.function = item.value;
+      fig.refresh?.();
+    });
+    label.append(input, math(item.label));
+    choices.append(label);
+    radios.push(input);
+  }
+  row.append(choices);
+  fig.controls.append(row);
+  fig.control('n', 'n', options.n, 'Last term index n');
+  // Restore the function before the shared Reset handler refreshes the graph.
+  fig.reset.addEventListener('click', () => {
+    fig.values.function = options.function;
+    for (const input of radios) input.checked = input.value === options.function;
+  }, { capture: true });
+  const partialKey = polynomialHeading(fig, ''), functionKey = fig.key('', ORANGE);
+  const getFrame = () => options.view;
+  const panel = fig.board(() => frameBounds(getFrame()));
+  let partial = [], exact = [];
+  fig.mount(() => {
+    axes(panel.board, getFrame);
+    plotCurve(panel.board, () => partial, getFrame, BLUE, { strokeWidth: 2.4, layer: 5 });
+    plotCurve(panel.board, () => exact, getFrame, ORANGE, { dash: 2, layer: 6 });
+  }, () => {
+    const kind = fig.values.function, n = fig.values.n;
+    const model = elementarySeriesModel(kind, n + 1);
+    partial = samples(model.partial, options.view.xmin, options.view.xmax, 1200);
+    exact = samples(model.value, options.view.xmin, options.view.xmax, 1200);
+    const chosen = functions.find(item => item.value === kind);
+    partialKey(chosen.polynomial);
+    functionKey(`y=${chosen.label}`);
+    panel.element.setAttribute('aria-label', `The ${kind} partial sum through term index ${n} in blue and the function itself in orange. Fixed x and y axes.`);
+  });
+}
+
 function mountGeometricSums(image, options) {
   const fig = new Figure(image, options);
   fig.control('n', 'n', options.n, 'Exponent n');
-  fig.key('S_n=\\sum_{k=0}^{n}x^k', BLUE);
+  polynomialHeading(fig, 'S_n=1+x+x^2+\\cdots+x^n');
   fig.key('y=\\frac{1}{1-x}', ORANGE);
   const getFrame = () => options.view;
   const panel = fig.board(() => frameBounds(getFrame()));
@@ -597,7 +669,7 @@ function mountGeometricSums(image, options) {
   }, () => {
     const n = fig.values.n;
     partial = samples(x => geometricSum(x, n + 1), options.view.xmin, options.view.xmax, 1200);
-    panel.element.setAttribute('aria-label', `S_n = 1 + x + x^2 + ... + x^n in blue, and 1/(1-x) in orange, for -2 < x < 2. Fixed x and y axes; 1/(1-x) is undefined at x=1.`);
+    panel.element.setAttribute('aria-label', `S_n = 1 + x + x^2 + ... + x^n in blue, and 1/(1-x) in orange, for ${options.view.xmin} < x < ${options.view.xmax}. Fixed x and y axes; 1/(1-x) is undefined at x=1.`);
   });
 }
 
@@ -804,6 +876,7 @@ function mountComplexAverage(placeholder, options) {
 }
 
 const mounts = {
+  'elementary-series': mountElementarySeries,
   'geometric-partial-sums': mountGeometricSums,
   'complex-average': mountComplexAverage,
   'inscribed-polygon': mountPolygon, 'circumscribed-polygon': mountPolygon, 'sine-sector': mountSector,

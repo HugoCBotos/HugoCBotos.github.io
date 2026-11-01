@@ -18,7 +18,8 @@
 .figure-live { max-width: 760px; margin: auto; }
 .figure-stage { display: grid; grid-template-columns: minmax(0, 1fr) 185px; align-items: center; gap: 12px; }
 @media (min-width: 481px) {
-  [data-figure="geometric-partial-sums"] .figure-stage { grid-template-columns: minmax(0, 1fr) 230px; }
+  [data-figure="geometric-partial-sums"] .figure-stage,
+  [data-figure="elementary-series"] .figure-stage { grid-template-columns: minmax(0, 1fr) 230px; }
 }
 .figure-panels, .figure-panel { min-width: 0; }
 .figure-board { position: relative; width: 100%; aspect-ratio: 1.2; overflow: hidden; border: 0; background: transparent; touch-action: pan-y; }
@@ -81,4 +82,19 @@
 @media (max-width: 650px) {
   .figure-legacy-factorial .figure-board { aspect-ratio: 1.15; }
   .figure-legacy-factorial .figure-readouts { font-size: 14px; gap: .5rem 1.2rem; }
+}
+
+.figure-function-options { display: flex; align-items: center; flex-wrap: wrap; gap: 8px 20px; min-height: 26px; }
+.figure-function-choice { display: inline-flex; align-items: center; gap: 6px; cursor: pointer; white-space: nowrap; }
+.figure-function-choice input { margin: 0; accent-color: #4b6375; }
+
+.figure-polynomial { display: flex; align-items: center; justify-content: center; gap: 8px; min-height: 58px; margin: 0 0 6px; font-size: 16px; overflow-x: auto; }
+.figure-polynomial .figure-math { flex: 0 0 auto; white-space: nowrap; }
+
+.figure-aside.figure-top-legend { align-items: center; margin: 0 0 8px; padding: 0; font-size: 16px; }
+.figure-stage.figure-stage-full { display: block; }
+.figure-stage-full .figure-panels { max-width: 700px; margin: 0 auto; }
+.figure-stage-full .figure-plot { aspect-ratio: 1.8; }
+@media (max-width: 480px) {
+  .figure-stage-full .figure-plot { aspect-ratio: 1.35; }
 }

@@ -118,3 +118,22 @@ export function geometricSum(x, n) {
   for (let k = 0; k < n; k++) sum = 1 + x * sum;
   return sum;
 }
+
+/** The first n nonzero terms of the elementary series, centered at zero. */
+export function elementarySeriesModel(kind, n) {
+  const value = { exp: Math.exp, sin: Math.sin, cos: Math.cos }[kind];
+  if (!['exp', 'sin', 'cos'].includes(kind) || !Number.isInteger(n) || n < 1 || n > 21) {
+    throw new RangeError('Choose exp, sin or cos, and 1 to 21 terms.');
+  }
+  const partial = x => {
+    let term = kind === 'sin' ? x : 1;
+    let sum = term;
+    for (let k = 1; k < n; k++) {
+      term *= kind === 'exp' ? x / k
+        : -x * x / (kind === 'sin' ? (2 * k) * (2 * k + 1) : (2 * k - 1) * (2 * k));
+      sum += term;
+    }
+    return sum;
+  };
+  return { value, partial };
+}
