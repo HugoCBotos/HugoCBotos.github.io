@@ -17,6 +17,9 @@
 }
 .figure-live { max-width: 760px; margin: auto; }
 .figure-stage { display: grid; grid-template-columns: minmax(0, 1fr) 185px; align-items: center; gap: 12px; }
+@media (min-width: 481px) {
+  [data-figure="geometric-partial-sums"] .figure-stage { grid-template-columns: minmax(0, 1fr) 230px; }
+}
 .figure-panels, .figure-panel { min-width: 0; }
 .figure-board { position: relative; width: 100%; aspect-ratio: 1.2; overflow: hidden; border: 0; background: transparent; touch-action: pan-y; }
 .figure-plot { aspect-ratio: 1.3; }

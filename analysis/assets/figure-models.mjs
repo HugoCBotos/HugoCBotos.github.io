@@ -108,3 +108,13 @@ export function clipPolyline(points, view) {
   }
   return result;
 }
+
+/** Evaluate 1 + x + ... + x^(n-1), including at x = 1. */
+export function geometricSum(x, n) {
+  if (!Number.isFinite(x) || !Number.isInteger(n) || n < 1) {
+    throw new RangeError('Use a finite x and a positive integer n.');
+  }
+  let sum = 0;
+  for (let k = 0; k < n; k++) sum = 1 + x * sum;
+  return sum;
+}

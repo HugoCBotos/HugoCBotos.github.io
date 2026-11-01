@@ -1,4 +1,4 @@
-const { circumscribedPolygon, sectorModel, circularSegmentModel, factorialTerms, powerModel, exponentialModel, convexityModel, complexAverageModel, clipPolyline } =
+const { circumscribedPolygon, sectorModel, circularSegmentModel, factorialTerms, powerModel, exponentialModel, convexityModel, complexAverageModel, geometricSum, clipPolyline } =
   await import(`./figure-models.mjs${new URL(import.meta.url).search}`);
 import { inscribedPolygon } from './polygon-model.mjs';
 
@@ -575,6 +575,32 @@ function tangentEquation(slope) {
   return `y=1${slope < 0 ? '-' : '+'}${number(Math.abs(slope))}x`;
 }
 
+function mountGeometricSums(image, options) {
+  const fig = new Figure(image, options);
+  fig.control('n', 'n', options.n, 'Exponent n');
+  fig.key('S_n=\\sum_{k=0}^{n}x^k', BLUE);
+  fig.key('y=\\frac{1}{1-x}', ORANGE);
+  const getFrame = () => options.view;
+  const panel = fig.board(() => frameBounds(getFrame()));
+  // Keep the two branches separate: there is no curve segment across x = 1.
+  const reciprocal = [
+    ...samples(x => 1 / (1 - x), options.view.xmin, 1 - 1e-4, 900),
+    [NaN, NaN],
+    ...samples(x => 1 / (1 - x), 1 + 1e-4, options.view.xmax, 900),
+  ];
+  let partial = [];
+  fig.mount(() => {
+    const board = panel.board;
+    axes(board, getFrame);
+    plotCurve(board, () => partial, getFrame, BLUE, { strokeWidth: 2.4, layer: 5 });
+    plotCurve(board, () => reciprocal, getFrame, ORANGE, { dash: 2, layer: 6 });
+  }, () => {
+    const n = fig.values.n;
+    partial = samples(x => geometricSum(x, n + 1), options.view.xmin, options.view.xmax, 1200);
+    panel.element.setAttribute('aria-label', `S_n = 1 + x + x^2 + ... + x^n in blue, and 1/(1-x) in orange, for -2 < x < 2. Fixed x and y axes; 1/(1-x) is undefined at x=1.`);
+  });
+}
+
 function mountFamily(image, options) {
   const fig = new Figure(image, options);
   fig.control('a', 'a', options.a, 'Exponential base a');
@@ -778,6 +804,7 @@ function mountComplexAverage(placeholder, options) {
 }
 
 const mounts = {
+  'geometric-partial-sums': mountGeometricSums,
   'complex-average': mountComplexAverage,
   'inscribed-polygon': mountPolygon, 'circumscribed-polygon': mountPolygon, 'sine-sector': mountSector,
   'circular-segment': mountCircularSegment,
