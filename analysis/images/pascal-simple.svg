@@ -1,0 +1,202 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="780" height="600" viewBox="0 0 780 600" role="img" aria-labelledby="title desc">
+<title id="title">Pascal's identity for real r</title>
+<desc id="desc">Staggered rows of upright hexagons, with every coefficient written in binomial notation. The two orange entries, r choose one and r choose two, add to the green entry r plus one choose two below them. The diagram fades at its edges.</desc>
+<defs>
+  <linearGradient id="fade-vertical" x1="0" y1="0" x2="0" y2="600" gradientUnits="userSpaceOnUse">
+    <stop offset="0" stop-color="black"/>
+    <stop offset=".2" stop-color="white"/>
+    <stop offset=".7" stop-color="white"/>
+    <stop offset="1" stop-color="black"/>
+  </linearGradient>
+  <linearGradient id="fade-right" x1="400" y1="91" x2="535" y2="13" gradientUnits="userSpaceOnUse">
+    <stop offset="0" stop-color="white"/>
+    <stop offset="1" stop-color="black"/>
+  </linearGradient>
+  <linearGradient id="fade-frame" x1="0" y1="0" x2="780" y2="0" gradientUnits="userSpaceOnUse">
+    <stop offset="0" stop-color="black"/>
+    <stop offset=".07" stop-color="white"/>
+    <stop offset=".9" stop-color="white"/>
+    <stop offset="1" stop-color="black"/>
+  </linearGradient>
+  <mask id="vertical"><rect width="780" height="600" fill="url(#fade-vertical)"/></mask>
+  <mask id="right"><rect width="780" height="600" fill="url(#fade-right)"/></mask>
+  <mask id="frame"><rect width="780" height="600" fill="url(#fade-frame)"/></mask>
+</defs>
+<g mask="url(#frame)"><g mask="url(#vertical)"><g mask="url(#right)" font-family="DejaVu Serif,serif" text-anchor="middle" fill="#18222b">
+<polygon points="407.63,-46.50 455.26,-19.00 455.26,36.00 407.63,63.50 360.00,36.00 360.00,-19.00" fill="#ffffff" stroke="#606a70" stroke-width="1.3"/>
+<path d="M 378.63 -20.50 Q 365.63 8.50 378.63 37.50 M 436.63 -20.50 Q 449.63 8.50 436.63 37.50" fill="none" stroke="#18222b" stroke-width="1.4"/>
+<text x="407.63" y="2.50" font-size="23" fill="#18222b"><tspan font-style="italic">r</tspan><tspan font-style="normal">−</tspan><tspan font-style="normal">3</tspan></text>
+<text x="407.63" y="30.50" font-size="24" fill="#18222b"><tspan font-style="normal">0</tspan></text>
+<polygon points="502.89,-46.50 550.53,-19.00 550.53,36.00 502.89,63.50 455.26,36.00 455.26,-19.00" fill="#ffffff" stroke="#606a70" stroke-width="1.3"/>
+<path d="M 473.89 -20.50 Q 460.89 8.50 473.89 37.50 M 531.89 -20.50 Q 544.89 8.50 531.89 37.50" fill="none" stroke="#18222b" stroke-width="1.4"/>
+<text x="502.89" y="2.50" font-size="23" fill="#18222b"><tspan font-style="italic">r</tspan><tspan font-style="normal">−</tspan><tspan font-style="normal">3</tspan></text>
+<text x="502.89" y="30.50" font-size="24" fill="#18222b"><tspan font-style="normal">1</tspan></text>
+<polygon points="360.00,36.00 407.63,63.50 407.63,118.50 360.00,146.00 312.37,118.50 312.37,63.50" fill="#ffffff" stroke="#606a70" stroke-width="1.3"/>
+<path d="M 331.00 62.00 Q 318.00 91.00 331.00 120.00 M 389.00 62.00 Q 402.00 91.00 389.00 120.00" fill="none" stroke="#18222b" stroke-width="1.4"/>
+<text x="360.00" y="85.00" font-size="23" fill="#18222b"><tspan font-style="italic">r</tspan><tspan font-style="normal">−</tspan><tspan font-style="normal">2</tspan></text>
+<text x="360.00" y="113.00" font-size="24" fill="#18222b"><tspan font-style="normal">0</tspan></text>
+<polygon points="455.26,36.00 502.89,63.50 502.89,118.50 455.26,146.00 407.63,118.50 407.63,63.50" fill="#ffffff" stroke="#606a70" stroke-width="1.3"/>
+<path d="M 426.26 62.00 Q 413.26 91.00 426.26 120.00 M 484.26 62.00 Q 497.26 91.00 484.26 120.00" fill="none" stroke="#18222b" stroke-width="1.4"/>
+<text x="455.26" y="85.00" font-size="23" fill="#18222b"><tspan font-style="italic">r</tspan><tspan font-style="normal">−</tspan><tspan font-style="normal">2</tspan></text>
+<text x="455.26" y="113.00" font-size="24" fill="#18222b"><tspan font-style="normal">1</tspan></text>
+<polygon points="550.53,36.00 598.16,63.50 598.16,118.50 550.53,146.00 502.89,118.50 502.89,63.50" fill="#ffffff" stroke="#606a70" stroke-width="1.3"/>
+<path d="M 521.53 62.00 Q 508.53 91.00 521.53 120.00 M 579.53 62.00 Q 592.53 91.00 579.53 120.00" fill="none" stroke="#18222b" stroke-width="1.4"/>
+<text x="550.53" y="85.00" font-size="23" fill="#18222b"><tspan font-style="italic">r</tspan><tspan font-style="normal">−</tspan><tspan font-style="normal">2</tspan></text>
+<text x="550.53" y="113.00" font-size="24" fill="#18222b"><tspan font-style="normal">2</tspan></text>
+<polygon points="312.37,118.50 360.00,146.00 360.00,201.00 312.37,228.50 264.74,201.00 264.74,146.00" fill="#ffffff" stroke="#606a70" stroke-width="1.3"/>
+<path d="M 283.37 144.50 Q 270.37 173.50 283.37 202.50 M 341.37 144.50 Q 354.37 173.50 341.37 202.50" fill="none" stroke="#18222b" stroke-width="1.4"/>
+<text x="312.37" y="167.50" font-size="23" fill="#18222b"><tspan font-style="italic">r</tspan><tspan font-style="normal">−</tspan><tspan font-style="normal">1</tspan></text>
+<text x="312.37" y="195.50" font-size="24" fill="#18222b"><tspan font-style="normal">0</tspan></text>
+<polygon points="407.63,118.50 455.26,146.00 455.26,201.00 407.63,228.50 360.00,201.00 360.00,146.00" fill="#ffffff" stroke="#606a70" stroke-width="1.3"/>
+<path d="M 378.63 144.50 Q 365.63 173.50 378.63 202.50 M 436.63 144.50 Q 449.63 173.50 436.63 202.50" fill="none" stroke="#18222b" stroke-width="1.4"/>
+<text x="407.63" y="167.50" font-size="23" fill="#18222b"><tspan font-style="italic">r</tspan><tspan font-style="normal">−</tspan><tspan font-style="normal">1</tspan></text>
+<text x="407.63" y="195.50" font-size="24" fill="#18222b"><tspan font-style="normal">1</tspan></text>
+<polygon points="502.89,118.50 550.53,146.00 550.53,201.00 502.89,228.50 455.26,201.00 455.26,146.00" fill="#ffffff" stroke="#606a70" stroke-width="1.3"/>
+<path d="M 473.89 144.50 Q 460.89 173.50 473.89 202.50 M 531.89 144.50 Q 544.89 173.50 531.89 202.50" fill="none" stroke="#18222b" stroke-width="1.4"/>
+<text x="502.89" y="167.50" font-size="23" fill="#18222b"><tspan font-style="italic">r</tspan><tspan font-style="normal">−</tspan><tspan font-style="normal">1</tspan></text>
+<text x="502.89" y="195.50" font-size="24" fill="#18222b"><tspan font-style="normal">2</tspan></text>
+<polygon points="598.16,118.50 645.79,146.00 645.79,201.00 598.16,228.50 550.53,201.00 550.53,146.00" fill="#ffffff" stroke="#606a70" stroke-width="1.3"/>
+<path d="M 569.16 144.50 Q 556.16 173.50 569.16 202.50 M 627.16 144.50 Q 640.16 173.50 627.16 202.50" fill="none" stroke="#18222b" stroke-width="1.4"/>
+<text x="598.16" y="167.50" font-size="23" fill="#18222b"><tspan font-style="italic">r</tspan><tspan font-style="normal">−</tspan><tspan font-style="normal">1</tspan></text>
+<text x="598.16" y="195.50" font-size="24" fill="#18222b"><tspan font-style="normal">3</tspan></text>
+<polygon points="264.74,201.00 312.37,228.50 312.37,283.50 264.74,311.00 217.11,283.50 217.11,228.50" fill="#ffffff" stroke="#606a70" stroke-width="1.3"/>
+<path d="M 235.74 227.00 Q 222.74 256.00 235.74 285.00 M 293.74 227.00 Q 306.74 256.00 293.74 285.00" fill="none" stroke="#18222b" stroke-width="1.4"/>
+<text x="264.74" y="250.00" font-size="23" fill="#18222b"><tspan font-style="italic">r</tspan></text>
+<text x="264.74" y="278.00" font-size="24" fill="#18222b"><tspan font-style="normal">0</tspan></text>
+<polygon points="360.00,201.00 407.63,228.50 407.63,283.50 360.00,311.00 312.37,283.50 312.37,228.50" fill="#ffad75" stroke="#606a70" stroke-width="1.3"/>
+<path d="M 331.00 227.00 Q 318.00 256.00 331.00 285.00 M 389.00 227.00 Q 402.00 256.00 389.00 285.00" fill="none" stroke="#18222b" stroke-width="1.4"/>
+<text x="360.00" y="250.00" font-size="23" fill="#18222b"><tspan font-style="italic">r</tspan></text>
+<text x="360.00" y="278.00" font-size="24" fill="#18222b"><tspan font-style="normal">1</tspan></text>
+<polygon points="455.26,201.00 502.89,228.50 502.89,283.50 455.26,311.00 407.63,283.50 407.63,228.50" fill="#ffad75" stroke="#606a70" stroke-width="1.3"/>
+<path d="M 426.26 227.00 Q 413.26 256.00 426.26 285.00 M 484.26 227.00 Q 497.26 256.00 484.26 285.00" fill="none" stroke="#18222b" stroke-width="1.4"/>
+<text x="455.26" y="250.00" font-size="23" fill="#18222b"><tspan font-style="italic">r</tspan></text>
+<text x="455.26" y="278.00" font-size="24" fill="#18222b"><tspan font-style="normal">2</tspan></text>
+<polygon points="550.53,201.00 598.16,228.50 598.16,283.50 550.53,311.00 502.89,283.50 502.89,228.50" fill="#ffffff" stroke="#606a70" stroke-width="1.3"/>
+<path d="M 521.53 227.00 Q 508.53 256.00 521.53 285.00 M 579.53 227.00 Q 592.53 256.00 579.53 285.00" fill="none" stroke="#18222b" stroke-width="1.4"/>
+<text x="550.53" y="250.00" font-size="23" fill="#18222b"><tspan font-style="italic">r</tspan></text>
+<text x="550.53" y="278.00" font-size="24" fill="#18222b"><tspan font-style="normal">3</tspan></text>
+<polygon points="645.79,201.00 693.42,228.50 693.42,283.50 645.79,311.00 598.16,283.50 598.16,228.50" fill="#ffffff" stroke="#606a70" stroke-width="1.3"/>
+<path d="M 616.79 227.00 Q 603.79 256.00 616.79 285.00 M 674.79 227.00 Q 687.79 256.00 674.79 285.00" fill="none" stroke="#18222b" stroke-width="1.4"/>
+<text x="645.79" y="250.00" font-size="23" fill="#18222b"><tspan font-style="italic">r</tspan></text>
+<text x="645.79" y="278.00" font-size="24" fill="#18222b"><tspan font-style="normal">4</tspan></text>
+<polygon points="217.11,283.50 264.74,311.00 264.74,366.00 217.11,393.50 169.47,366.00 169.47,311.00" fill="#ffffff" stroke="#606a70" stroke-width="1.3"/>
+<path d="M 188.11 309.50 Q 175.11 338.50 188.11 367.50 M 246.11 309.50 Q 259.11 338.50 246.11 367.50" fill="none" stroke="#18222b" stroke-width="1.4"/>
+<text x="217.11" y="332.50" font-size="23" fill="#18222b"><tspan font-style="italic">r</tspan><tspan font-style="normal">+</tspan><tspan font-style="normal">1</tspan></text>
+<text x="217.11" y="360.50" font-size="24" fill="#18222b"><tspan font-style="normal">0</tspan></text>
+<polygon points="312.37,283.50 360.00,311.00 360.00,366.00 312.37,393.50 264.74,366.00 264.74,311.00" fill="#ffffff" stroke="#606a70" stroke-width="1.3"/>
+<path d="M 283.37 309.50 Q 270.37 338.50 283.37 367.50 M 341.37 309.50 Q 354.37 338.50 341.37 367.50" fill="none" stroke="#18222b" stroke-width="1.4"/>
+<text x="312.37" y="332.50" font-size="23" fill="#18222b"><tspan font-style="italic">r</tspan><tspan font-style="normal">+</tspan><tspan font-style="normal">1</tspan></text>
+<text x="312.37" y="360.50" font-size="24" fill="#18222b"><tspan font-style="normal">1</tspan></text>
+<polygon points="407.63,283.50 455.26,311.00 455.26,366.00 407.63,393.50 360.00,366.00 360.00,311.00" fill="#b4ed79" stroke="#606a70" stroke-width="1.3"/>
+<path d="M 378.63 309.50 Q 365.63 338.50 378.63 367.50 M 436.63 309.50 Q 449.63 338.50 436.63 367.50" fill="none" stroke="#18222b" stroke-width="1.4"/>
+<text x="407.63" y="332.50" font-size="23" fill="#18222b"><tspan font-style="italic">r</tspan><tspan font-style="normal">+</tspan><tspan font-style="normal">1</tspan></text>
+<text x="407.63" y="360.50" font-size="24" fill="#18222b"><tspan font-style="normal">2</tspan></text>
+<polygon points="502.89,283.50 550.53,311.00 550.53,366.00 502.89,393.50 455.26,366.00 455.26,311.00" fill="#ffffff" stroke="#606a70" stroke-width="1.3"/>
+<path d="M 473.89 309.50 Q 460.89 338.50 473.89 367.50 M 531.89 309.50 Q 544.89 338.50 531.89 367.50" fill="none" stroke="#18222b" stroke-width="1.4"/>
+<text x="502.89" y="332.50" font-size="23" fill="#18222b"><tspan font-style="italic">r</tspan><tspan font-style="normal">+</tspan><tspan font-style="normal">1</tspan></text>
+<text x="502.89" y="360.50" font-size="24" fill="#18222b"><tspan font-style="normal">3</tspan></text>
+<polygon points="598.16,283.50 645.79,311.00 645.79,366.00 598.16,393.50 550.53,366.00 550.53,311.00" fill="#ffffff" stroke="#606a70" stroke-width="1.3"/>
+<path d="M 569.16 309.50 Q 556.16 338.50 569.16 367.50 M 627.16 309.50 Q 640.16 338.50 627.16 367.50" fill="none" stroke="#18222b" stroke-width="1.4"/>
+<text x="598.16" y="332.50" font-size="23" fill="#18222b"><tspan font-style="italic">r</tspan><tspan font-style="normal">+</tspan><tspan font-style="normal">1</tspan></text>
+<text x="598.16" y="360.50" font-size="24" fill="#18222b"><tspan font-style="normal">4</tspan></text>
+<polygon points="693.42,283.50 741.05,311.00 741.05,366.00 693.42,393.50 645.79,366.00 645.79,311.00" fill="#ffffff" stroke="#606a70" stroke-width="1.3"/>
+<path d="M 664.42 309.50 Q 651.42 338.50 664.42 367.50 M 722.42 309.50 Q 735.42 338.50 722.42 367.50" fill="none" stroke="#18222b" stroke-width="1.4"/>
+<text x="693.42" y="332.50" font-size="23" fill="#18222b"><tspan font-style="italic">r</tspan><tspan font-style="normal">+</tspan><tspan font-style="normal">1</tspan></text>
+<text x="693.42" y="360.50" font-size="24" fill="#18222b"><tspan font-style="normal">5</tspan></text>
+<polygon points="169.47,366.00 217.11,393.50 217.11,448.50 169.47,476.00 121.84,448.50 121.84,393.50" fill="#ffffff" stroke="#606a70" stroke-width="1.3"/>
+<path d="M 140.47 392.00 Q 127.47 421.00 140.47 450.00 M 198.47 392.00 Q 211.47 421.00 198.47 450.00" fill="none" stroke="#18222b" stroke-width="1.4"/>
+<text x="169.47" y="415.00" font-size="23" fill="#18222b"><tspan font-style="italic">r</tspan><tspan font-style="normal">+</tspan><tspan font-style="normal">2</tspan></text>
+<text x="169.47" y="443.00" font-size="24" fill="#18222b"><tspan font-style="normal">0</tspan></text>
+<polygon points="264.74,366.00 312.37,393.50 312.37,448.50 264.74,476.00 217.11,448.50 217.11,393.50" fill="#ffffff" stroke="#606a70" stroke-width="1.3"/>
+<path d="M 235.74 392.00 Q 222.74 421.00 235.74 450.00 M 293.74 392.00 Q 306.74 421.00 293.74 450.00" fill="none" stroke="#18222b" stroke-width="1.4"/>
+<text x="264.74" y="415.00" font-size="23" fill="#18222b"><tspan font-style="italic">r</tspan><tspan font-style="normal">+</tspan><tspan font-style="normal">2</tspan></text>
+<text x="264.74" y="443.00" font-size="24" fill="#18222b"><tspan font-style="normal">1</tspan></text>
+<polygon points="360.00,366.00 407.63,393.50 407.63,448.50 360.00,476.00 312.37,448.50 312.37,393.50" fill="#ffffff" stroke="#606a70" stroke-width="1.3"/>
+<path d="M 331.00 392.00 Q 318.00 421.00 331.00 450.00 M 389.00 392.00 Q 402.00 421.00 389.00 450.00" fill="none" stroke="#18222b" stroke-width="1.4"/>
+<text x="360.00" y="415.00" font-size="23" fill="#18222b"><tspan font-style="italic">r</tspan><tspan font-style="normal">+</tspan><tspan font-style="normal">2</tspan></text>
+<text x="360.00" y="443.00" font-size="24" fill="#18222b"><tspan font-style="normal">2</tspan></text>
+<polygon points="455.26,366.00 502.89,393.50 502.89,448.50 455.26,476.00 407.63,448.50 407.63,393.50" fill="#ffffff" stroke="#606a70" stroke-width="1.3"/>
+<path d="M 426.26 392.00 Q 413.26 421.00 426.26 450.00 M 484.26 392.00 Q 497.26 421.00 484.26 450.00" fill="none" stroke="#18222b" stroke-width="1.4"/>
+<text x="455.26" y="415.00" font-size="23" fill="#18222b"><tspan font-style="italic">r</tspan><tspan font-style="normal">+</tspan><tspan font-style="normal">2</tspan></text>
+<text x="455.26" y="443.00" font-size="24" fill="#18222b"><tspan font-style="normal">3</tspan></text>
+<polygon points="550.53,366.00 598.16,393.50 598.16,448.50 550.53,476.00 502.89,448.50 502.89,393.50" fill="#ffffff" stroke="#606a70" stroke-width="1.3"/>
+<path d="M 521.53 392.00 Q 508.53 421.00 521.53 450.00 M 579.53 392.00 Q 592.53 421.00 579.53 450.00" fill="none" stroke="#18222b" stroke-width="1.4"/>
+<text x="550.53" y="415.00" font-size="23" fill="#18222b"><tspan font-style="italic">r</tspan><tspan font-style="normal">+</tspan><tspan font-style="normal">2</tspan></text>
+<text x="550.53" y="443.00" font-size="24" fill="#18222b"><tspan font-style="normal">4</tspan></text>
+<polygon points="645.79,366.00 693.42,393.50 693.42,448.50 645.79,476.00 598.16,448.50 598.16,393.50" fill="#ffffff" stroke="#606a70" stroke-width="1.3"/>
+<path d="M 616.79 392.00 Q 603.79 421.00 616.79 450.00 M 674.79 392.00 Q 687.79 421.00 674.79 450.00" fill="none" stroke="#18222b" stroke-width="1.4"/>
+<text x="645.79" y="415.00" font-size="23" fill="#18222b"><tspan font-style="italic">r</tspan><tspan font-style="normal">+</tspan><tspan font-style="normal">2</tspan></text>
+<text x="645.79" y="443.00" font-size="24" fill="#18222b"><tspan font-style="normal">5</tspan></text>
+<polygon points="741.05,366.00 788.68,393.50 788.68,448.50 741.05,476.00 693.42,448.50 693.42,393.50" fill="#ffffff" stroke="#606a70" stroke-width="1.3"/>
+<path d="M 712.05 392.00 Q 699.05 421.00 712.05 450.00 M 770.05 392.00 Q 783.05 421.00 770.05 450.00" fill="none" stroke="#18222b" stroke-width="1.4"/>
+<text x="741.05" y="415.00" font-size="23" fill="#18222b"><tspan font-style="italic">r</tspan><tspan font-style="normal">+</tspan><tspan font-style="normal">2</tspan></text>
+<text x="741.05" y="443.00" font-size="24" fill="#18222b"><tspan font-style="normal">6</tspan></text>
+<polygon points="121.84,448.50 169.47,476.00 169.47,531.00 121.84,558.50 74.21,531.00 74.21,476.00" fill="#ffffff" stroke="#606a70" stroke-width="1.3"/>
+<path d="M 92.84 474.50 Q 79.84 503.50 92.84 532.50 M 150.84 474.50 Q 163.84 503.50 150.84 532.50" fill="none" stroke="#18222b" stroke-width="1.4"/>
+<text x="121.84" y="497.50" font-size="23" fill="#18222b"><tspan font-style="italic">r</tspan><tspan font-style="normal">+</tspan><tspan font-style="normal">3</tspan></text>
+<text x="121.84" y="525.50" font-size="24" fill="#18222b"><tspan font-style="normal">0</tspan></text>
+<polygon points="217.11,448.50 264.74,476.00 264.74,531.00 217.11,558.50 169.47,531.00 169.47,476.00" fill="#ffffff" stroke="#606a70" stroke-width="1.3"/>
+<path d="M 188.11 474.50 Q 175.11 503.50 188.11 532.50 M 246.11 474.50 Q 259.11 503.50 246.11 532.50" fill="none" stroke="#18222b" stroke-width="1.4"/>
+<text x="217.11" y="497.50" font-size="23" fill="#18222b"><tspan font-style="italic">r</tspan><tspan font-style="normal">+</tspan><tspan font-style="normal">3</tspan></text>
+<text x="217.11" y="525.50" font-size="24" fill="#18222b"><tspan font-style="normal">1</tspan></text>
+<polygon points="312.37,448.50 360.00,476.00 360.00,531.00 312.37,558.50 264.74,531.00 264.74,476.00" fill="#ffffff" stroke="#606a70" stroke-width="1.3"/>
+<path d="M 283.37 474.50 Q 270.37 503.50 283.37 532.50 M 341.37 474.50 Q 354.37 503.50 341.37 532.50" fill="none" stroke="#18222b" stroke-width="1.4"/>
+<text x="312.37" y="497.50" font-size="23" fill="#18222b"><tspan font-style="italic">r</tspan><tspan font-style="normal">+</tspan><tspan font-style="normal">3</tspan></text>
+<text x="312.37" y="525.50" font-size="24" fill="#18222b"><tspan font-style="normal">2</tspan></text>
+<polygon points="407.63,448.50 455.26,476.00 455.26,531.00 407.63,558.50 360.00,531.00 360.00,476.00" fill="#ffffff" stroke="#606a70" stroke-width="1.3"/>
+<path d="M 378.63 474.50 Q 365.63 503.50 378.63 532.50 M 436.63 474.50 Q 449.63 503.50 436.63 532.50" fill="none" stroke="#18222b" stroke-width="1.4"/>
+<text x="407.63" y="497.50" font-size="23" fill="#18222b"><tspan font-style="italic">r</tspan><tspan font-style="normal">+</tspan><tspan font-style="normal">3</tspan></text>
+<text x="407.63" y="525.50" font-size="24" fill="#18222b"><tspan font-style="normal">3</tspan></text>
+<polygon points="502.89,448.50 550.53,476.00 550.53,531.00 502.89,558.50 455.26,531.00 455.26,476.00" fill="#ffffff" stroke="#606a70" stroke-width="1.3"/>
+<path d="M 473.89 474.50 Q 460.89 503.50 473.89 532.50 M 531.89 474.50 Q 544.89 503.50 531.89 532.50" fill="none" stroke="#18222b" stroke-width="1.4"/>
+<text x="502.89" y="497.50" font-size="23" fill="#18222b"><tspan font-style="italic">r</tspan><tspan font-style="normal">+</tspan><tspan font-style="normal">3</tspan></text>
+<text x="502.89" y="525.50" font-size="24" fill="#18222b"><tspan font-style="normal">4</tspan></text>
+<polygon points="598.16,448.50 645.79,476.00 645.79,531.00 598.16,558.50 550.53,531.00 550.53,476.00" fill="#ffffff" stroke="#606a70" stroke-width="1.3"/>
+<path d="M 569.16 474.50 Q 556.16 503.50 569.16 532.50 M 627.16 474.50 Q 640.16 503.50 627.16 532.50" fill="none" stroke="#18222b" stroke-width="1.4"/>
+<text x="598.16" y="497.50" font-size="23" fill="#18222b"><tspan font-style="italic">r</tspan><tspan font-style="normal">+</tspan><tspan font-style="normal">3</tspan></text>
+<text x="598.16" y="525.50" font-size="24" fill="#18222b"><tspan font-style="normal">5</tspan></text>
+<polygon points="693.42,448.50 741.05,476.00 741.05,531.00 693.42,558.50 645.79,531.00 645.79,476.00" fill="#ffffff" stroke="#606a70" stroke-width="1.3"/>
+<path d="M 664.42 474.50 Q 651.42 503.50 664.42 532.50 M 722.42 474.50 Q 735.42 503.50 722.42 532.50" fill="none" stroke="#18222b" stroke-width="1.4"/>
+<text x="693.42" y="497.50" font-size="23" fill="#18222b"><tspan font-style="italic">r</tspan><tspan font-style="normal">+</tspan><tspan font-style="normal">3</tspan></text>
+<text x="693.42" y="525.50" font-size="24" fill="#18222b"><tspan font-style="normal">6</tspan></text>
+<polygon points="788.68,448.50 836.31,476.00 836.31,531.00 788.68,558.50 741.05,531.00 741.05,476.00" fill="#ffffff" stroke="#606a70" stroke-width="1.3"/>
+<path d="M 759.68 474.50 Q 746.68 503.50 759.68 532.50 M 817.68 474.50 Q 830.68 503.50 817.68 532.50" fill="none" stroke="#18222b" stroke-width="1.4"/>
+<text x="788.68" y="497.50" font-size="23" fill="#18222b"><tspan font-style="italic">r</tspan><tspan font-style="normal">+</tspan><tspan font-style="normal">3</tspan></text>
+<text x="788.68" y="525.50" font-size="24" fill="#18222b"><tspan font-style="normal">7</tspan></text>
+<polygon points="74.21,531.00 121.84,558.50 121.84,613.50 74.21,641.00 26.58,613.50 26.58,558.50" fill="#ffffff" stroke="#606a70" stroke-width="1.3"/>
+<path d="M 45.21 557.00 Q 32.21 586.00 45.21 615.00 M 103.21 557.00 Q 116.21 586.00 103.21 615.00" fill="none" stroke="#18222b" stroke-width="1.4"/>
+<text x="74.21" y="580.00" font-size="23" fill="#18222b"><tspan font-style="italic">r</tspan><tspan font-style="normal">+</tspan><tspan font-style="normal">4</tspan></text>
+<text x="74.21" y="608.00" font-size="24" fill="#18222b"><tspan font-style="normal">0</tspan></text>
+<polygon points="169.47,531.00 217.11,558.50 217.11,613.50 169.47,641.00 121.84,613.50 121.84,558.50" fill="#ffffff" stroke="#606a70" stroke-width="1.3"/>
+<path d="M 140.47 557.00 Q 127.47 586.00 140.47 615.00 M 198.47 557.00 Q 211.47 586.00 198.47 615.00" fill="none" stroke="#18222b" stroke-width="1.4"/>
+<text x="169.47" y="580.00" font-size="23" fill="#18222b"><tspan font-style="italic">r</tspan><tspan font-style="normal">+</tspan><tspan font-style="normal">4</tspan></text>
+<text x="169.47" y="608.00" font-size="24" fill="#18222b"><tspan font-style="normal">1</tspan></text>
+<polygon points="264.74,531.00 312.37,558.50 312.37,613.50 264.74,641.00 217.11,613.50 217.11,558.50" fill="#ffffff" stroke="#606a70" stroke-width="1.3"/>
+<path d="M 235.74 557.00 Q 222.74 586.00 235.74 615.00 M 293.74 557.00 Q 306.74 586.00 293.74 615.00" fill="none" stroke="#18222b" stroke-width="1.4"/>
+<text x="264.74" y="580.00" font-size="23" fill="#18222b"><tspan font-style="italic">r</tspan><tspan font-style="normal">+</tspan><tspan font-style="normal">4</tspan></text>
+<text x="264.74" y="608.00" font-size="24" fill="#18222b"><tspan font-style="normal">2</tspan></text>
+<polygon points="360.00,531.00 407.63,558.50 407.63,613.50 360.00,641.00 312.37,613.50 312.37,558.50" fill="#ffffff" stroke="#606a70" stroke-width="1.3"/>
+<path d="M 331.00 557.00 Q 318.00 586.00 331.00 615.00 M 389.00 557.00 Q 402.00 586.00 389.00 615.00" fill="none" stroke="#18222b" stroke-width="1.4"/>
+<text x="360.00" y="580.00" font-size="23" fill="#18222b"><tspan font-style="italic">r</tspan><tspan font-style="normal">+</tspan><tspan font-style="normal">4</tspan></text>
+<text x="360.00" y="608.00" font-size="24" fill="#18222b"><tspan font-style="normal">3</tspan></text>
+<polygon points="455.26,531.00 502.89,558.50 502.89,613.50 455.26,641.00 407.63,613.50 407.63,558.50" fill="#ffffff" stroke="#606a70" stroke-width="1.3"/>
+<path d="M 426.26 557.00 Q 413.26 586.00 426.26 615.00 M 484.26 557.00 Q 497.26 586.00 484.26 615.00" fill="none" stroke="#18222b" stroke-width="1.4"/>
+<text x="455.26" y="580.00" font-size="23" fill="#18222b"><tspan font-style="italic">r</tspan><tspan font-style="normal">+</tspan><tspan font-style="normal">4</tspan></text>
+<text x="455.26" y="608.00" font-size="24" fill="#18222b"><tspan font-style="normal">4</tspan></text>
+<polygon points="550.53,531.00 598.16,558.50 598.16,613.50 550.53,641.00 502.89,613.50 502.89,558.50" fill="#ffffff" stroke="#606a70" stroke-width="1.3"/>
+<path d="M 521.53 557.00 Q 508.53 586.00 521.53 615.00 M 579.53 557.00 Q 592.53 586.00 579.53 615.00" fill="none" stroke="#18222b" stroke-width="1.4"/>
+<text x="550.53" y="580.00" font-size="23" fill="#18222b"><tspan font-style="italic">r</tspan><tspan font-style="normal">+</tspan><tspan font-style="normal">4</tspan></text>
+<text x="550.53" y="608.00" font-size="24" fill="#18222b"><tspan font-style="normal">5</tspan></text>
+<polygon points="645.79,531.00 693.42,558.50 693.42,613.50 645.79,641.00 598.16,613.50 598.16,558.50" fill="#ffffff" stroke="#606a70" stroke-width="1.3"/>
+<path d="M 616.79 557.00 Q 603.79 586.00 616.79 615.00 M 674.79 557.00 Q 687.79 586.00 674.79 615.00" fill="none" stroke="#18222b" stroke-width="1.4"/>
+<text x="645.79" y="580.00" font-size="23" fill="#18222b"><tspan font-style="italic">r</tspan><tspan font-style="normal">+</tspan><tspan font-style="normal">4</tspan></text>
+<text x="645.79" y="608.00" font-size="24" fill="#18222b"><tspan font-style="normal">6</tspan></text>
+<polygon points="741.05,531.00 788.68,558.50 788.68,613.50 741.05,641.00 693.42,613.50 693.42,558.50" fill="#ffffff" stroke="#606a70" stroke-width="1.3"/>
+<path d="M 712.05 557.00 Q 699.05 586.00 712.05 615.00 M 770.05 557.00 Q 783.05 586.00 770.05 615.00" fill="none" stroke="#18222b" stroke-width="1.4"/>
+<text x="741.05" y="580.00" font-size="23" fill="#18222b"><tspan font-style="italic">r</tspan><tspan font-style="normal">+</tspan><tspan font-style="normal">4</tspan></text>
+<text x="741.05" y="608.00" font-size="24" fill="#18222b"><tspan font-style="normal">7</tspan></text>
+<polygon points="836.31,531.00 883.95,558.50 883.95,613.50 836.31,641.00 788.68,613.50 788.68,558.50" fill="#ffffff" stroke="#606a70" stroke-width="1.3"/>
+<path d="M 807.31 557.00 Q 794.31 586.00 807.31 615.00 M 865.31 557.00 Q 878.31 586.00 865.31 615.00" fill="none" stroke="#18222b" stroke-width="1.4"/>
+<text x="836.31" y="580.00" font-size="23" fill="#18222b"><tspan font-style="italic">r</tspan><tspan font-style="normal">+</tspan><tspan font-style="normal">4</tspan></text>
+<text x="836.31" y="608.00" font-size="24" fill="#18222b"><tspan font-style="normal">8</tspan></text>
+</g></g></g></svg>

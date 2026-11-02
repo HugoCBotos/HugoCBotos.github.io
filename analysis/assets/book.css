@@ -56,6 +56,8 @@ mjx-container { text-indent: 0; }
 .chapter-contents a { text-decoration: none; }
 .chapter-contents a:hover { text-decoration: underline; }
 .anchor-alias { display: block; }
+.theorem-label { scroll-margin-top: 5rem; }
+.theorem-label:target { background: #fff0bd; border-radius: .15rem; outline: .2rem solid #fff0bd; }
 .page-navigation { border-top: 1px solid var(--line); margin-top: 3rem; padding-top: 1.2rem; display: flex; justify-content: space-between; gap: 20px; font: 14px/1.6 system-ui, sans-serif; }
 .page-navigation a { text-decoration: none; }
 .home main { max-width: 680px; margin-top: 4rem; }
